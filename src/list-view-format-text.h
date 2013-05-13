@@ -62,9 +62,10 @@ class ListViewFormatText : public Gtk::EventBox
 		 */
 		void set_text(guint row, const Glib::ustring& value);
 
+		void set_tooltip_markup(const Glib::ustring markup);
 
 		/// @return the number of rows in the listbox
-			guint size() const;
+		guint size() const;
 
 
 		Glib::ustring SelectionString;
@@ -80,6 +81,7 @@ class ListViewFormatText : public Gtk::EventBox
 	protected:		
 		Gtk::Box vbox;
 		std::vector<Gtk::Label*> Rows;
+		Glib::ustring m_tooltip_markup;
 		type_signal_clicked m_signal_clicked;
 		type_signal_clicked m_signal_dblclicked;
 	
