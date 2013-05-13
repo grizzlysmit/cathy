@@ -48,6 +48,8 @@ guint ListViewFormatText::append(const Glib::ustring& column_one_value)
 	tmp->set_use_markup();
 	tmp->set_selectable();
 	//tmp->set_opacity(1);
+	tmp->set_tooltip_markup(m_tooltip_markup);
+	tmp->set_has_tooltip(true);
 	std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
 
 
@@ -71,6 +73,8 @@ void ListViewFormatText::prepend(const Glib::ustring& column_one_value)
 	Gtk::Label *tmp = new Gtk::Label(column_one_value, Gtk::ALIGN_START);
 	tmp->set_use_markup();
 	tmp->set_selectable();
+	tmp->set_tooltip_markup(m_tooltip_markup);
+	tmp->set_has_tooltip(true);
 	//tmp->set_opacity(1);
 
 	Rows.insert(Rows.begin(), tmp);
@@ -156,4 +160,9 @@ ListViewFormatText::type_signal_clicked ListViewFormatText::signal_dblclicked()
 	return m_signal_dblclicked;
 }
 
+void ListViewFormatText::set_tooltip_markup(const Glib::ustring markup)
+{
+	Gtk::EventBox::set_tooltip_markup(markup);
+	m_tooltip_markup = markup;
+}
 

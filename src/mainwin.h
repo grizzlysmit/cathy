@@ -45,25 +45,59 @@ class Main_win: public Gtk::Window
 
 	private:
 		const Glib::RefPtr<Gtk::Builder>& m_builder;
+
+		// the buttons //
 		Gtk::Button *m_buttonConnect;
-		ListViewFormatText *m_listviewformatTextPlaylists;
-		MatrixBox *m_listviewformatTextCurrentPlaylist;
+		Gtk::Button *m_buttonPrevious;
+		Gtk::Button *m_buttonRewind;
+		Gtk::Button *m_buttonStop;
+		Gtk::Button *m_buttonPlayPause;
+		Gtk::Button *m_buttonForward;
+		Gtk::Button *m_buttonNext;
+		Gtk::Button *m_buttonDelete;
 		Gtk::Button *m_buttonExit;
+		Gtk::Button *m_buttonHelp;
+
+		Gtk::AboutDialog *m_aboutdialog1;
+		ListViewFormatText *m_listviewformatTextPlaylists;
+		MatrixBox *m_MatrixBoxCurrentPlaylist;
+
+		// Menu Stuff //
 		Gtk::ImageMenuItem *m_imagemenuitemQuit;
+		Gtk::ImageMenuItem *m_imagemenuitemConnect;
+		
 		Gtk::ScrolledWindow *m_scrolledwindowPlaylists;
 		Gtk::ScrolledWindow *m_scrolledwindowCurrentPlaylist;
 		Gtk::Paned *m_panedBody;
+		Gtk::Statusbar *m_statusbar1;
+		
 		Xmms::Client xmms2_client;
 		Glib::RefPtr<Gtk::TextTag> m_ref_bold_tag;
 		int connect_cout;
 		unsigned m_connect_retrys;
 		std::string m_currentPlaylistName;
+		unsigned m_ContextId;
 
+		Xmms::Playback::Status m_status;
+
+		// button signal handlers //
 		void on_button_Connect();
-		void refresh_playlists();
-		std::vector<Glib::ustring> get_mediainfo(int id);
-		void refresh_playlist();
+		void on_button_Previous();
+		void on_button_Rewind();
+		void on_button_Stop();
+		void on_button_PlayPause();
+		void on_button_Forward();
+		void on_button_Next();
+		void on_button_Delete();
 		void on_button_Exit();
+		void on_button_Help();
+
+		bool handle_status(const Xmms::Playback::Status &st);
+		void handle_disconnect();
+		
+		void refresh_playlists();
+		std::vector<Glib::ustring> get_mediainfo(int id, int highlight = 0);
+		void refresh_playlist();
 		void on_Playlists_clicked(Glib::ustring cp);
 		void on_Playlists_dblclicked(Glib::ustring cp);
 		void on_Playlist_clicked(int id);
