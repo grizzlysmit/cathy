@@ -63,8 +63,8 @@ class Main_win: public Gtk::Window
 		Gtk::Button *m_buttonForward;
 		Gtk::Button *m_buttonNext;
 		Gtk::Button *m_buttonDelete;
-		Gtk::Button *m_buttonNew;
-		Gtk::Action *m_actionNewCollection;
+		Gtk::Button *m_buttonNewPlayList;
+		Gtk::Button *m_buttonNewCollection;
 		Gtk::Button *m_buttonExit;
 		Gtk::Button *m_buttonHelp;
 		Gtk::VolumeButton *m_volumebuttonMaster;
@@ -90,7 +90,8 @@ class Main_win: public Gtk::Window
 		// Menu Stuff //
 		Gtk::ImageMenuItem *m_imagemenuitemQuit;
 		Gtk::ImageMenuItem *m_imagemenuitemConnect;
-		Gtk::ImageMenuItem *m_imagemenuitemNew;
+		Gtk::ImageMenuItem *m_imagemenuitemNewPlayList;
+		Gtk::ImageMenuItem *m_imagemenuitemNewCollection;
 		
 		Gtk::ScrolledWindow *m_scrolledwindowPlaylists;
 		Gtk::ScrolledWindow *m_scrolledwindowCurrentPlaylist;
@@ -135,8 +136,8 @@ class Main_win: public Gtk::Window
 		void on_button_Next();
 		void on_button_Delete();
 		void on_button_Exit();
-		void on_button_New();
-		void on_action_NewCollection();
+		void on_button_NewPlayList();
+		void on_button_NewCollection();
 		void on_button_Help();
 
 		// VolumeButton signal handler //

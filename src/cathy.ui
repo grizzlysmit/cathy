@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkAction" id="actionNewCollection">
-    <property name="label" translatable="yes">New _Collection ...</property>
-    <property name="short_label" translatable="yes">New _Coll ..</property>
-    <property name="stock_id">gtk-new</property>
-  </object>
+  <object class="GtkAction" id="action1"/>
   <object class="GtkAboutDialog" id="aboutdialog1">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -597,7 +593,8 @@
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="stock">gtk-new</property>
+    <property name="yalign">0.49000000953674316</property>
+    <property name="pixbuf">gtk-new.svg</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
@@ -609,6 +606,12 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-new</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="yalign">0.50999999046325684</property>
+    <property name="pixbuf">gtk-new.svg</property>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="visible">True</property>
@@ -648,18 +651,18 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkImageMenuItem" id="menuitemNewCollection">
+                              <object class="GtkImageMenuItem" id="imagemenuitemNewCollection">
                                 <property name="label" translatable="yes">New _Collection ...</property>
-                                <property name="use_action_appearance">False</property>
-                                <property name="related_action">actionNewCollection</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="image">image4</property>
                                 <property name="use_stock">False</property>
                                 <property name="always_show_image">True</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkImageMenuItem" id="imagemenuitemNew">
+                              <object class="GtkImageMenuItem" id="imagemenuitemNewPlayList">
                                 <property name="label">New _PlayList ...</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -928,8 +931,8 @@ must not be the active list </property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="buttonNew">
-                <property name="label">New PlayList</property>
+              <object class="GtkButton" id="buttonNewPlayList">
+                <property name="label">New _PlayList ...</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="receives_default">True</property>
@@ -937,6 +940,7 @@ must not be the active list </property>
                 <property name="tooltip_markup" translatable="yes">&lt;b&gt;New Playlist&lt;/b&gt;
 &lt;i&gt;make a new playlist with chosen content&lt;/i&gt;</property>
                 <property name="image">image2</property>
+                <property name="yalign">0.50999999046325684</property>
                 <property name="always_show_image">True</property>
               </object>
               <packing>
@@ -947,14 +951,13 @@ must not be the active list </property>
             </child>
             <child>
               <object class="GtkButton" id="buttonNewCollection">
-                <property name="label" translatable="yes">New Collection</property>
-                <property name="use_action_appearance">False</property>
-                <property name="related_action">actionNewCollection</property>
+                <property name="label" translatable="yes">New _Coll ...</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="receives_default">True</property>
+                <property name="tooltip_markup" translatable="yes">&lt;b&gt;Make a New Collection from &lt;i&gt;Pattern&lt;/i&gt;&lt;/b&gt;</property>
                 <property name="image">image3</property>
-                <property name="yalign">0.50999999046325684</property>
+                <property name="yalign">0.53999996185302734</property>
                 <property name="always_show_image">True</property>
               </object>
               <packing>

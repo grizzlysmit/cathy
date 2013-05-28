@@ -28,14 +28,14 @@ cathy is free software: you can redistribute it and/or modify it
 Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Window(cobject), m_builder(builder), m_buttonConnect(0), m_buttonPrevious(0),
     m_buttonRewind(0), m_buttonStop(0), m_buttonPlayPause(0), m_buttonForward(0), 
-    m_buttonNext(0), m_buttonDelete(0), m_buttonNew(0), m_actionNewCollection(0), 
+    m_buttonNext(0), m_buttonDelete(0), m_buttonNewPlayList(0), m_buttonNewCollection(0), 
     m_buttonExit(0), m_buttonHelp(0), 
     m_volumebuttonMaster(0), m_volumebuttonLeft(0), m_volumebuttonRight(0), m_progressbar1(0), 
     m_labelPlayed(0), m_labelLeft(0), m_labelTitle(0), m_labelArtist(0), m_labelAlbum(0), 
     m_labelDuration(0), 
     m_aboutdialog1(0), m_dialogNewPlaylist(0), 
     m_listviewformatTextPlaylists(0), m_MatrixBoxCurrentPlaylist(0), m_imagemenuitemQuit(0), 
-    m_imagemenuitemConnect(0), m_imagemenuitemNew(0), 
+    m_imagemenuitemConnect(0), m_imagemenuitemNewPlayList(0), m_imagemenuitemNewCollection(0), 
     m_scrolledwindowPlaylists(0), m_scrolledwindowCurrentPlaylist(0), m_panedBody(0), 
     m_statusbar1(0), 
     //m_eventboxPlaylists(0), m_eventboxCurrentPlaylist(0), 
@@ -78,14 +78,15 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	if(m_buttonDelete){
 		m_buttonDelete->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_Delete) );
 	}
-	m_builder->get_widget("buttonNew", m_buttonNew);
-	if(m_buttonNew){
-		m_buttonNew->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_New) );
+	// m_buttonNewPlayList //
+	m_builder->get_widget("buttonNewPlayList", m_buttonNewPlayList);
+	if(m_buttonNewPlayList){
+		m_buttonNewPlayList->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_NewPlayList) );
 	}
-	// m_actionNewCollection //
-	m_builder->get_widget("actionNewCollection", m_actionNewCollection);
-	if(m_actionNewCollection){
-		m_actionNewCollection->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_action_NewCollection) );
+	// m_buttonNewCollection //
+	m_builder->get_widget("buttonNewCollection", m_buttonNewCollection);
+	if(m_buttonNewCollection){
+		m_buttonNewCollection->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_NewCollection) );
 	}
 	m_builder->get_widget("buttonExit", m_buttonExit);
 	if(m_buttonExit){
@@ -153,10 +154,16 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	if(m_imagemenuitemConnect){
 		m_imagemenuitemConnect->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Connect) );
 	}
-	m_builder->get_widget("imagemenuitemNew", m_imagemenuitemNew);
-	if(m_imagemenuitemNew){
-		m_imagemenuitemNew->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_New) );
+	m_builder->get_widget("imagemenuitemNewPlayList", m_imagemenuitemNewPlayList);
+	if(m_imagemenuitemNewPlayList){
+		m_imagemenuitemNewPlayList->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_NewPlayList) );
 	}
+	// m_imagemenuitemNewCollection //
+	m_builder->get_widget("imagemenuitemNewCollection", m_imagemenuitemNewCollection);
+	if(m_imagemenuitemNewCollection){
+		m_imagemenuitemNewCollection->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_NewCollection) );
+	}
+
 
 	// The Paned comopnet and custom sub componets //
 	m_builder->get_widget("panedBody", m_panedBody);
@@ -917,7 +924,7 @@ void Main_win::on_button_Next()
 
 void Main_win::on_button_Delete()
 {
-	Gtk::MessageDialog dialogGtk::MessageDialog(*this, "Delete PlayList <b>" + m_currentPlaylistName 
+	Gtk::MessageDialog dialog(*this, "Delete PlayList <b>" + m_currentPlaylistName 
 	                                              + "?</b>\nThis cannot be undone!",
 	                          true /* use_markup */, Gtk::MESSAGE_QUESTION,
 	                          Gtk::BUTTONS_OK_CANCEL);
@@ -1519,7 +1526,7 @@ bool Main_win::handle_medialib_info(const Xmms::PropDict &info)
 	return true;
 }
 
-void Main_win::on_button_New()
+void Main_win::on_button_NewPlayList()
 {
 	Xmms::List< std::string > lst = xmms2_client.collection.list(Xmms::Collection::COLLECTIONS);
 	std::vector<Glib::ustring> colls(lst.begin(), lst.end());
@@ -1533,8 +1540,9 @@ void Main_win::on_button_New()
 	}
 }
 
-void Main_win::on_action_NewCollection()
+void Main_win::on_button_NewCollection()
 {
+	std::cout << __FILE__ << '[' << __LINE__ << "] on_button_NewCollection" << std::endl;
 }
 
 std::vector<Xmms::Dict> Main_win::on_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby)
