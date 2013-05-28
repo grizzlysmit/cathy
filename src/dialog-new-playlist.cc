@@ -29,7 +29,7 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
     m_scrolledwindowAvailable(0), m_listviewtextAvailable(0), 
     m_scrolledwindowColContent(0), m_toolbuttonMoveLeft(0), 
     m_toolbuttonMoveRight(0), m_toolbuttonUp(0), m_toolbuttonDown(0), 
-    m_toolbuttonRevese(0), m_toolbuttonRefresh(0), 
+    m_toolbuttonRevese(0), m_toolbuttonRefresh(0), /*m_filefilterSound(0), */
     m_addrecursive(true), m_radioselected(directory), m_orderby(atoz)
 {
 	//////////////////////////////////////////////////////////
@@ -158,6 +158,15 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
 	if(m_toolbuttonRefresh){
 		m_toolbuttonRefresh->signal_clicked().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_toolbutton_Refresh) );
 	}
+
+	// m_filefilterSound //
+	m_filefilterSound = Gtk::FileFilter::create();
+	if(m_filefilterSound){
+		//m_filefilterSound->signal_clicked().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_toolbutton_Refresh) );
+		m_filefilterSound->set_name("sound files");
+		m_filefilterSound->add_pattern("*.ogg");
+		m_filefilterSound->add_pattern("*.mp3");
+	}
 }
 
 DialogNewPlaylist::~DialogNewPlaylist()
@@ -169,8 +178,15 @@ void DialogNewPlaylist::on_checkbutton_AddRecursive()
 	m_addrecursive = m_checkbuttonAddRecursive->get_active();
 	if(m_addrecursive){
 		std::cout << __FILE__ << '[' << __LINE__ << "]  checked" << std::endl;
+		m_filechooserbutton1->set_action(Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER);
+		m_filechooserbutton1->remove_filter(m_filefilterSound);
+		m_filechooserbutton1->set_title("Select a Folder");
 	}else{
 		std::cout << __FILE__ << '[' << __LINE__ << "]  unchecked" << std::endl;
+		m_filechooserbutton1->set_action(Gtk::FILE_CHOOSER_ACTION_OPEN);
+		m_filechooserbutton1->add_filter(m_filefilterSound);
+		m_filechooserbutton1->set_filter(m_filefilterSound);
+		m_filechooserbutton1->set_title("Select a File");
 	}
 }
 
@@ -461,6 +477,17 @@ std::vector<Glib::ustring> DialogNewPlaylist::get_order()
 	}
 	return result;
 }
+
+DialogNewPlaylist::RadioSelected DialogNewPlaylist::get_radio_selected()
+{
+	return m_radioselected;
+}
+
+bool DialogNewPlaylist::get_addrecursive()
+{
+	return m_addrecursive;
+}
+
 
 
 

@@ -20,6 +20,7 @@
 #ifndef _DIALOG_NEW_PLAYLIST_H_
 #define _DIALOG_NEW_PLAYLIST_H_
 #include <gtkmm.h>
+#include <gtkmm/filefilter.h>
 #include <xmmsclient/xmmsclient++.h>
 #include <xmmsclient/xmmsclient++/list.h>
 #include <xmmsclient/xmmsclient++/coll.h>
@@ -45,6 +46,8 @@ class DialogNewPlaylist : public Gtk::Dialog
 
 		void set_collections(std::vector<Glib::ustring> colls);
 		std::vector<Glib::ustring> get_order();
+		RadioSelected get_radio_selected();
+		bool get_addrecursive();
 
 		type_signal_coll_changed signal_coll_changed();
 	protected:
@@ -74,6 +77,7 @@ class DialogNewPlaylist : public Gtk::Dialog
 		Gtk::ToolButton *m_toolbuttonDown;
 		Gtk::ToolButton *m_toolbuttonRevese;
 		Gtk::ToolButton *m_toolbuttonRefresh;
+		Glib::RefPtr<Gtk::FileFilter> m_filefilterSound;
 		bool m_addrecursive;
 		RadioSelected m_radioselected;
 		OrderBy m_orderby;
