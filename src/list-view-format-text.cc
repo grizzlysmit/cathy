@@ -44,57 +44,80 @@ ListViewFormatText::~ListViewFormatText()
 
 guint ListViewFormatText::append(const Glib::ustring& column_one_value)
 {
-	Gtk::Label *tmp = new Gtk::Label(column_one_value, Gtk::ALIGN_START);
-	tmp->set_use_markup();
-	tmp->set_selectable();
-	//tmp->set_opacity(1);
-	tmp->set_tooltip_markup(m_tooltip_markup);
-	tmp->set_has_tooltip(true);
-	std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
+	try{
+		Gtk::Label *tmp = new Gtk::Label(column_one_value, Gtk::ALIGN_START);
+		tmp->set_use_markup();
+		tmp->set_selectable();
+		//tmp->set_opacity(1);
+		tmp->set_tooltip_markup(m_tooltip_markup);
+		tmp->set_has_tooltip(true);
+		//std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
 
 
-	Rows.insert(Rows.end(), tmp);
-	tmp->set_events(Gdk::BUTTON_PRESS_MASK);
-	tmp->signal_button_press_event().connect( sigc::bind<Gtk::Label*>( sigc::mem_fun(*this, &ListViewFormatText::on_button_Pressed), tmp), false );
-	std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
+		Rows.insert(Rows.end(), tmp);
+		tmp->set_events(Gdk::BUTTON_PRESS_MASK);
+		tmp->signal_button_press_event().connect( sigc::bind<Gtk::Label*>( sigc::mem_fun(*this, &ListViewFormatText::on_button_Pressed), tmp), false );
+		//std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
 
 
-	vbox.pack_start(*tmp, true, true, 0);
-	std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
-	vbox.show_all();
-	tmp->show();
-	std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
+		vbox.pack_start(*tmp, true, true, 0);
+		//std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
+		vbox.show_all();
+		tmp->show();
+		//std::cout << __FILE__ << "[" << __LINE__ << "] got here" << std::endl;
 
-	return size() - 1;
+		return size() - 1;
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
+		return 0;
+	}
+	
 }
 
 void ListViewFormatText::prepend(const Glib::ustring& column_one_value)
 {
-	Gtk::Label *tmp = new Gtk::Label(column_one_value, Gtk::ALIGN_START);
-	tmp->set_use_markup();
-	tmp->set_selectable();
-	tmp->set_tooltip_markup(m_tooltip_markup);
-	tmp->set_has_tooltip(true);
-	//tmp->set_opacity(1);
+	try{
+		Gtk::Label *tmp = new Gtk::Label(column_one_value, Gtk::ALIGN_START);
+		tmp->set_use_markup();
+		tmp->set_selectable();
+		tmp->set_tooltip_markup(m_tooltip_markup);
+		tmp->set_has_tooltip(true);
+		//tmp->set_opacity(1);
 
-	Rows.insert(Rows.begin(), tmp);
-	tmp->set_events(Gdk::BUTTON_PRESS_MASK);
-	tmp->signal_button_press_event().connect( sigc::bind<Gtk::Label*>( sigc::mem_fun(*this, &ListViewFormatText::on_button_Pressed), tmp), false );
+		Rows.insert(Rows.begin(), tmp);
+		tmp->set_events(Gdk::BUTTON_PRESS_MASK);
+		tmp->signal_button_press_event().connect( sigc::bind<Gtk::Label*>( sigc::mem_fun(*this, &ListViewFormatText::on_button_Pressed), tmp), false );
 
-	vbox.pack_end(*tmp, true, true, 0);
-	tmp->show();
-	vbox.show_all();
+		vbox.pack_end(*tmp, true, true, 0);
+		tmp->show();
+		vbox.show_all();
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
+	}
 }
 
 void ListViewFormatText::clear_items()
 {
-	Gtk::Label *tmp;
-	for(std::vector<Gtk::Label*>::iterator i(Rows.begin()), i_end(Rows.end()); i != i_end; ++i){
-		tmp = *i;
-		vbox.remove(*tmp);
-		delete tmp;
+	try{
+		Gtk::Label *tmp;
+		for(std::vector<Gtk::Label*>::iterator i(Rows.begin()), i_end(Rows.end()); i != i_end; ++i){
+			tmp = *i;
+			vbox.remove(*tmp);
+			delete tmp;
+		}
+		Rows.clear();
 	}
-	Rows.clear();
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
+	}
 }
 
 Glib::ustring ListViewFormatText::get_text(guint row) const
@@ -126,26 +149,33 @@ Glib::ustring ListViewFormatText::get_selected()
 }
 
 bool ListViewFormatText::on_button_Pressed(GdkEventButton* event, Gtk::Label *label){
-	std::cout << "entering on_button_Pressed" << std::endl;
-	label->select_region(0);
-	if(event->type == GDK_2BUTTON_PRESS){ //double click //
-		SelectionString = label->get_text();
-		m_signal_dblclicked.emit(SelectionString);
-		std::cout << "double click: " << SelectionString << std::endl;
-		return false;
-	}else if(event->type == GDK_BUTTON_PRESS){ // single click //
-		SelectionString = label->get_text();
-		m_signal_clicked.emit(SelectionString);
-		std::cout << "single click: " << SelectionString << std::endl;
-		return true;
-	}else if(event->type == GDK_3BUTTON_PRESS){ // single click //
-		SelectionString = label->get_text();
-		std::cout << "triple click: " << SelectionString << std::endl;
-		return false;
-	}else if(event->type == GDK_BUTTON_RELEASE){
-		SelectionString = label->get_text();
-		std::cout << "button release: " << SelectionString << std::endl;
-		return false;
+	try{
+		//std::cout << "entering on_button_Pressed" << std::endl;
+		label->select_region(0);
+		if(event->type == GDK_2BUTTON_PRESS){ //double click //
+			SelectionString = label->get_text();
+			m_signal_dblclicked.emit(SelectionString);
+			//std::cout << "double click: " << SelectionString << std::endl;
+			return false;
+		}else if(event->type == GDK_BUTTON_PRESS){ // single click //
+			SelectionString = label->get_text();
+			m_signal_clicked.emit(SelectionString);
+			//std::cout << "single click: " << SelectionString << std::endl;
+			return true;
+		}else if(event->type == GDK_3BUTTON_PRESS){ // single click //
+			SelectionString = label->get_text();
+			//std::cout << "triple click: " << SelectionString << std::endl;
+			return false;
+		}else if(event->type == GDK_BUTTON_RELEASE){
+			SelectionString = label->get_text();
+			//std::cout << "button release: " << SelectionString << std::endl;
+			return false;
+		}
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
 	}
 	return false;
 }

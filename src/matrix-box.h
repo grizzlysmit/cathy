@@ -36,22 +36,23 @@ class MatrixBox: public Gtk::EventBox
 		type_signal_clicked signal_clicked();
 		type_signal_clicked signal_dblclicked();
 		void  set_headings(const std::vector<Glib::ustring>& heads);
-		guint append(const std::vector<Glib::ustring>& row, int _id);
+		guint append(const std::vector<Glib::ustring>& row, int _id, int _pos);
 		void clear_items();
 	protected:
 		class Row {
 			public:
 				Row();
 				Row(guint num_cols);
-				Row(guint num_cols, const std::vector<Gtk::Label*>& r, int _id);
+				Row(guint num_cols, const std::vector<Gtk::Label*>& r, int _id, int _pos);
 				~Row();
 				std::vector<Gtk::Label*>::iterator begin();
 				std::vector<Gtk::Label*>::iterator end();
-				void add(const std::vector<Gtk::Label*>& r, int _id);
+				void add(const std::vector<Gtk::Label*>& r, int _id, int _pos);
+				int get_pos() const;
 			protected:
 				std::vector<Gtk::Label*> row;
 				guint num_columns;
-				int id;
+				int id, pos;
 			private:
 		};
 		

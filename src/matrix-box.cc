@@ -25,13 +25,15 @@ MatrixBox::Row::Row()
 }
 
 MatrixBox::Row::Row(guint num_cols)
-  : num_columns(num_cols), id(-1)
+  : num_columns(num_cols), id(-1), pos(-1)
 {
 }
 
-MatrixBox::Row::Row(guint num_cols, const std::vector<Gtk::Label*>& r, int _id)
-  : num_columns(num_cols), id(_id)
+MatrixBox::Row::Row(guint num_cols, const std::vector<Gtk::Label*>& r, int _id, int _pos)
+  : num_columns(num_cols), id(_id), pos(_pos)
 {
+	//std::cout << __FILE__ << '[' << __LINE__ << "] r.size() == " << r.size() << std::endl;
+	//std::cout << __FILE__ << '[' << __LINE__ << "] num_columns == " << num_columns << std::endl;
 	g_return_if_fail( num_columns == r.size() );
 	
 	for(guint i = 0; i < num_columns; ++i){
@@ -39,18 +41,26 @@ MatrixBox::Row::Row(guint num_cols, const std::vector<Gtk::Label*>& r, int _id)
 	}
 }
 
-void MatrixBox::Row::add(const std::vector<Gtk::Label*>& r, int _id)
+void MatrixBox::Row::add(const std::vector<Gtk::Label*>& r, int _id, int _pos)
 {
 	g_return_if_fail( num_columns == r.size() );
 	
 	for(guint i = 0; i < num_columns; ++i){
 		row.insert(row.end(), r[i]);
 	}
+	id  = _id;
+	pos = _pos;
+}
+
+int MatrixBox::Row::get_pos() const
+{
+	return pos;
 }
 
 MatrixBox::Row::~Row()
 {
 }
+
 
 
 MatrixBox::MatrixBox(guint num_cols)
@@ -94,13 +104,13 @@ void  MatrixBox::set_headings(const std::vector<Glib::ustring>& heads)
 	}
 }
 
-guint MatrixBox::append(const std::vector<Glib::ustring>& row, int _id){
-	std::cout << __FILE__ << '[' << __LINE__ << "] row.size() == " << row.size() << std::endl;
+guint MatrixBox::append(const std::vector<Glib::ustring>& row, int _id, int _pos){
+	//std::cout << __FILE__ << '[' << __LINE__ << "] row.size() == " << row.size() << std::endl;
 	g_return_val_if_fail( num_columns == row.size(), row.size());
 
 	std::vector<Gtk::Label*> _row;
 	guint j = rows.size() + 1;
-	Row *r = new Row(num_columns, /*hbox,*/ _row, _id);
+	Row *r = new Row(num_columns); // do the rest in add //
 	for(guint i = 0; i < num_columns; ++i){
 		Gtk::Label *tmp = new Gtk::Label(row[i], Gtk::ALIGN_START);
 		tmp->set_use_markup();
@@ -113,8 +123,8 @@ guint MatrixBox::append(const std::vector<Glib::ustring>& row, int _id){
 
 		m_grid.attach(*tmp, i, j, 1, 1);
 	}
-	std::cout << __FILE__ << '[' << __LINE__ << "] _row.size() == " << _row.size() << std::endl;
-	r->add(_row, _id);
+	//std::cout << __FILE__ << '[' << __LINE__ << "] _row.size() == " << _row.size() << std::endl;
+	r->add(_row, _id, _pos);
 	rows.insert(rows.end(), r);
 	m_grid.show_all();
 	return rows.size() - 1;
@@ -122,34 +132,34 @@ guint MatrixBox::append(const std::vector<Glib::ustring>& row, int _id){
 
 
 bool MatrixBox::on_button_Pressed(GdkEventButton* event, int _id, Row* row){
-	std::cout << "entering on_button_Pressed" << std::endl;
+	//std::cout << "entering on_button_Pressed" << std::endl;
 	
     for(std::vector<Gtk::Label*>::iterator label(row->begin()), label_end(row->end()); label != label_end; ++label){
 		(*label)->select_region(0);
 	}
 	if(event->type == GDK_2BUTTON_PRESS){ //double click //
 		currentid = _id;
-		m_signal_dblclicked.emit(currentid);
-		std::cout << "double click: " << currentid << std::endl;
+		m_signal_dblclicked.emit(row->get_pos());
+		//std::cout << "double click: " << currentid << std::endl;
 		return false;
 	}else if(event->type == GDK_BUTTON_PRESS){ // single click //
 		currentid = _id;
 		m_signal_clicked.emit(currentid);
-		std::cout << "single click: " << currentid << std::endl;
+		//std::cout << "single click: " << currentid << std::endl;
 		std::vector<Gtk::Label*>::iterator label(row->end()), label_end(row->begin());
 		do{
 			--label;
-			std::cout << (*label)->get_text() << "\t|\t" << std::flush;
+			//std::cout << (*label)->get_text() << "\t|\t" << std::flush;
 		}while(label != label_end);
-		std::cout << std::endl;
+		//std::cout << std::endl;
 		return true;
 	}else if(event->type == GDK_3BUTTON_PRESS){ // single click //
 		currentid = _id;
-		std::cout << "triple click: " << currentid << std::endl;
+		//std::cout << "triple click: " << currentid << std::endl;
 		return false;
 	}else if(event->type == GDK_BUTTON_RELEASE){
 		currentid = _id;
-		std::cout << "button release: " << currentid << std::endl;
+		//std::cout << "button release: " << currentid << std::endl;
 		return false;
 	}
 	return false;
@@ -186,12 +196,12 @@ std::vector<Gtk::Label*>::iterator MatrixBox::Row::end()
 
 MatrixBox::type_signal_clicked MatrixBox::signal_clicked()
 {
-  return m_signal_clicked;
+	return m_signal_clicked;
 }
 
 MatrixBox::type_signal_clicked MatrixBox::signal_dblclicked()
 {
-  return m_signal_dblclicked;
+	return m_signal_dblclicked;
 }
 
 

@@ -28,7 +28,15 @@ cathy_SOURCES = \
 	list-view-format-text.cc \
 	list-view-format-text.h \
 	matrix-box.cc \
-	matrix-box.h
+	matrix-box.h \
+	basemesage.cc \
+	basemesage.h \
+	mesage.cc \
+	mesage.h \
+	dialog-new-playlist.cc \
+	dialog-new-playlist.h \
+	lvt.cc \
+	lvt.h
 
 cathy_LDFLAGS = 
 
