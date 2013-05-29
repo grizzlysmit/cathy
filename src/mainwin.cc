@@ -496,6 +496,7 @@ void Main_win::run_sync()
 
 bool Main_win::on_timeout()
 {
+	//std::cout << __FILE__ << "[" << __LINE__  << "] in " << __PRETTY_FUNCTION__ << ": "  << std::endl;
 	// code goes here //
 	try{
 		Glib::Threads::Mutex::Lock lock(m_mutex);
@@ -508,7 +509,7 @@ bool Main_win::on_timeout()
 			Xmms::PropDict info = xmms2_client->medialib.getInfo( id );
 			update_labels(info);
 		}
-		if(m_queue.empty()) return true; // nothing to do //
+		if(m_queue.empty()) return m_dont_disconect; // nothing to do //
 		while(!m_queue.empty()){
 			basemesage *msg = m_queue.front();
 			switch(msg->get_message_type()){
@@ -560,7 +561,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					//mesage<Xmms::Playback::Status> *the_mesage = dynamic_cast<mesage<Xmms::Playback::Status>*>(msg);
 					m_status = st;
@@ -641,7 +642,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					if(!xmms2_client) break;
 					int32_t pos = 0, npos = 0;
@@ -669,7 +670,9 @@ bool Main_win::on_timeout()
 							<< "] s != m_currentPlaylistName; s == " << s << std::endl;
 						std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " 
 							<< m_currentPlaylistName << std::endl;
-						return true;
+						m_queue.pop();
+						delete msg;
+						return m_dont_disconect;
 					}
 
 					switch(change){
@@ -724,7 +727,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					if(!xmms2_client) break;
 					if(changed_pl == m_currentPlaylistName){
@@ -751,7 +754,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					if(xmms2_client && name == m_currentPlaylistName && xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
 						xmms2_sync_client->playlist.listEntries(name)(Xmms::bind (&Main_win::handle_list, this));
@@ -777,7 +780,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					if(!xmms2_client) break;
 					std::cout << __FILE__ << "[" << __LINE__ << "] got here case(basemesage::list): " << std::endl;
@@ -799,7 +802,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					//mesage<int> *the_mesage = dynamic_cast<mesage<int>*>(msg);
 					std::cout << __FILE__ << "[" << __LINE__ << "] got here case(basemesage::current_id): " << std::endl;
@@ -822,12 +825,14 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					//mesage<Xmms::Dict> *the_mesage = dynamic_cast<mesage<Xmms::Dict>*>(msg);
 					if(m_setting_volume_left || m_setting_volume_right || m_setting_volume_master){
 						std::cout << __FILE__ << "[" << __LINE__ << "] got here case(basemesage::handle_volume): " << std::endl;
-						return true;
+						m_queue.pop();
+						delete msg;
+						return m_dont_disconect;
 					}
 					if(d.contains("master")){
 						m_setting_volume_master = true;
@@ -868,7 +873,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					//mesage<unsigned> *the_mesage = dynamic_cast<mesage<unsigned>*>(msg);
 					// TODO: fill this in %%%%%%%%%%%%%%% //
@@ -919,7 +924,7 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					//mesage<Xmms::PropDict> *the_mesage = dynamic_cast<mesage<Xmms::PropDict>*>(msg);
 					break;
@@ -938,9 +943,14 @@ bool Main_win::on_timeout()
 							<< e.what() << std::endl;
 						m_queue.pop();
 						delete msg;
-						return true;
+						return m_dont_disconect;
 					}
 					//mesage<uint32_t> *the_mesage = dynamic_cast<mesage<uint32_t>*>(msg);
+					break;
+				}
+				case(basemesage::Playlists_clicked):
+				{
+					refresh_playlist();
 					break;
 				}
 			}
@@ -953,7 +963,7 @@ bool Main_win::on_timeout()
 			<< "] Error in on_timeout: " 
 			<< e.what() << std::endl;
 	}
-	return true;
+	return m_dont_disconect;
 }
 
 void Main_win::update_labels(const Xmms::PropDict &info)
@@ -1152,7 +1162,7 @@ void Main_win::on_button_Delete()
 		{
 			try{
 				xmms2_client->playlist.remove(m_currentPlaylistName);
-				//refresh_playlists(); // taken care of in callbacks from xmms2_sync_client //
+				refresh_playlists(); // taken care of in callbacks from xmms2_sync_client // not so taken care of //
 			}
 			catch(std::exception &e){
 				Gtk::MessageDialog dialog(*this, "Failed to delete PlayList <b>" + m_currentPlaylistName 
@@ -1433,11 +1443,20 @@ void Main_win::refresh_playlist()
 		if(list.begin() == list.end()) return;
 		std::cout << __FILE__ << '[' << __LINE__ << "] should not get here on enpty list: m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 
-		Xmms::DictResult currentPos = xmms2_client->playlist.currentPos(m_currentPlaylistName);
-		Xmms::Dict d = currentPos;
-		std::string name = boost::get<std::string>(d["name"]);
-		//std::cout << __FILE__ << '[' << __LINE__ << "] name == " << name << std::endl;
-		int position = boost::get<int>(d["position"]);
+		std::string name;
+		int position = 0;
+		try{
+			Xmms::DictResult currentPos = xmms2_client->playlist.currentPos(m_currentPlaylistName);
+			Xmms::Dict d = currentPos;
+			name = boost::get<std::string>(d["name"]);
+			//std::cout << __FILE__ << '[' << __LINE__ << "] name == " << name << std::endl;
+			position = boost::get<int>(d["position"]);
+		}
+		catch(std::exception &e){
+			std::cout << __FILE__ << "[" << __LINE__ 
+				      << "] Error in " << __PRETTY_FUNCTION__ << ": " 
+				      << e.what() << std::endl;
+		}
 		//std::cout << __FILE__ << '[' << __LINE__ << "] position == " << position << std::endl;
 		std::string currentplst = xmms2_client->playlist.currentActive();
 		/*std::string fred;
@@ -1463,8 +1482,8 @@ void Main_win::refresh_playlist()
 	}
 	catch(std::exception &e){
 		std::cout << __FILE__ << "[" << __LINE__ 
-			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
-			<< e.what() << std::endl;
+			      << "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			      << e.what() << std::endl;
 	}
 }
 
@@ -1472,12 +1491,24 @@ void Main_win::refresh_playlist()
 void Main_win::on_Playlists_clicked(Glib::ustring cp)
 {
 	if(!xmms2_sync_client) return;
-	//Glib::Threads::Mutex::Lock lock (m_mutex);
+	if(!xmms2_client) return;
+	Glib::Threads::Mutex::Lock lock (m_mutex);
     m_currentPlaylistName = cp;
 	std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 	try{
-		xmms2_sync_client->playlist.listEntries(m_currentPlaylistName)(Xmms::bind(&Main_win::handle_list, this));
+		if(xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
+			xmms2_sync_client->playlist.listEntries(m_currentPlaylistName)(Xmms::bind(&Main_win::handle_list, this));
+		}
 		//refresh_playlist(); // taken care of in callbacks from xmms2_sync_client //
+		try{
+			basemesage *msg = new mesage<int>(basemesage::Playlists_clicked, 0);
+			m_queue.push(msg);
+		}
+		catch(std::exception &e){
+			std::cout << __FILE__ << "[" << __LINE__ 
+				<< "] Error in handle_change: " 
+				<< e.what() << std::endl;
+		}
 	}
 	catch(Xmms::no_such_key_error& err){
 		std::cout << __FILE__ << '[' << __LINE__ << "] refresh_playlist() failed m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
@@ -1717,9 +1748,13 @@ bool Main_win::handle_medialib_info(const Xmms::PropDict &info)
 void Main_win::on_button_NewPlayList()
 {
 	if(!xmms2_client) return;
+	
+	//Glib::Threads::Mutex::Lock lock (m_mutex);
+	
 	Xmms::List< std::string > lst = xmms2_client->collection.list(Xmms::Collection::COLLECTIONS);
 	std::vector<Glib::ustring> colls(lst.begin(), lst.end());
 	m_dialogNewPlaylist->set_collections(colls);
+	std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): colls.size() == " << colls.size() << std::endl;
 	int res = m_dialogNewPlaylist->run();
 	m_dialogNewPlaylist->hide();
 	if(res){
@@ -1744,10 +1779,12 @@ void Main_win::on_button_NewPlayList()
 			}
 			case(DialogNewPlaylist::url):
 			{
+				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::url):" << std::endl;
 				break;
 			}
 			case(DialogNewPlaylist::collection):
 			{
+				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::collection):" << std::endl;
 				break;
 			}
 			default:
@@ -1815,7 +1852,7 @@ void Main_win::on_imagemenuitem_Refresh()
 
 std::string Main_win::Urlencode(std::string url)
 {
-    std::string result, invalid = " \t%+:;&\"'@\\-.<>^_`{|}~";
+    std::string result, invalid = " \t%+:;&\"'@\\-.<>^_`{|}~()[]";
 	size_t pos = url.find_first_of(invalid);
 	while(pos != std::string::npos){
 		if(pos) result += url.substr(0, pos);

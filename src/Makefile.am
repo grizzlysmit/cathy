@@ -36,7 +36,9 @@ cathy_SOURCES = \
 	dialog-new-playlist.cc \
 	dialog-new-playlist.h \
 	lvt.cc \
-	lvt.h
+	lvt.h \
+	dnc.cc \
+	dnc.h
 
 cathy_LDFLAGS = 
 

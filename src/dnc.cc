@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
  * cathy
- * Copyright (C) 2013 Francis (Grizzly) Smit <grizzlysmit@smit.id.au>
+ * Copyright (C) 2013 Francis (Grizzly) Smit <grizzlysmit@rakbat>
  * 
  * cathy is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,29 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BASEMESAGE_H_
-#define _BASEMESAGE_H_
-
-class basemesage
-{
-	public:
-		enum message_type { status, disconnect, connect, 
-			plchange, update_pos, pls_loaded, list, current_id,
-		    handle_volume, handle_playtime, handle_medialib_info,
-		    handle_mlib_entry_changed, Playlists_clicked};
-		
-		basemesage(message_type mt);
-		virtual ~basemesage();
-
-		message_type get_message_type();
-	protected:
-		message_type _mt;
-
-	private:
-
-};
+#include "dnc.h"
 
 
-
-#endif // _BASEMESAGE_H_
 
