@@ -66,7 +66,7 @@ class Main_win: public Gtk::Window
 		Gtk::Button *m_buttonNewPlayList;
 		Gtk::Button *m_buttonNewCollection;
 		Gtk::Button *m_buttonExit;
-		Gtk::Button *m_buttonHelp;
+		Gtk::Button *m_buttonAbout;
 		Gtk::VolumeButton *m_volumebuttonMaster;
 		Gtk::VolumeButton *m_volumebuttonLeft;
 		Gtk::VolumeButton *m_volumebuttonRight;
@@ -92,15 +92,26 @@ class Main_win: public Gtk::Window
 		Gtk::ImageMenuItem *m_imagemenuitemConnect;
 		Gtk::ImageMenuItem *m_imagemenuitemNewPlayList;
 		Gtk::ImageMenuItem *m_imagemenuitemNewCollection;
+		Gtk::ImageMenuItem *m_imagemenuitemPlayPause;
+		Gtk::ImageMenuItem *m_imagemenuitemPrevious;
+		Gtk::ImageMenuItem *m_imagemenuitemRewind;
+		Gtk::ImageMenuItem *m_imagemenuitemStop;
+		Gtk::ImageMenuItem *m_imagemenuitemForward;
+		Gtk::ImageMenuItem *m_imagemenuitemNext;
+		Gtk::ImageMenuItem *m_imagemenuitemRefresh;
+		Gtk::ImageMenuItem *m_imagemenuitemAbout;
 		
 		Gtk::ScrolledWindow *m_scrolledwindowPlaylists;
 		Gtk::ScrolledWindow *m_scrolledwindowCurrentPlaylist;
 		Gtk::Paned *m_panedBody;
 		Gtk::Statusbar *m_statusbar1;
 		
-		Xmms::Client xmms2_client;
-		Xmms::Client xmms2_sync_client;
+		Xmms::Client *xmms2_client;
+		Xmms::Client *xmms2_sync_client;
 		Glib::RefPtr<Gtk::TextTag> m_ref_bold_tag;
+		Glib::RefPtr<Gtk::Action> m_action_PlayPause;
+		Glib::RefPtr<Gtk::Action> m_action_Connection;
+		//Glib::RefPtr<Gtk::ActionGroup> m_refActionGroupPlayBack;
 		int connect_cout;
 		unsigned m_connect_retrys;
 		std::string m_currentPlaylistName;
@@ -111,15 +122,17 @@ class Main_win: public Gtk::Window
 		bool m_setting_volume_right;
 		bool m_setting_volume_master;
 		double m_duration;
+		bool m_dont_disconect;
+		bool m_auto_connect;
 
 		// thread stuff //
 		Glib::Threads::Mutex m_mutex;
-		Glib::Threads::Cond m_cond_push;
-		Glib::Threads::Cond m_cond_pop;
+		Glib::Threads::Cond m_cond_disconnect;
+		//Glib::Threads::Cond m_cond_pop;
 		// note message is missspelt as mesage I'm //
 		// not fixing this error now  too much bother. //
 		std::queue<basemesage*> m_queue;
-		Glib::Threads::Thread * m_sync_thread;
+		Glib::Threads::Thread *m_sync_thread;
 
 		// timer connection //
 		sigc::connection m_conn;
@@ -138,7 +151,8 @@ class Main_win: public Gtk::Window
 		void on_button_Exit();
 		void on_button_NewPlayList();
 		void on_button_NewCollection();
-		void on_button_Help();
+		void on_imagemenuitem_Refresh();
+		void on_button_About();
 
 		// VolumeButton signal handler //
 		void on_button_VolumeLeftChange(double value);
@@ -170,6 +184,8 @@ class Main_win: public Gtk::Window
 		void on_Playlist_dblclicked(int id);
 		std::vector<Xmms::Dict> on_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby);
 		void update_labels(const Xmms::PropDict &info);
+		void disconnect();
+		std::string Urlencode(std::string url);
 };
 
 #endif // _MAINWIN_H_

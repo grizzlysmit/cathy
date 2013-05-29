@@ -47,6 +47,10 @@ class DialogNewPlaylist : public Gtk::Dialog
 		void set_collections(std::vector<Glib::ustring> colls);
 		std::vector<Glib::ustring> get_order();
 		RadioSelected get_radio_selected();
+		Glib::ustring get_playlist_name();
+		Glib::ustring get_filename();
+		Glib::ustring get_url();
+		Glib::ustring get_collection_name();
 		bool get_addrecursive();
 
 		type_signal_coll_changed signal_coll_changed();

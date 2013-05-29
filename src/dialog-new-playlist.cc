@@ -488,6 +488,27 @@ bool DialogNewPlaylist::get_addrecursive()
 	return m_addrecursive;
 }
 
+Glib::ustring DialogNewPlaylist::get_playlist_name()
+{
+	return m_entryNewPlayList->get_text();
+}
+
+Glib::ustring DialogNewPlaylist::get_filename()
+{
+	return m_filechooserbutton1->get_filename();
+}
+
+Glib::ustring DialogNewPlaylist::get_url()
+{
+	return m_entryUrl->get_text();
+}
+
+Glib::ustring DialogNewPlaylist::get_collection_name()
+{
+	return m_comboboxtextCollection->get_active_text();
+}
+
+
 
 
 

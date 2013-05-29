@@ -29,19 +29,22 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
   : Gtk::Window(cobject), m_builder(builder), m_buttonConnect(0), m_buttonPrevious(0),
     m_buttonRewind(0), m_buttonStop(0), m_buttonPlayPause(0), m_buttonForward(0), 
     m_buttonNext(0), m_buttonDelete(0), m_buttonNewPlayList(0), m_buttonNewCollection(0), 
-    m_buttonExit(0), m_buttonHelp(0), 
+    m_buttonExit(0), m_buttonAbout(0), 
     m_volumebuttonMaster(0), m_volumebuttonLeft(0), m_volumebuttonRight(0), m_progressbar1(0), 
     m_labelPlayed(0), m_labelLeft(0), m_labelTitle(0), m_labelArtist(0), m_labelAlbum(0), 
     m_labelDuration(0), 
     m_aboutdialog1(0), m_dialogNewPlaylist(0), 
     m_listviewformatTextPlaylists(0), m_MatrixBoxCurrentPlaylist(0), m_imagemenuitemQuit(0), 
     m_imagemenuitemConnect(0), m_imagemenuitemNewPlayList(0), m_imagemenuitemNewCollection(0), 
+    m_imagemenuitemPlayPause(0), m_imagemenuitemPrevious(0), m_imagemenuitemRewind(0), 
+    m_imagemenuitemStop(0), m_imagemenuitemForward(0), m_imagemenuitemNext(0), 
+    m_imagemenuitemRefresh(0), m_imagemenuitemAbout(0), 
     m_scrolledwindowPlaylists(0), m_scrolledwindowCurrentPlaylist(0), m_panedBody(0), 
     m_statusbar1(0), 
     //m_eventboxPlaylists(0), m_eventboxCurrentPlaylist(0), 
-    xmms2_client("cathy"), xmms2_sync_client("cathy_sync"), connect_cout(0), 
+    xmms2_client(0), xmms2_sync_client(0), connect_cout(0), 
     m_connect_retrys(2), m_setting_volume_left(false), m_setting_volume_right(false), 
-    m_setting_volume_master(false), m_duration(0)
+    m_setting_volume_master(false), m_duration(0), m_auto_connect(true)
 {
 	m_status = Xmms::Playback::STOPPED;
 
@@ -92,9 +95,9 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	if(m_buttonExit){
 		m_buttonExit->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_Exit) );
 	}
-	m_builder->get_widget("buttonHelp", m_buttonHelp);
-	if(m_buttonHelp){
-		m_buttonHelp->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_Help) );
+	m_builder->get_widget("buttonAbout", m_buttonAbout);
+	if(m_buttonAbout){
+		m_buttonAbout->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_About) );
 	}
 
 	// volume control  //
@@ -152,7 +155,16 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	}
 	m_builder->get_widget("imagemenuitemConnect", m_imagemenuitemConnect);
 	if(m_imagemenuitemConnect){
+		m_action_Connection = Gtk::Action::create("actionConnection", Gtk::Stock::CONNECT, "Connect", "Connect to xmms2d");
+		if(m_action_Connection){
+			m_imagemenuitemConnect->do_set_related_action(m_action_Connection);
+			//m_action_Connection->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Connect) );
+			m_action_Connection->set_always_show_image(true);
+			m_imagemenuitemConnect->set_use_action_appearance(true);
+			m_imagemenuitemConnect->set_always_show_image(true);
+		}
 		m_imagemenuitemConnect->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Connect) );
+		m_imagemenuitemConnect->set_use_stock(true);
 	}
 	m_builder->get_widget("imagemenuitemNewPlayList", m_imagemenuitemNewPlayList);
 	if(m_imagemenuitemNewPlayList){
@@ -162,6 +174,58 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	m_builder->get_widget("imagemenuitemNewCollection", m_imagemenuitemNewCollection);
 	if(m_imagemenuitemNewCollection){
 		m_imagemenuitemNewCollection->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_NewCollection) );
+	}
+	// m_imagemenuitemPlayPause //
+	m_builder->get_widget("imagemenuitemPlayPause", m_imagemenuitemPlayPause);
+	if(m_imagemenuitemPlayPause){
+		// m_action_PlayPause //
+		//m_refActionGroupPlayBack = Gtk::ActionGroup::create();
+		m_action_PlayPause = Gtk::Action::create("actionPlayPause", Gtk::Stock::MEDIA_PLAY, "Play", "Play current Track");
+		if(m_action_PlayPause){
+			m_imagemenuitemPlayPause->do_set_related_action(m_action_PlayPause);
+			//m_action_PlayPause->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_PlayPause) );
+			m_action_PlayPause->set_always_show_image(true);
+			m_imagemenuitemPlayPause->set_use_action_appearance(true);
+			m_imagemenuitemPlayPause->set_always_show_image(true);
+			//m_refActionGroupPlayBack->add(m_action_PlayPause, sigc::mem_fun(*this, &Main_win::on_button_PlayPause) );
+		}
+		m_imagemenuitemPlayPause->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_PlayPause) );
+		m_imagemenuitemPlayPause->set_use_stock(true);
+	}
+	// m_imagemenuitemPrevious //
+	m_builder->get_widget("imagemenuitemPrevious", m_imagemenuitemPrevious);
+	if(m_imagemenuitemPrevious){
+		m_imagemenuitemPrevious->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Previous) );
+	}
+	// m_imagemenuitemRewind //
+	m_builder->get_widget("imagemenuitemRewind", m_imagemenuitemRewind);
+	if(m_imagemenuitemRewind){
+		m_imagemenuitemRewind->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Rewind) );
+	}
+	// m_imagemenuitemStop //
+	m_builder->get_widget("imagemenuitemStop", m_imagemenuitemStop);
+	if(m_imagemenuitemStop){
+		m_imagemenuitemStop->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Stop) );
+	}
+    // m_imagemenuitemForward //
+	m_builder->get_widget("imagemenuitemForward", m_imagemenuitemForward);
+	if(m_imagemenuitemForward){
+		m_imagemenuitemForward->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Forward) );
+	}
+	// m_imagemenuitemNext //
+	m_builder->get_widget("imagemenuitemNext", m_imagemenuitemNext);
+	if(m_imagemenuitemNext){
+		m_imagemenuitemNext->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_Next) );
+	}
+	// m_imagemenuitemRefresh //
+	m_builder->get_widget("imagemenuitemRefresh", m_imagemenuitemRefresh);
+	if(m_imagemenuitemRefresh){
+		m_imagemenuitemRefresh->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_imagemenuitem_Refresh) );
+	}
+	// m_imagemenuitemAbout //
+	m_builder->get_widget("imagemenuitemAbout", m_imagemenuitemAbout);
+	if(m_imagemenuitemAbout){
+		m_imagemenuitemAbout->signal_activate().connect( sigc::mem_fun(*this, &Main_win::on_button_About) );
 	}
 
 
@@ -227,6 +291,30 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	if(m_dialogNewPlaylist){
 		m_dialogNewPlaylist->signal_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_coll_changed) );
 	}
+
+	// set buttons to non-interactive state at sart //
+	m_buttonPrevious->set_sensitive(false);
+	m_buttonRewind->set_sensitive(false);
+	m_buttonStop->set_sensitive(false);
+	m_buttonPlayPause->set_sensitive(false);
+	m_buttonForward->set_sensitive(false);
+	m_buttonNext->set_sensitive(false);
+	m_buttonDelete->set_sensitive(false);
+	m_buttonNewPlayList->set_sensitive(false);
+	m_buttonNewCollection->set_sensitive(false);
+	m_volumebuttonMaster->set_sensitive(false);
+	m_volumebuttonLeft->set_sensitive(false);
+	m_volumebuttonRight->set_sensitive(false);
+	m_imagemenuitemNewPlayList->set_sensitive(false);
+	m_imagemenuitemNewCollection->set_sensitive(false);
+	m_imagemenuitemPlayPause->set_sensitive(false);
+	m_imagemenuitemPrevious->set_sensitive(false);
+	m_imagemenuitemRewind->set_sensitive(false);
+	m_imagemenuitemStop->set_sensitive(false);
+	m_imagemenuitemForward->set_sensitive(false);
+	m_imagemenuitemNext->set_sensitive(false);
+	m_imagemenuitemRefresh->set_sensitive(false);
+	if(m_auto_connect) on_button_Connect();
 }
 
 Main_win::~Main_win(){
@@ -234,19 +322,30 @@ Main_win::~Main_win(){
 	delete m_MatrixBoxCurrentPlaylist;
 	delete m_scrolledwindowPlaylists;
 	delete m_scrolledwindowCurrentPlaylist;
+	if(xmms2_client) delete xmms2_client;
+	if(xmms2_sync_client){ 
+		if(xmms2_sync_client->getMainLoop().isRunning()) xmms2_sync_client->getMainLoop().~MainloopInterface();
+		delete xmms2_sync_client;
+	}
 }
 
 
 void Main_win::on_button_Connect()
 {
 	std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
+	if(xmms2_client && xmms2_client->isConnected()){
+		disconnect();
+		return;
+	}
+	m_dont_disconect = true;
     for(int i = 0; i < m_connect_retrys;i++){
 		std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
 		try{
-			xmms2_client.connect( std::getenv("XMMS_PATH") );
+			xmms2_client = new Xmms::Client("cathy");
+			xmms2_client->connect( std::getenv("XMMS_PATH") );
 			m_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this, &Main_win::on_timeout), 100);
-			if(xmms2_client.playback.getStatus() == Xmms::Playback::PLAYING){
-				Xmms::Dict d = xmms2_client.playback.volumeGet();
+			if(xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
+				Xmms::Dict d = xmms2_client->playback.volumeGet();
 				std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
 				if(d.contains("master")){
 					m_setting_volume_master = true;
@@ -272,9 +371,9 @@ void Main_win::on_button_Connect()
 					m_setting_volume_right = false;
 				}
 				std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
-				unsigned tme = xmms2_client.playback.getPlaytime();
-				int id = xmms2_client.playback.currentID();
-				Xmms::PropDict info = xmms2_client.medialib.getInfo( id );
+				unsigned tme = xmms2_client->playback.getPlaytime();
+				int id = xmms2_client->playback.currentID();
+				Xmms::PropDict info = xmms2_client->medialib.getInfo( id );
 				if(info.contains("duration")){
 					m_duration = boost::get< int >( info["duration"] );
 					m_progressbar1->set_fraction(tme/m_duration);
@@ -286,7 +385,11 @@ void Main_win::on_button_Connect()
 			
 			// thread stuff //
 			m_sync_thread = Glib::Threads::Thread::create(sigc::mem_fun(this, &Main_win::run_sync));
-			
+
+			m_buttonConnect->set_label("gtk-disconnect");
+			m_buttonConnect->set_tooltip_markup("<i><b>Disconnect</b> from <b>xmms2d</b></i>");
+			m_action_Connection->set_stock_id(Gtk::Stock::DISCONNECT);
+			m_action_Connection->set_label("Disconnect");
 			std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
 			refresh_playlists();
 			std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
@@ -294,7 +397,30 @@ void Main_win::on_button_Connect()
 			std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
 			
 			m_statusbar1->push("Cathy is connected to xmms2d", m_ContextId);
-
+			
+			// need to make the buttons/menues work now that we're connected //
+			m_buttonPrevious->set_sensitive(true);
+			m_buttonRewind->set_sensitive(true);
+			m_buttonStop->set_sensitive(true);
+			m_buttonPlayPause->set_sensitive(true);
+			m_buttonForward->set_sensitive(true);
+			m_buttonNext->set_sensitive(true);
+			m_buttonDelete->set_sensitive(true);
+			m_buttonNewPlayList->set_sensitive(true);
+			m_buttonNewCollection->set_sensitive(true);
+			m_volumebuttonMaster->set_sensitive(true);
+			m_volumebuttonLeft->set_sensitive(true);
+			m_volumebuttonRight->set_sensitive(true);
+			m_imagemenuitemNewPlayList->set_sensitive(true);
+			m_imagemenuitemNewCollection->set_sensitive(true);
+			m_imagemenuitemPlayPause->set_sensitive(true);
+			m_imagemenuitemPrevious->set_sensitive(true);
+			m_imagemenuitemRewind->set_sensitive(true);
+			m_imagemenuitemStop->set_sensitive(true);
+			m_imagemenuitemForward->set_sensitive(true);
+			m_imagemenuitemNext->set_sensitive(true);
+			m_imagemenuitemRefresh->set_sensitive(true);
+			
 			std::cout << "connect count == " << ++connect_cout << std::endl;
 			break;
 		}
@@ -305,28 +431,60 @@ void Main_win::on_button_Connect()
 	}
 }
 
+void Main_win::disconnect()
+{
+	std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
+	Glib::Threads::Mutex::Lock lock (m_mutex);
+	m_dont_disconect = false;
+	xmms2_sync_client->getMainLoop().~MainloopInterface();
+	//delete m_sync_thread;
+	//std::cout << __FILE__ << '[' << __LINE__ << "] delete m_sync_thread" << std::endl;
+/*	while(xmms2_sync_client->isConnected()){
+		m_cond_disconnect.wait(m_mutex);
+	}*/
+	std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
+	m_sync_thread->join();
+	std::cout << __FILE__ << '[' << __LINE__ << "] m_sync_thread->join()" << std::endl;
+	delete xmms2_client;
+	std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_client" << std::endl;
+	delete xmms2_sync_client;
+	std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_sync_client" << std::endl;
+	xmms2_client = 0;
+	xmms2_sync_client = 0;
+	try{
+		basemesage *msg = new mesage<int>(basemesage::disconnect, 0);
+		m_queue.push(msg);
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in handle_disconnect: " 
+			<< e.what() << std::endl;
+	}
+	std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
+}
+
 void Main_win::run_sync()
 {
+    xmms2_sync_client = new Xmms::Client("cathy_sync");
+	xmms2_sync_client->connect(std::getenv("XMMS_PATH"));
+	xmms2_sync_client->playback.getStatus()(Xmms::bind(&Main_win::handle_status, this));
+	xmms2_sync_client->playback.broadcastStatus()(Xmms::bind(&Main_win::handle_status, this));
 
-	xmms2_sync_client.connect(std::getenv("XMMS_PATH"));
-	xmms2_sync_client.playback.getStatus()(Xmms::bind(&Main_win::handle_status, this));
-	xmms2_sync_client.playback.broadcastStatus()(Xmms::bind(&Main_win::handle_status, this));
+	xmms2_sync_client->setDisconnectCallback(boost::bind(&Main_win::handle_disconnect, this));
+	m_status = xmms2_sync_client->playback.getStatus();
+	xmms2_sync_client->playlist.broadcastChanged()(Xmms::bind(&Main_win::handle_change, this));
+	xmms2_sync_client->playlist.broadcastCurrentPos()(Xmms::bind(&Main_win::handle_update_pos, this));
 
-	xmms2_sync_client.setDisconnectCallback(boost::bind(&Main_win::handle_disconnect, this));
-	m_status = xmms2_sync_client.playback.getStatus();
-	xmms2_sync_client.playlist.broadcastChanged()(Xmms::bind(&Main_win::handle_change, this));
-	xmms2_sync_client.playlist.broadcastCurrentPos()(Xmms::bind(&Main_win::handle_update_pos, this));
-
-	xmms2_sync_client.playlist.broadcastLoaded()(Xmms::bind(&Main_win::handle_pls_loaded, this));
-	xmms2_sync_client.playback.broadcastCurrentID()(Xmms::bind(&Main_win::handle_current_id, this));
-	xmms2_sync_client.playback.currentID()(Xmms::bind(&Main_win::handle_current_id, this));
-	xmms2_sync_client.playback.broadcastVolumeChanged()(Xmms::bind (&Main_win::handle_volume, this));
-	xmms2_sync_client.playback.signalPlaytime()(Xmms::bind(&Main_win::handle_playtime, this));
-	xmms2_sync_client.playback.getPlaytime()(Xmms::bind(&Main_win::handle_playtime, this));
-	xmms2_sync_client.medialib.broadcastEntryChanged()(Xmms::bind(&Main_win::handle_mlib_entry_changed, this));
-	for(int i = 0; i < 10; i++){
+	xmms2_sync_client->playlist.broadcastLoaded()(Xmms::bind(&Main_win::handle_pls_loaded, this));
+	xmms2_sync_client->playback.broadcastCurrentID()(Xmms::bind(&Main_win::handle_current_id, this));
+	xmms2_sync_client->playback.currentID()(Xmms::bind(&Main_win::handle_current_id, this));
+	xmms2_sync_client->playback.broadcastVolumeChanged()(Xmms::bind (&Main_win::handle_volume, this));
+	xmms2_sync_client->playback.signalPlaytime()(Xmms::bind(&Main_win::handle_playtime, this));
+	xmms2_sync_client->playback.getPlaytime()(Xmms::bind(&Main_win::handle_playtime, this));
+	xmms2_sync_client->medialib.broadcastEntryChanged()(Xmms::bind(&Main_win::handle_mlib_entry_changed, this));
+	for(int i = 0; m_dont_disconect && i < 10; i++){
 		try{
-			xmms2_sync_client.getMainLoop().run();
+			xmms2_sync_client->getMainLoop().run();
 		}
 		catch(std::exception &e){
 			std::cout << __FILE__ << "[" << __LINE__ 
@@ -341,13 +499,13 @@ bool Main_win::on_timeout()
 	// code goes here //
 	try{
 		Glib::Threads::Mutex::Lock lock(m_mutex);
-		if(m_duration <= 0 && xmms2_client.playback.getStatus() == Xmms::Playback::PLAYING){
+		if(m_duration <= 0 && xmms2_client && xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
 			std::cout << __FILE__ << '[' << __LINE__ 
-				<< "] m_duration <= 0 && xmms2_client.playback.getStatus()"
+				<< "] m_duration <= 0 && xmms2_client->playback.getStatus()"
 				<< " == Xmms::Playback::PLAYING; m_duration == " 
 				<< m_duration << std::endl;
-			int id = xmms2_client.playback.currentID();
-			Xmms::PropDict info = xmms2_client.medialib.getInfo( id );
+			int id = xmms2_client->playback.currentID();
+			Xmms::PropDict info = xmms2_client->medialib.getInfo( id );
 			update_labels(info);
 		}
 		if(m_queue.empty()) return true; // nothing to do //
@@ -356,7 +514,34 @@ bool Main_win::on_timeout()
 			switch(msg->get_message_type()){
 				case(basemesage::disconnect):
 					m_statusbar1->push("Cathy is disconnected from xmms2d", m_ContextId);
-					//on_button_Connect();
+					m_buttonConnect->set_label("gtk-connect");
+					m_buttonConnect->set_tooltip_markup("<i><b>Connect</b> to <b>xmms2d</b></i>");
+					m_action_Connection->set_stock_id(Gtk::Stock::CONNECT);
+					m_action_Connection->set_label("Connect");
+
+					// make buttons that require Xmms::Client's non-interactive till we connect again //
+					m_buttonPrevious->set_sensitive(false);
+					m_buttonRewind->set_sensitive(false);
+					m_buttonStop->set_sensitive(false);
+					m_buttonPlayPause->set_sensitive(false);
+					m_buttonForward->set_sensitive(false);
+					m_buttonNext->set_sensitive(false);
+					m_buttonDelete->set_sensitive(false);
+					m_buttonNewPlayList->set_sensitive(false);
+					m_buttonNewCollection->set_sensitive(false);
+					m_volumebuttonMaster->set_sensitive(false);
+					m_volumebuttonLeft->set_sensitive(false);
+					m_volumebuttonRight->set_sensitive(false);
+					m_imagemenuitemNewPlayList->set_sensitive(false);
+					m_imagemenuitemNewCollection->set_sensitive(false);
+					m_imagemenuitemPlayPause->set_sensitive(false);
+					m_imagemenuitemPrevious->set_sensitive(false);
+					m_imagemenuitemRewind->set_sensitive(false);
+					m_imagemenuitemStop->set_sensitive(false);
+					m_imagemenuitemForward->set_sensitive(false);
+					m_imagemenuitemNext->set_sensitive(false);
+					m_imagemenuitemRefresh->set_sensitive(false);
+					//on_button_Connect(); // auto reconnect not a good idea could start a infinite loop //
 					break;
 				case(basemesage::status):
 				{
@@ -383,14 +568,31 @@ bool Main_win::on_timeout()
 					if (st == Xmms::Playback::STOPPED ||
 					    st == Xmms::Playback::PAUSED){
 						m_buttonPlayPause->set_label("gtk-media-play");
+						m_buttonPlayPause->set_tooltip_markup("<b>Play</b> current track");
+						//m_imagemenuitemPlayPause->set_use_stock(true);
+						//m_imagemenuitemPlayPause->set_label("gtk-media-play");
+						//m_imagemenuitemPlayPause->set_use_stock(true);
+						m_imagemenuitemPlayPause->set_tooltip_markup("<b>Play</b> current track");
+						m_action_PlayPause->set_stock_id(Gtk::Stock::MEDIA_PLAY);
+						m_action_PlayPause->set_label("Play");
+						m_action_PlayPause->set_tooltip("<b>Play</b> current track");
 					}else{
+						if(!xmms2_client) break;
 						m_buttonPlayPause->set_label("gtk-media-pause");
+						m_buttonPlayPause->set_tooltip_markup("<b>Pause</b> current track");
+						//m_imagemenuitemPlayPause->set_use_stock(true);
+						//m_imagemenuitemPlayPause->set_label("gtk-media-pause");
+						//m_imagemenuitemPlayPause->set_use_stock(true);
+						m_imagemenuitemPlayPause->set_tooltip_markup("<b>Pause</b> current track");
+						m_action_PlayPause->set_stock_id(Gtk::Stock::MEDIA_PAUSE);
+						m_action_PlayPause->set_label("Pause");
+						m_action_PlayPause->set_tooltip("<b>Pause</b> current track");
 						std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
-						Xmms::Dict d = xmms2_client.playback.volumeGet();
+						Xmms::Dict d = xmms2_client->playback.volumeGet();
 						std::cout << __FILE__ << '[' << __LINE__ 
 							<< "]  m_duration == " << m_duration << std::endl;
-						int id = xmms2_client.playback.currentID();
-						Xmms::PropDict info = xmms2_client.medialib.getInfo( id );
+						int id = xmms2_client->playback.currentID();
+						Xmms::PropDict info = xmms2_client->medialib.getInfo( id );
 						update_labels(info);
 						if(d.contains("left")){
 							m_setting_volume_left = true;
@@ -416,7 +618,7 @@ bool Main_win::on_timeout()
 							m_setting_volume_master = false;
 						}
 						std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
-						//xmms2_sync_client.playback.broadcastVolumeChanged()(Xmms::bind (&Main_win::handle_volume, this));
+						//xmms2_sync_client->playback.broadcastVolumeChanged()(Xmms::bind (&Main_win::handle_volume, this));
 						// TODO: code for monitoring song play //
 					}
 					break;
@@ -441,6 +643,7 @@ bool Main_win::on_timeout()
 						delete msg;
 						return true;
 					}
+					if(!xmms2_client) break;
 					int32_t pos = 0, npos = 0;
 					uint32_t id = 0;
 					Glib::ustring s;
@@ -451,8 +654,8 @@ bool Main_win::on_timeout()
 
 					if(chg.contains("id")){
 						id = chg.get<int32_t>("id");
-						//int id = xmms2_client.playback.currentID();
-						Xmms::PropDict info = xmms2_client.medialib.getInfo( id );
+						//int id = xmms2_client->playback.currentID();
+						Xmms::PropDict info = xmms2_client->medialib.getInfo( id );
 						update_labels(info);
 					}
 					std::cout << __FILE__ << '[' << __LINE__ << "] id == " << id << std::endl;
@@ -497,8 +700,8 @@ bool Main_win::on_timeout()
 						case XMMS_PLAYLIST_CHANGED_CLEAR:
 							std::cout << __FILE__ << '[' << __LINE__ << "] XMMS_PLAYLIST_CHANGED_SHUFFLE id == " << id << std::endl;
 							refresh_playlist();
-							if(xmms2_client.playback.getStatus() == Xmms::Playback::PLAYING){
-								xmms2_sync_client.playlist.listEntries(m_currentPlaylistName)(Xmms::bind(&Main_win::handle_list, this));
+							if(xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
+								xmms2_sync_client->playlist.listEntries(m_currentPlaylistName)(Xmms::bind(&Main_win::handle_list, this));
 							}
 							break;
 					}
@@ -523,13 +726,14 @@ bool Main_win::on_timeout()
 						delete msg;
 						return true;
 					}
+					if(!xmms2_client) break;
 					if(changed_pl == m_currentPlaylistName){
 						int32_t pos = posdict.get<int32_t>("position");
 						//m_current_pos = pos;
 						refresh_playlist();
 					}
-					/*				int id = xmms2_client.playback.currentID();
-					Xmms::PropDict info = xmms2_client.medialib.getInfo( id );
+					/*				int id = xmms2_client->playback.currentID();
+					Xmms::PropDict info = xmms2_client->medialib.getInfo( id );
 					update_labels(info);*/
 					break;
 				}
@@ -549,8 +753,8 @@ bool Main_win::on_timeout()
 						delete msg;
 						return true;
 					}
-					if(name == m_currentPlaylistName && xmms2_client.playback.getStatus() == Xmms::Playback::PLAYING){
-						xmms2_sync_client.playlist.listEntries(name)(Xmms::bind (&Main_win::handle_list, this));
+					if(xmms2_client && name == m_currentPlaylistName && xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
+						xmms2_sync_client->playlist.listEntries(name)(Xmms::bind (&Main_win::handle_list, this));
 
 						refresh_playlist();
 					}
@@ -575,6 +779,7 @@ bool Main_win::on_timeout()
 						delete msg;
 						return true;
 					}
+					if(!xmms2_client) break;
 					std::cout << __FILE__ << "[" << __LINE__ << "] got here case(basemesage::list): " << std::endl;
 					refresh_playlist();
 					std::cout << __FILE__ << "[" << __LINE__ << "] got here case(basemesage::list): " << std::endl;
@@ -803,15 +1008,16 @@ void Main_win::handle_disconnect()
 
 void Main_win::on_button_Previous()
 {
+	if(!xmms2_client) return;
 	try{
-		m_status = xmms2_client.playback.getStatus();
+		m_status = xmms2_client->playback.getStatus();
 		if(m_status == Xmms::Playback::PLAYING ||
 		   m_status == Xmms::Playback::PAUSED){
-			xmms2_client.playback.stop();
-			xmms2_client.playlist.setNextRel(-1);
-			xmms2_client.playback.start();
+			xmms2_client->playback.stop();
+			xmms2_client->playlist.setNextRel(-1);
+			xmms2_client->playback.start();
 		}else{
-			xmms2_client.playlist.setNextRel(-1);
+			xmms2_client->playlist.setNextRel(-1);
 		}
 		//refresh_playlist(); taken care off by xmms2_sync_client's callbacks //
 	}
@@ -824,20 +1030,21 @@ void Main_win::on_button_Previous()
 
 void Main_win::on_button_Rewind()
 {
+	if(!xmms2_client) return;
 	try{
 		std::cout << __FILE__ << "[" << __LINE__ << "] got here on_button_Rewind()" << std::endl;
-		m_status = xmms2_client.playback.getStatus();
+		m_status = xmms2_client->playback.getStatus();
 		if(m_status == Xmms::Playback::PLAYING ||
 		   m_status == Xmms::Playback::PAUSED){
-			//unsigned p = xmms2_client.playback.getPlaytime();
-			//xmms2_client.playback.stop();
-			//xmms2_client.playback.seekMs(p - 10000);
-			xmms2_client.playback.seekSamplesRel(-10000);
-			//xmms2_client.playback.start();
+			//unsigned p = xmms2_client->playback.getPlaytime();
+			//xmms2_client->playback.stop();
+			//xmms2_client->playback.seekMs(p - 10000);
+			xmms2_client->playback.seekSamplesRel(-10000);
+			//xmms2_client->playback.start();
 		}else{
-			//unsigned p = xmms2_client.playback.getPlaytime();
-			//xmms2_client.playback.seekMs(p - 10000);
-			xmms2_client.playback.seekSamplesRel(-10000);
+			//unsigned p = xmms2_client->playback.getPlaytime();
+			//xmms2_client->playback.seekMs(p - 10000);
+			xmms2_client->playback.seekSamplesRel(-10000);
 		}
 	}
 	catch(std::exception &e){
@@ -849,8 +1056,9 @@ void Main_win::on_button_Rewind()
 
 void Main_win::on_button_Stop()
 {
+	if(!xmms2_client) return;
 	try{
-		xmms2_client.playback.stop();
+		xmms2_client->playback.stop();
 	}
 	catch(std::exception &e){
 		std::cout << __FILE__ << "[" << __LINE__ 
@@ -861,12 +1069,13 @@ void Main_win::on_button_Stop()
 
 void Main_win::on_button_PlayPause()
 {
+	if(!xmms2_client) return;
 	try{
-		m_status = xmms2_client.playback.getStatus();
+		m_status = xmms2_client->playback.getStatus();
 		if(m_status == Xmms::Playback::PLAYING){
-			xmms2_client.playback.pause();
+			xmms2_client->playback.pause();
 		}else{
-			xmms2_client.playback.start();
+			xmms2_client->playback.start();
 		}
 	}
 	catch(std::exception &e){
@@ -878,20 +1087,21 @@ void Main_win::on_button_PlayPause()
 
 void Main_win::on_button_Forward()
 {
+	if(!xmms2_client) return;
 	try{
 		std::cout << __FILE__ << "[" << __LINE__ << "] got here on_button_Forward()" << std::endl;
-		m_status = xmms2_client.playback.getStatus();
+		m_status = xmms2_client->playback.getStatus();
 		if(m_status == Xmms::Playback::PLAYING ||
 		   m_status == Xmms::Playback::PAUSED){
-			//unsigned p = xmms2_client.playback.getPlaytime();
-			//xmms2_client.playback.stop();
-			//xmms2_client.playback.seekMs(p + 10000);
-			xmms2_client.playback.seekSamplesRel(10000);
-			//xmms2_client.playback.start();
+			//unsigned p = xmms2_client->playback.getPlaytime();
+			//xmms2_client->playback.stop();
+			//xmms2_client->playback.seekMs(p + 10000);
+			xmms2_client->playback.seekSamplesRel(10000);
+			//xmms2_client->playback.start();
 		}else{
-			//unsigned p = xmms2_client.playback.getPlaytime();
-			//xmms2_client.playback.seekMs(p + 10000);
-			xmms2_client.playback.seekSamplesRel(10000);
+			//unsigned p = xmms2_client->playback.getPlaytime();
+			//xmms2_client->playback.seekMs(p + 10000);
+			xmms2_client->playback.seekSamplesRel(10000);
 		}
 	}
 	catch(std::exception &e){
@@ -903,15 +1113,16 @@ void Main_win::on_button_Forward()
 
 void Main_win::on_button_Next()
 {
+	if(!xmms2_client) return;
 	try{
-		m_status = xmms2_client.playback.getStatus();
+		m_status = xmms2_client->playback.getStatus();
 		if(m_status == Xmms::Playback::PLAYING ||
 		   m_status == Xmms::Playback::PAUSED){
-			xmms2_client.playback.stop();
-			xmms2_client.playlist.setNextRel(1);
-			xmms2_client.playback.start();
+			xmms2_client->playback.stop();
+			xmms2_client->playlist.setNextRel(1);
+			xmms2_client->playback.start();
 		}else{
-			xmms2_client.playlist.setNextRel(1);
+			xmms2_client->playlist.setNextRel(1);
 		}
 		//refresh_playlist(); // taken care of in callbacks from xmms2_sync_client //
 	}
@@ -924,6 +1135,7 @@ void Main_win::on_button_Next()
 
 void Main_win::on_button_Delete()
 {
+	if(!xmms2_client) return;
 	Gtk::MessageDialog dialog(*this, "Delete PlayList <b>" + m_currentPlaylistName 
 	                                              + "?</b>\nThis cannot be undone!",
 	                          true /* use_markup */, Gtk::MESSAGE_QUESTION,
@@ -939,7 +1151,7 @@ void Main_win::on_button_Delete()
 		case(Gtk::RESPONSE_OK):
 		{
 			try{
-				xmms2_client.playlist.remove(m_currentPlaylistName);
+				xmms2_client->playlist.remove(m_currentPlaylistName);
 				//refresh_playlists(); // taken care of in callbacks from xmms2_sync_client //
 			}
 			catch(std::exception &e){
@@ -947,7 +1159,7 @@ void Main_win::on_button_Delete()
 				                          + "?</b>\nyour error message was <b><i>" + e.what() + "!</i></b>",
 				                          true /* use_markup */, Gtk::MESSAGE_ERROR,
 				                          Gtk::BUTTONS_OK);
-				std::string currentplst = xmms2_client.playlist.currentActive();
+				std::string currentplst = xmms2_client->playlist.currentActive();
 				if(currentplst == m_currentPlaylistName){
 					dialog.set_secondary_text("you cannot delete the currently "
 					                          "active playlist!!");
@@ -988,17 +1200,18 @@ bool Main_win::handle_status(const Xmms::Playback::Status &st)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 
 
 void Main_win::refresh_playlists(){
+	if(!xmms2_client) return;
 	try{
 		//std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
-		std::string currentplst = xmms2_client.playlist.currentActive();
-		//Xmms::List< std::string > lst = xmms2_client.collection.list("Playlists");
-		Xmms::List< std::string > lst = xmms2_client.collection.list(Xmms::Collection::PLAYLISTS);
+		std::string currentplst = xmms2_client->playlist.currentActive();
+		//Xmms::List< std::string > lst = xmms2_client->collection.list("Playlists");
+		Xmms::List< std::string > lst = xmms2_client->collection.list(Xmms::Collection::PLAYLISTS);
 
 
 		//Glib::RefPtr<Gtk::TextBuffer> buffer = m_listviewformatTextPlaylists->get_buffer();
@@ -1052,19 +1265,20 @@ void Main_win::on_button_Exit(){
 	hide();
 }
 
-void Main_win::on_button_Help(){
+void Main_win::on_button_About(){
 	int res = m_aboutdialog1->run();
 	m_aboutdialog1->hide();
 }
 
 void Main_win::on_button_VolumeLeftChange(double value)
 {
+	if(!xmms2_client) return;
 	std::cout << __FILE__ << "[" << __LINE__ << "] got here on_button_VolumeLeftChange: value " << value << std::endl;
 
 	//Glib::Threads::Mutex::Lock lock (m_mutex);
 	try{
 		if(!m_setting_volume_left){
-			xmms2_client.playback.volumeSet("left", round(value*100));
+			xmms2_client->playback.volumeSet("left", round(value*100));
 		}
 	}
 	catch(std::exception &e){
@@ -1076,12 +1290,13 @@ void Main_win::on_button_VolumeLeftChange(double value)
 
 void Main_win::on_button_VolumeRightChange(double value)
 {
+	if(!xmms2_client) return;
 	std::cout << __FILE__ << "[" << __LINE__ << "] got here on_button_VolumeRightChange: value " << value << std::endl;
 
 	//Glib::Threads::Mutex::Lock lock (m_mutex);
 	try{
 		if(!m_setting_volume_right){
-			xmms2_client.playback.volumeSet("right", round(value*100));
+			xmms2_client->playback.volumeSet("right", round(value*100));
 		}
 	}
 	catch(std::exception &e){
@@ -1093,12 +1308,13 @@ void Main_win::on_button_VolumeRightChange(double value)
 
 void Main_win::on_button_VolumeMasterChange(double value)
 {
+	if(!xmms2_client) return;
 	std::cout << __FILE__ << "[" << __LINE__ << "] got here on_button_VolumeMasterChange: value " << value << std::endl;
 
 	//Glib::Threads::Mutex::Lock lock (m_mutex);
 	try{
 		if(!m_setting_volume_master){
-			xmms2_client.playback.volumeSet("master", round(value*100));
+			xmms2_client->playback.volumeSet("master", round(value*100));
 		}
 	}
 	catch(std::exception &e){
@@ -1108,49 +1324,14 @@ void Main_win::on_button_VolumeMasterChange(double value)
 	}
 }
 
-/*bool Main_win::on_button_Pressed(GdkEventButton* event){
-	std::cout << "entering on_button_Pressed" << std::endl;
-	//Glib::RefPtr<Gtk::TextBuffer> buffer = m_listviewformatTextPlaylists->get_buffer();
-	if(event->type == GDK_2BUTTON_PRESS){ //double click //
-		std::cout << "double click: " << m_currentPlaylistName << std::endl;
-		return false;
-	}else if(event->type == GDK_BUTTON_PRESS){ // single click //
-		std::cout << __FILE__ << '[' << __LINE__ << "] m_connect_retrys == " 
-		                           << m_connect_retrys << std::endl;
-		for(int i = 0; i < m_connect_retrys;i++){
-			std::cout << "got here[" << __LINE__ << ']' << std::endl;
-			try{
-				xmms2_client.connect( std::getenv("XMMS_PATH") );
-				std::cout << "got here[" << __LINE__ << ']' << std::endl;
-				//refresh_playlists();
-				refresh_playlist();
-				std::cout << "connect count == " << ++connect_cout << std::endl;
-				break;
-			}
-			catch(std::exception &e){
-				std::cout << e.what() << std::endl;
-				system("/usr/bin/xmms2-launcher"); // force xmms2d to start //
-			}
-		}
-		std::cout << "single click: " << m_currentPlaylistName << std::endl;
-		
-		return false;
-	}else if(event->type == GDK_3BUTTON_PRESS){ // single click //
-		std::cout << "triple click: " << m_currentPlaylistName << std::endl;
-		return false;
-	}else if(event->type == GDK_BUTTON_RELEASE){
-		std::cout << "button release: " << m_currentPlaylistName << std::endl;
-		return true;
-	}
-	return false;
-}*/
 
 std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 {
-    try{
+	if(!xmms2_client) return std::vector<Glib::ustring>();
+	try{
 		std::vector<Glib::ustring> result;
 
-		Xmms::Dict info = xmms2_client.medialib.getInfo( id );
+		Xmms::Dict info = xmms2_client->medialib.getInfo( id );
 
 		std::string pre, post;
 		if(highlight == 1){ // bold //
@@ -1240,23 +1421,25 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 
 void Main_win::refresh_playlist()
 {
+	if(!xmms2_client) return;
 	try{
-		//std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
-		Xmms::List<int> list = xmms2_client.playlist.listEntries(m_currentPlaylistName);
-		//std::cout << __FILE__ << '[' << __LINE__ << "] list.size() == " << list.size() << std::endl;
+		std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
+		Xmms::List<int> list = xmms2_client->playlist.listEntries(m_currentPlaylistName);
+		std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 
 		m_MatrixBoxCurrentPlaylist->clear_items();
 
 		//if(list.size() == 0) return;
 		if(list.begin() == list.end()) return;
+		std::cout << __FILE__ << '[' << __LINE__ << "] should not get here on enpty list: m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 
-		Xmms::DictResult currentPos = xmms2_client.playlist.currentPos(m_currentPlaylistName);
+		Xmms::DictResult currentPos = xmms2_client->playlist.currentPos(m_currentPlaylistName);
 		Xmms::Dict d = currentPos;
 		std::string name = boost::get<std::string>(d["name"]);
 		//std::cout << __FILE__ << '[' << __LINE__ << "] name == " << name << std::endl;
 		int position = boost::get<int>(d["position"]);
 		//std::cout << __FILE__ << '[' << __LINE__ << "] position == " << position << std::endl;
-		std::string currentplst = xmms2_client.playlist.currentActive();
+		std::string currentplst = xmms2_client->playlist.currentActive();
 		/*std::string fred;
 		 std::cout << "debug >> " <<std::flush;
 		 std::cin >> fred;*/
@@ -1288,11 +1471,12 @@ void Main_win::refresh_playlist()
 
 void Main_win::on_Playlists_clicked(Glib::ustring cp)
 {
+	if(!xmms2_sync_client) return;
 	//Glib::Threads::Mutex::Lock lock (m_mutex);
     m_currentPlaylistName = cp;
 	std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 	try{
-		xmms2_sync_client.playlist.listEntries(m_currentPlaylistName)(Xmms::bind(&Main_win::handle_list, this));
+		xmms2_sync_client->playlist.listEntries(m_currentPlaylistName)(Xmms::bind(&Main_win::handle_list, this));
 		//refresh_playlist(); // taken care of in callbacks from xmms2_sync_client //
 	}
 	catch(Xmms::no_such_key_error& err){
@@ -1307,14 +1491,15 @@ void Main_win::on_Playlists_clicked(Glib::ustring cp)
 
 void Main_win::on_Playlists_dblclicked(Glib::ustring cp)
 {
+	if(!xmms2_client) return;
 	try{
 		//Glib::Threads::Mutex::Lock lock (m_mutex);
 		m_currentPlaylistName = cp;
 		std::cout << __FILE__ << '[' << __LINE__ << "] got here m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 		//refresh_playlist();
-		xmms2_client.playlist.load(m_currentPlaylistName);
-		xmms2_client.playback.stop();
-		xmms2_client.playback.start();
+		xmms2_client->playlist.load(m_currentPlaylistName);
+		xmms2_client->playback.stop();
+		xmms2_client->playback.start();
 		//refresh_playlists();
 		//refresh_playlist();
 	}
@@ -1333,13 +1518,14 @@ void Main_win::on_Playlist_clicked(int id)
 
 void Main_win::on_Playlist_dblclicked(int pos)
 {
+	if(!xmms2_client) return;
 	//Glib::Threads::Mutex::Lock lock (m_mutex);
 	try{
 		std::cout << __FILE__ << '[' << __LINE__ << "] got here pos == " << pos << std::endl;
-		xmms2_client.playlist.load(m_currentPlaylistName);
-		xmms2_client.playback.stop();
-		xmms2_client.playlist.setNext(pos);
-		xmms2_client.playback.start();
+		xmms2_client->playlist.load(m_currentPlaylistName);
+		xmms2_client->playback.stop();
+		xmms2_client->playlist.setNext(pos);
+		xmms2_client->playback.start();
 		//refresh_playlists();
 		//refresh_playlist();
 	}
@@ -1364,7 +1550,7 @@ bool Main_win::handle_change(const Xmms::Dict &chg)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 
@@ -1382,7 +1568,7 @@ bool Main_win::handle_update_pos(const Xmms::Dict &posdict)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 bool Main_win::handle_pls_loaded(const std::string &name)
@@ -1400,7 +1586,7 @@ bool Main_win::handle_pls_loaded(const std::string &name)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 bool Main_win::handle_list(const Xmms::List< int > &list)
@@ -1410,7 +1596,7 @@ bool Main_win::handle_list(const Xmms::List< int > &list)
 
 	if(list.begin() == list.end()){
 		std::cout << __FILE__ << '[' << __LINE__ << "] handle_list: exiting early list empty"  << std::endl;
-		return true;
+		return m_dont_disconect;
 	}
 	
 	try{
@@ -1424,7 +1610,7 @@ bool Main_win::handle_list(const Xmms::List< int > &list)
 	}
 	
 	std::cout << __FILE__ << '[' << __LINE__ << "] handle_list: exiting"  << std::endl;
-	return true;
+	return m_dont_disconect;
 }
 
 
@@ -1443,7 +1629,7 @@ bool Main_win::handle_current_id(const unsigned int &id)
 			<< e.what() << std::endl;
 	}
 	
-	return true;
+	return m_dont_disconect;
 }
 
 
@@ -1464,7 +1650,7 @@ bool Main_win::handle_volume(const Xmms::Dict &d)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 bool Main_win::handle_playtime(const unsigned int &tme)
@@ -1482,17 +1668,19 @@ bool Main_win::handle_playtime(const unsigned int &tme)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 bool Main_win::handle_mlib_entry_changed(const uint32_t &id)
 {
 	std::cout << __FILE__ << '[' << __LINE__ << "] handle_mlib_entry_changed: id == " << id << std::endl;
 
+	if(!xmms2_sync_client) return m_dont_disconect;
+	if(!xmms2_client) return m_dont_disconect;
 	Glib::Threads::Mutex::Lock lock(m_mutex);
 	try{
-		if(xmms2_client.playback.getStatus() == Xmms::Playback::PLAYING){
-			xmms2_sync_client.medialib.getInfo(id)(Xmms::bind(&Main_win::handle_medialib_info, this));
+		if(xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
+			xmms2_sync_client->medialib.getInfo(id)(Xmms::bind(&Main_win::handle_medialib_info, this));
 		}
 
 		basemesage *msg = new mesage<uint32_t>(basemesage::handle_mlib_entry_changed, id);
@@ -1504,7 +1692,7 @@ bool Main_win::handle_mlib_entry_changed(const uint32_t &id)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 bool Main_win::handle_medialib_info(const Xmms::PropDict &info)
@@ -1523,18 +1711,50 @@ bool Main_win::handle_medialib_info(const Xmms::PropDict &info)
 			<< e.what() << std::endl;
 	}
 
-	return true;
+	return m_dont_disconect;
 }
 
 void Main_win::on_button_NewPlayList()
 {
-	Xmms::List< std::string > lst = xmms2_client.collection.list(Xmms::Collection::COLLECTIONS);
+	if(!xmms2_client) return;
+	Xmms::List< std::string > lst = xmms2_client->collection.list(Xmms::Collection::COLLECTIONS);
 	std::vector<Glib::ustring> colls(lst.begin(), lst.end());
 	m_dialogNewPlaylist->set_collections(colls);
 	int res = m_dialogNewPlaylist->run();
 	m_dialogNewPlaylist->hide();
 	if(res){
 		std::cout << "Create palylist" << std::endl;
+		std::string playlist_name = m_dialogNewPlaylist->get_playlist_name();
+		switch(m_dialogNewPlaylist->get_radio_selected()){
+			case(DialogNewPlaylist::directory):
+			{
+				std::string filename = m_dialogNewPlaylist->get_filename();
+				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): filename == " << filename << std::endl;
+				if(filename[0] == '/'){
+					filename = "file://" + Urlencode(filename);
+				}
+				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): filename == " << filename << std::endl;
+				xmms2_client->playlist.create(playlist_name);
+				if(m_dialogNewPlaylist->get_addrecursive()){
+					xmms2_client->playlist.addRecursiveEncoded(filename, playlist_name);
+				}else{
+					xmms2_client->playlist.addUrlEncoded(filename, playlist_name);
+				}
+				break;
+			}
+			case(DialogNewPlaylist::url):
+			{
+				break;
+			}
+			case(DialogNewPlaylist::collection):
+			{
+				break;
+			}
+			default:
+			{
+				// TODO: handle this error cond should never get here //
+			}
+		}
 	}else{
 		std::cout << "New Playlist Canceled" << std::endl;
 	}
@@ -1543,12 +1763,14 @@ void Main_win::on_button_NewPlayList()
 void Main_win::on_button_NewCollection()
 {
 	std::cout << __FILE__ << '[' << __LINE__ << "] on_button_NewCollection" << std::endl;
+	if(!xmms2_client) return;
 }
 
 std::vector<Xmms::Dict> Main_win::on_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby)
 {
 	std::cout << __FILE__ << '[' << __LINE__ << "] on_coll_changed: collection_name == " << collection_name << std::endl;
-	Xmms::CollResult collresult = xmms2_client.collection.get(static_cast<std::string>(collection_name), Xmms::Collection::COLLECTIONS);
+	if(!xmms2_client) return std::vector<Xmms::Dict>();
+	Xmms::CollResult collresult = xmms2_client->collection.get(static_cast<std::string>(collection_name), Xmms::Collection::COLLECTIONS);
 	Xmms::CollPtr coll = static_cast<Xmms::CollPtr>(collresult);
 	std::cout << __FILE__ << '[' << __LINE__ << "] coll got: collection_name == " << collection_name << std::endl;
 	std::list<std::string> fetch;
@@ -1566,21 +1788,45 @@ std::vector<Xmms::Dict> Main_win::on_coll_changed(Glib::ustring collection_name,
 		//order.insert(order.end(), "duration");
 	}
 	std::cout << __FILE__ << '[' << __LINE__ << "] getting list: collection_name == " << collection_name << std::endl;
-	//Xmms::List<int> lst = xmms2_client.collection.queryIds(*coll);
-/*	Xmms::List<int> lst = xmms2_client.collection.queryIds(*coll, order);
+	//Xmms::List<int> lst = xmms2_client->collection.queryIds(*coll);
+/*	Xmms::List<int> lst = xmms2_client->collection.queryIds(*coll, order);
 	std::vector<Xmms::Dict> result;
 	std::cout << __FILE__ << '[' << __LINE__ << "] got list: collection_name == " << collection_name << std::endl;
 	for( Xmms::List<int>::const_iterator i(lst.begin()), i_end(lst.end()); i != i_end; ++i){
 		std::cout << __FILE__ << '[' << __LINE__ << "] *i == " << *i << std::endl;
-		Xmms::Dict info = xmms2_client.medialib.getInfo(*i);
+		Xmms::Dict info = xmms2_client->medialib.getInfo(*i);
 		result.insert(result.end(), info);
 		std::cout << __FILE__ << '[' << __LINE__ << "] result.size() == " << result.size() << std::endl;
 	}*/
 	std::cout << __FILE__ << '[' << __LINE__ << "] list got: collection_name == " << collection_name << std::endl;
-	Xmms::List<Xmms::Dict> lst = xmms2_client.collection.queryInfos(*coll, fetch, order);
+	Xmms::List<Xmms::Dict> lst = xmms2_client->collection.queryInfos(*coll, fetch, order);
 	std::cout << __FILE__ << '[' << __LINE__ << "] list got: collection_name == " << collection_name << std::endl;
 	std::vector<Xmms::Dict> result(lst.begin(), lst.end());
 	std::cout << __FILE__ << '[' << __LINE__ << "] result made: result.size() == " << result.size() << std::endl;
+	return result;
+}
+
+void Main_win::on_imagemenuitem_Refresh()
+{
+	if(!xmms2_client) return;
+	refresh_playlists();
+	refresh_playlist();
+}
+
+std::string Main_win::Urlencode(std::string url)
+{
+    std::string result, invalid = " \t%+:;&\"'@\\-.<>^_`{|}~";
+	size_t pos = url.find_first_of(invalid);
+	while(pos != std::string::npos){
+		if(pos) result += url.substr(0, pos);
+		int ch = url[pos];
+		url = url.substr(pos + 1);
+		boost::format bf("%%%02X");
+		bf % ch;
+		result += bf.str();
+		pos = url.find_first_of(invalid);
+	}
+	result += url;
 	return result;
 }
 
