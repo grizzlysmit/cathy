@@ -19,13 +19,40 @@
 
 #ifndef _DNC_H_
 #define _DNC_H_
+#include <gtkmm.h>
+#include <gtkmm/filefilter.h>
+#include <xmmsclient/xmmsclient++.h>
+#include <xmmsclient/xmmsclient++/list.h>
+#include <xmmsclient/xmmsclient++/coll.h>
 
-class DNC: public Gtk::Dailog 
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <cstdlib>
+#include <vector>
+#include "lvt.h"
+
+class DNC : public Gtk::Dialog 
 {
 	public:
+		DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
+		~DNC();
 
+		void set_big_hint(bool big_hint = true);
+		bool get_big_hint();
 	protected:
+		const Glib::RefPtr<Gtk::Builder>& m_builder;
 
+		Gtk::ScrolledWindow *m_scrolledwindowAvailbleKeys;
+		LVT *m_listviewtextAvailbleKeys;
+		Gtk::ScrolledWindow *m_scrolledwindowHelp;
+		LVT *m_listviewtextHelp;
+
+		bool m_big_hint;
+
+		void on_selection_changed_AvailableKeys();
+		void on_toolbutton_AddKey();
+		void set_help_hint();
 	private:
 		
 };

@@ -33,7 +33,7 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
     m_volumebuttonMaster(0), m_volumebuttonLeft(0), m_volumebuttonRight(0), m_progressbar1(0), 
     m_labelPlayed(0), m_labelLeft(0), m_labelTitle(0), m_labelArtist(0), m_labelAlbum(0), 
     m_labelDuration(0), 
-    m_aboutdialog1(0), m_dialogNewPlaylist(0), 
+    m_aboutdialog1(0), m_dialogNewPlaylist(0), m_dialogNewCollection(0), 
     m_listviewformatTextPlaylists(0), m_MatrixBoxCurrentPlaylist(0), m_imagemenuitemQuit(0), 
     m_imagemenuitemConnect(0), m_imagemenuitemNewPlayList(0), m_imagemenuitemNewCollection(0), 
     m_imagemenuitemPlayPause(0), m_imagemenuitemPrevious(0), m_imagemenuitemRewind(0), 
@@ -290,6 +290,11 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	m_builder->get_widget_derived("dialogNewPlaylist", m_dialogNewPlaylist);
 	if(m_dialogNewPlaylist){
 		m_dialogNewPlaylist->signal_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_coll_changed) );
+	}
+	// m_dialogNewCollection //
+	m_builder->get_widget_derived("dialogNewCollection", m_dialogNewCollection);
+	if(m_dialogNewCollection){
+		//m_dialogNewCollection->signal_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_coll_changed) );
 	}
 
 	// set buttons to non-interactive state at sart //
@@ -1801,6 +1806,14 @@ void Main_win::on_button_NewCollection()
 {
 	std::cout << __FILE__ << '[' << __LINE__ << "] on_button_NewCollection" << std::endl;
 	if(!xmms2_client) return;
+	// m_dialogNewCollection //
+	int res = m_dialogNewCollection->run();
+	m_dialogNewCollection->hide();
+	if(res){
+		std::cout << "New New Collection OK" << std::endl;
+	}else{
+		std::cout << "New New Collection Canceled" << std::endl;
+	}
 }
 
 std::vector<Xmms::Dict> Main_win::on_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby)

@@ -116,10 +116,15 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkLabel" id="label8">
+                  <object class="GtkLabel" id="dialogNewCollection-labelCollName">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">label</property>
+                    <property name="halign">end</property>
+                    <property name="xalign">0.49000000953674316</property>
+                    <property name="yalign">0.47999998927116394</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Collection Name: &lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">right</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -129,10 +134,19 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="label9">
+                  <object class="GtkLabel" id="dialogNewCollection-labelCollPattern">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">label</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_markup" translatable="yes">&lt;b&gt;Pattern:&lt;/b&gt;
+
+see help </property>
+                    <property name="halign">end</property>
+                    <property name="xpad">1</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Pattern: &lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">right</property>
+                    <property name="single_line_mode">True</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -144,7 +158,8 @@
                 <child>
                   <object class="GtkEntry" id="dialogNewCollection-entryPlayListName">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                     <property name="invisible_char">•</property>
                   </object>
                   <packing>
@@ -157,8 +172,12 @@
                 <child>
                   <object class="GtkEntry" id="dialogNewCollection-entryPattern">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="hexpand">True</property>
                     <property name="invisible_char">•</property>
+                    <property name="progress_fraction">0.039999999105930328</property>
+                    <property name="progress_pulse_step">0.11999999731779099</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -175,6 +194,23 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
+                    <property name="width">2</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="dialogNewCollection-scrolledwindowHelp">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="vexpand">True</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
                     <property name="width">2</property>
                     <property name="height">1</property>
                   </packing>
@@ -261,7 +297,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="scrolledwindowAvailbleKeys">
+              <object class="GtkScrolledWindow" id="dialogNewCollection-scrolledwindowAvailbleKeys">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="shadow_type">in</property>
@@ -1418,6 +1454,7 @@ all the details</property>
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">No active Title</property>
+                    <property name="selectable">True</property>
                     <property name="ellipsize">end</property>
                     <property name="single_line_mode">True</property>
                     <attributes>
@@ -1460,6 +1497,7 @@ all the details</property>
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">No Artist</property>
+                    <property name="selectable">True</property>
                     <property name="ellipsize">end</property>
                     <property name="single_line_mode">True</property>
                     <attributes>
@@ -1502,6 +1540,7 @@ all the details</property>
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">No Album</property>
+                    <property name="selectable">True</property>
                     <property name="ellipsize">end</property>
                     <property name="single_line_mode">True</property>
                     <attributes>
@@ -1544,6 +1583,7 @@ all the details</property>
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">00:00</property>
+                    <property name="selectable">True</property>
                     <property name="single_line_mode">True</property>
                     <attributes>
                       <attribute name="weight" value="semibold"/>

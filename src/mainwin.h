@@ -30,6 +30,7 @@ cathy is free software: you can redistribute it and/or modify it
 #include "mesage.h"
 #include <queue>
 #include "dialog-new-playlist.h"
+#include "dnc.h" // dialogNewCollection //
 
 
 
@@ -82,6 +83,7 @@ class Main_win: public Gtk::Window
 
 		Gtk::AboutDialog *m_aboutdialog1;
 		DialogNewPlaylist *m_dialogNewPlaylist;
+		DNC *m_dialogNewCollection;
 
 		//custom components I wrote //
 		ListViewFormatText *m_listviewformatTextPlaylists;
