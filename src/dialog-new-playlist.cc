@@ -22,23 +22,33 @@
 
 DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Dialog(cobject), m_builder(builder), 
+    m_buttonCreate(0), 
     m_entryNewPlayList(0), m_filechooserbutton1(0), m_entryUrl(0),
     m_comboboxtextCollection(0), m_checkbuttonAddRecursive(0), 
     m_radiobuttonDirectory(0), m_radiobuttonUrl(0), m_radiobuttonCollection(0), 
-    m_comboboxtextOrderBy(0), m_scrolledwindowOrderBy(0), m_listviewtextOrderBy(0), 
+    /*m_comboboxtextOrderBy(0),*/ m_scrolledwindowOrderBy(0), m_listviewtextOrderBy(0), 
     m_scrolledwindowAvailable(0), m_listviewtextAvailable(0), 
     m_scrolledwindowColContent(0), m_toolbuttonMoveLeft(0), 
     m_toolbuttonMoveRight(0), m_toolbuttonUp(0), m_toolbuttonDown(0), 
-    m_toolbuttonRevese(0), m_toolbuttonRefresh(0), /*m_filefilterSound(0), */
+    m_toolbuttonRevese(0), m_toolbuttonRefresh(0), m_notebookMain(0), 
+    m_scrolledwindowTracksChoosen(0), m_listviewtextTracksChoosen(0), 
+    m_scrolledwindowTracksAvailble(0), m_listviewtextTracksAvailble(0), 
+    m_comboboxtextNamespace(0), m_comboboxtextPlayListCollection(0), 
+    m_toolbuttonTrackUP(0), m_toolbuttonChooseTrack(0), 
+    m_toolbuttonRetractTrack(0), m_toolbuttonTrackDown(0), 
     m_addrecursive(true), m_radioselected(directory), m_orderby(atoz)
 {
 	//////////////////////////////////////////////////////////
 	// ********** stuff inside dialogNewPlaylist ********** //
 	//////////////////////////////////////////////////////////
 	//*
+	m_builder->get_widget("buttonCreate", m_buttonCreate);
+	if(m_buttonCreate){
+		//m_buttonCreate->signal_insert_text().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_entry_NewPlayList_changed) );
+	}
 	m_builder->get_widget("entryNewPlayList", m_entryNewPlayList);
 	if(m_entryNewPlayList){
-		//m_entryNewPlayList->signal_activate().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_button_Exit) );
+		m_entryNewPlayList->signal_insert_text().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_entry_NewPlayList_changed) );
 	}
 	m_builder->get_widget("filechooserbutton1", m_filechooserbutton1);
 	if(m_filechooserbutton1){
@@ -52,11 +62,11 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
 	if(m_comboboxtextCollection){
 		m_comboboxtextCollection->signal_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_combo_Coll_changed) );
 	}
-	m_builder->get_widget("comboboxtextOrderBy", m_comboboxtextOrderBy);
+/*	m_builder->get_widget("comboboxtextOrderBy", m_comboboxtextOrderBy);
 	if(m_comboboxtextOrderBy){
 		m_comboboxtextOrderBy->signal_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_comboOrderBy_changed) );
 		m_comboboxtextOrderBy->set_active(0);
-	}
+	}*/
 	// checkbox //
 	m_builder->get_widget("checkbuttonAddRecursive", m_checkbuttonAddRecursive);
 	if(m_checkbuttonAddRecursive){
@@ -128,6 +138,41 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
 		m_listviewtextColContent->set_column_title(4, "Duration");
 		//m_listviewtextColContent->signal_selection_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_selection_changed_Available) );
 	}
+	// m_scrolledwindowTracksChoosen //
+	m_builder->get_widget("scrolledwindowTracksChoosen", m_scrolledwindowTracksChoosen);
+	if(m_scrolledwindowTracksChoosen){
+		//m_scrolledwindowTracksChoosen->signal_toggled().connect( sigc::bind<RadioSelected>( sigc::mem_fun(*this, &DialogNewPlaylist::on_radiobutton), collection) );
+		m_listviewtextTracksChoosen = new LVT(6);
+		m_scrolledwindowTracksChoosen->add(*m_listviewtextTracksChoosen);
+		m_listviewtextTracksChoosen->show();
+		//m_listviewtextTracksChoosen->set_hexpand();
+		//m_listviewtextTracksChoosen->set_vexpand();
+		m_listviewtextTracksChoosen->set_column_title(0, "media id");
+		m_listviewtextTracksChoosen->set_column_title(1, "tracknr");
+		m_listviewtextTracksChoosen->set_column_title(2, "Title");
+		m_listviewtextTracksChoosen->set_column_title(3, "Artist");
+		m_listviewtextTracksChoosen->set_column_title(4, "Album");
+		m_listviewtextTracksChoosen->set_column_title(5, "Duration");
+		//m_listviewtextTracksChoosen->signal_selection_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_selection_changed_Available) );
+	}
+	// m_scrolledwindowTracksAvailble //
+	m_builder->get_widget("scrolledwindowTracksAvailble", m_scrolledwindowTracksAvailble);
+	if(m_scrolledwindowTracksAvailble){
+		//m_scrolledwindowTracksAvailble->signal_toggled().connect( sigc::bind<RadioSelected>( sigc::mem_fun(*this, &DialogNewPlaylist::on_radiobutton), collection) );
+		m_listviewtextTracksAvailble = new LVT(6);
+		m_scrolledwindowTracksAvailble->add(*m_listviewtextTracksAvailble);
+		m_listviewtextTracksAvailble->show();
+		//m_listviewtextTracksAvailble->set_hexpand();
+		//m_listviewtextTracksAvailble->set_vexpand();
+		m_listviewtextTracksAvailble->set_column_title(0, "media id");
+		m_listviewtextTracksAvailble->set_column_title(1, "tracknr");
+		m_listviewtextTracksAvailble->set_column_title(2, "Title");
+		m_listviewtextTracksAvailble->set_column_title(3, "Artist");
+		m_listviewtextTracksAvailble->set_column_title(4, "Album");
+		m_listviewtextTracksAvailble->set_column_title(5, "Duration");
+		//m_listviewtextTracksAvailble->signal_selection_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_selection_changed_Available) );
+	}
+	
 	// m_toolbuttonMoveLeft //
 	m_builder->get_widget("toolbuttonMoveLeft", m_toolbuttonMoveLeft);
 	if(m_toolbuttonMoveLeft){
@@ -167,10 +212,54 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
 		m_filefilterSound->add_pattern("*.ogg");
 		m_filefilterSound->add_pattern("*.mp3");
 	}
+
+	// m_comboboxtextNamespace //
+	m_builder->get_widget("comboboxtextNamespace", m_comboboxtextNamespace);
+	if(m_comboboxtextNamespace){
+		m_comboboxtextNamespace->signal_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_comboboxtextNamespace_changed) );
+	}
+	// m_comboboxtextPlayListCollection //
+	m_builder->get_widget("comboboxtextPlayListCollection", m_comboboxtextPlayListCollection);
+	if(m_comboboxtextPlayListCollection){
+		m_comboboxtextPlayListCollection->signal_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_comboboxtextPlayListCollection_changed) );
+	}
+	// m_toolbuttonTrackUP //
+	m_builder->get_widget("toolbuttonTrackUP", m_toolbuttonTrackUP);
+	if(m_toolbuttonTrackUP){
+		m_toolbuttonTrackUP->signal_clicked().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_toolbutton_TrackUP) );
+	}
+	// m_toolbuttonChooseTrack //
+	m_builder->get_widget("toolbuttonChooseTrack", m_toolbuttonChooseTrack);
+	if(m_toolbuttonChooseTrack){
+		m_toolbuttonChooseTrack->signal_clicked().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_toolbutton_ChooseTrack) );
+	}
+	// m_toolbuttonRetractTrack //
+	m_builder->get_widget("toolbuttonRetractTrack", m_toolbuttonRetractTrack);
+	if(m_toolbuttonRetractTrack){
+		m_toolbuttonRetractTrack->signal_clicked().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_toolbutton_RetractTrack) );
+	}
+	// m_toolbuttonTrackDown //
+	m_builder->get_widget("toolbuttonTrackDown", m_toolbuttonTrackDown);
+	if(m_toolbuttonTrackDown){
+		m_toolbuttonTrackDown->signal_clicked().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_toolbutton_TrackDown) );
+	}
+
+	// m_notebookMain //
+	m_builder->get_widget("notebookMain", m_notebookMain);
+	if(m_notebookMain){
+		m_notebookMain->signal_switch_page().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_notebookMain_switch_page) );
+	}
+
+	set_default_size(640, 480);
 }
 
 DialogNewPlaylist::~DialogNewPlaylist()
 {
+	delete m_listviewtextOrderBy;
+	delete m_listviewtextAvailable;
+	delete m_listviewtextColContent;
+	delete m_listviewtextTracksChoosen;
+	delete m_listviewtextTracksAvailble;
 }
 
 void DialogNewPlaylist::on_checkbutton_AddRecursive()
@@ -201,8 +290,8 @@ void DialogNewPlaylist::on_radiobutton(RadioSelected rs)
 			m_entryUrl->set_can_focus(false);
 			m_comboboxtextCollection->set_sensitive(false);
 			m_comboboxtextCollection->set_can_focus(false);
-			m_comboboxtextOrderBy->set_sensitive(false);
-			m_comboboxtextOrderBy->set_can_focus(false);
+			//m_comboboxtextOrderBy->set_sensitive(false);
+			//m_comboboxtextOrderBy->set_can_focus(false);
 			break;
 		case(url):
 			m_filechooserbutton1->set_sensitive(false);
@@ -211,8 +300,8 @@ void DialogNewPlaylist::on_radiobutton(RadioSelected rs)
 			m_entryUrl->set_can_focus(true);
 			m_comboboxtextCollection->set_sensitive(false);
 			m_comboboxtextCollection->set_can_focus(false);
-			m_comboboxtextOrderBy->set_sensitive(false);
-			m_comboboxtextOrderBy->set_can_focus(false);
+			//m_comboboxtextOrderBy->set_sensitive(false);
+			//m_comboboxtextOrderBy->set_can_focus(false);
 			break;
 		case(collection):
 			m_filechooserbutton1->set_sensitive(false);
@@ -221,8 +310,8 @@ void DialogNewPlaylist::on_radiobutton(RadioSelected rs)
 			m_entryUrl->set_can_focus(false);
 			m_comboboxtextCollection->set_sensitive(true);
 			m_comboboxtextCollection->set_can_focus(true);
-			m_comboboxtextOrderBy->set_sensitive(true);
-			m_comboboxtextOrderBy->set_can_focus(true);
+			//m_comboboxtextOrderBy->set_sensitive(true);
+			//m_comboboxtextOrderBy->set_can_focus(true);
 			break;
 	}
 }
@@ -238,7 +327,7 @@ void DialogNewPlaylist::on_selection_changed_Available()
 }
 
 
-void DialogNewPlaylist::on_comboOrderBy_changed()
+/*void DialogNewPlaylist::on_comboOrderBy_changed()
 {
 	Glib::ustring item = m_comboboxtextOrderBy->get_active_text();
 	if(!item.empty()){
@@ -253,7 +342,7 @@ void DialogNewPlaylist::on_comboOrderBy_changed()
 			std::cout << __FILE__ << '[' << __LINE__ << "]  Edit Manually" << std::endl;
 		}
 	}
-}
+}*/
 
 void DialogNewPlaylist::on_combo_Coll_changed()
 {
@@ -439,7 +528,41 @@ void DialogNewPlaylist::on_toolbutton_Revese()
 
 void DialogNewPlaylist::on_toolbutton_Refresh()
 {
-	on_combo_Coll_changed();
+	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ //
+	switch(m_Page){
+		case(page0):
+		{
+			switch(m_radioselected){
+				case(directory):
+				{
+					break;
+				}
+				case(url):
+				{
+					break;
+				}
+				case(collection):
+				{
+					on_combo_Coll_changed();
+					break;
+				}
+				default:
+				{
+					// TODO WTF how did I get here //
+				}
+			}
+			break;
+		}
+		case(pageSelect):
+		{
+			on_comboboxtextPlayListCollection_changed();
+			break;
+		}
+		default:
+		{
+			// todo how did we get here //
+		}
+	}
 }
 
 Glib::ustring DialogNewPlaylist::makeAsc(Glib::ustring s)
@@ -508,6 +631,287 @@ Glib::ustring DialogNewPlaylist::get_collection_name()
 	return m_comboboxtextCollection->get_active_text();
 }
 
+bool DialogNewPlaylist::valid_playlist_name(Glib::ustring name)
+{
+	if(name.empty()) return false;
+	Glib::ustring invalid(" \n\t\r");
+	size_t pos = name.find_first_of(invalid);
+	return (pos == Glib::ustring::npos);
+}
+
+void DialogNewPlaylist::on_entry_NewPlayList_changed(const Glib::ustring& s,int *i)
+{
+	std::cout << __FILE__ << '[' << __LINE__ << "] " << __PRETTY_FUNCTION__ << " s == " << s << std::endl;
+	Glib::ustring text = m_entryNewPlayList->get_text();
+	if(valid_playlist_name(text)){
+		m_buttonCreate->set_sensitive(true);
+	}else{
+		m_buttonCreate->set_sensitive(false);
+	}
+}
+
+void DialogNewPlaylist::namespaces_remove_all()
+{
+	m_comboboxtextNamespace->remove_all();
+}
+
+void DialogNewPlaylist::namespaces_append(Glib::ustring namespaces)
+{
+	m_comboboxtextNamespace->append(namespaces);
+}
+
+void DialogNewPlaylist::on_comboboxtextNamespace_changed()
+{
+	m_comboboxtextPlayListCollection->remove_all();
+	Glib::ustring _namespace = m_comboboxtextNamespace->get_active_text();
+	std::cout << __FILE__ << "[" << __LINE__ 
+		      << "] " << __PRETTY_FUNCTION__ << ": _namespace == " 
+			  << _namespace << std::endl;
+	std::vector<Glib::ustring> lst = m_signal_namespace_changed.emit(_namespace);
+	std::cout << __FILE__ << "[" << __LINE__ 
+		      << "] " << __PRETTY_FUNCTION__ << ": lst.size() == " 
+			  << lst.size() << std::endl;
+	for(std::vector<Glib::ustring>::iterator i = lst.begin(), i_end = lst.end(); i != i_end; ++i){
+		m_comboboxtextPlayListCollection->append(*i);
+	}
+}
+
+DialogNewPlaylist::type_signal_namespace_changed DialogNewPlaylist::signal_namespace_changed()
+{
+	return m_signal_namespace_changed;
+}
+
+DialogNewPlaylist::type_signal_playlist_coll_changed DialogNewPlaylist::signal_playlist_coll_changed()
+{
+	return m_signal_playlist_coll_changed;
+}
+
+void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
+{
+	std::cout << __FILE__ << '[' << __LINE__ << "] " << __PRETTY_FUNCTION__ << std::endl;
+	m_listviewtextTracksAvailble->remove_all_rows();
+	Glib::ustring item = m_comboboxtextPlayListCollection->get_active_text();
+	Glib::ustring _namespace = m_comboboxtextNamespace->get_active_text();
+	std::cout << __FILE__ << "[" << __LINE__ 
+		      << "] " << __PRETTY_FUNCTION__ << ": _namespace == " 
+			  << _namespace << std::endl;
+	std::vector<Glib::ustring> orderby = get_order();
+	if(!item.empty() && !_namespace.empty()){
+		std::vector<Xmms::Dict> lst = m_signal_playlist_coll_changed.emit(item, orderby, _namespace);
+		std::cout << __FILE__ << '[' << __LINE__ << "] list got: lst.size() == " << lst.size() << std::endl;
+		for(std::vector<Xmms::Dict>::iterator i = lst.begin(), i_end = lst.end(); i != i_end; ++i){
+			Xmms::Dict info = *i;
+			int tracknr, id;
+			std::string tracknr_str, id_str;
+			try{
+				id = boost::get<int>(info["id"]);
+				//boost::format bf("%010d");
+				boost::format bf("%d");
+				bf % id;
+				id_str = bf.str();
+			}
+			catch( Xmms::no_such_key_error& err ) {
+				id_str = "tracknr unknown";
+				//std::cout << "tracknr unknown" << std::endl;
+			}
+			int row = m_listviewtextTracksAvailble->append(id_str);
+			try{
+				tracknr = boost::get<int>(info["tracknr"]);
+				boost::format bf("%02d");
+				bf % tracknr;
+				tracknr_str = bf.str();
+			}
+			catch( Xmms::no_such_key_error& err ) {
+				tracknr_str = "tracknr unknown";
+				//std::cout << "tracknr unknown" << std::endl;
+			}
+			m_listviewtextTracksAvailble->set_text(row, 1, tracknr_str);
+			std::string title, artist, album;
+			try{
+				title = boost::get<std::string>(info["title"]);
+			}
+			catch( Xmms::no_such_key_error& err ) {
+				title = "Title unknown";
+				//std::cout << "Title unknown" << std::endl;
+			}
+			m_listviewtextTracksAvailble->set_text(row, 2, title);
+			
+			try{
+				artist = boost::get<std::string>(info["artist"]);
+			}
+			catch( Xmms::no_such_key_error& err ) {
+				artist = "Artist unknown";
+				//std::cout << "Artist unknown" << std::endl;
+			}			
+			m_listviewtextTracksAvailble->set_text(row, 3, artist);
+			
+			try{
+				album = boost::get<std::string>(info["album"]);
+			}
+			catch( Xmms::no_such_key_error& err ) {
+				album = "No Album";
+				//std::cout << "No Album" << std::endl;
+			}			
+			m_listviewtextTracksAvailble->set_text(row, 4, album);
+
+			try{
+				int duration = boost::get< int >( info["duration"] );
+				//std::cout << duration << "  (" << std::flush;
+				double secs = (duration % 60000)/1000.0;
+				duration /= 60000;
+				int mins = duration % 60;
+				duration /= 60;
+				int hours = duration;
+				boost::format bf("%02d:%02d:%06.3f");
+				bf % hours % mins % secs;
+				//std::cout << bf << ')' << std::endl;
+				std::string s = bf.str();
+				m_listviewtextTracksAvailble->set_text(row, 5, s);
+			}
+			catch( Xmms::no_such_key_error& err ) {
+				m_listviewtextTracksAvailble->set_text(row, 5, "00:00:00");
+				//std::cout << "00:00:00" << std::endl;
+			}			
+		}
+	}
+}
+
+void DialogNewPlaylist::on_notebookMain_switch_page(Gtk::Widget* page, guint page_num)
+{
+	// m_notebookMain //
+	switch(page_num){
+		case(0):
+		{
+			m_Page = page0;
+			break;
+		}
+		case(1):
+		{
+			m_Page = pageSelect;
+			break;
+		}
+		default:
+		{
+			// TODO error handling unknown page //
+		}
+	}
+}
+
+DialogNewPlaylist::Page_type DialogNewPlaylist::get_page()
+{
+	return m_Page;
+}
+
+void DialogNewPlaylist::on_toolbutton_TrackUP()
+{
+	Gtk::ListViewText::SelectionList sellst = m_listviewtextTracksChoosen->get_selected();
+	if(sellst.empty()) return;
+	int sel = sellst[0];
+	if(sel == 0) return; // already at top //
+	Glib::RefPtr<Gtk::TreeSelection> ts = m_listviewtextTracksChoosen->get_selection();
+	Gtk::TreeModel::iterator sel_it = ts->get_selected();
+	Gtk::TreeModel::iterator new_it = sel_it;
+	--new_it;
+	Glib::RefPtr<Gtk::TreeModel> reftm = m_listviewtextTracksChoosen->get_model();
+	Glib::RefPtr<Gtk::ListStore> refLStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(reftm);
+	if(refLStore){
+		std::cout << __FILE__ << '[' << __LINE__ << "]  it's a Gtk::ListStore" << std::endl;
+		refLStore->iter_swap(sel_it, new_it);
+	}
+}
+
+void DialogNewPlaylist::on_toolbutton_ChooseTrack()
+{
+	Gtk::ListViewText::SelectionList sellst = m_listviewtextTracksAvailble->get_selected();
+	if(sellst.empty()) return;
+	Glib::RefPtr<Gtk::TreeSelection> ts = m_listviewtextTracksAvailble->get_selection();
+	Gtk::TreeModel::iterator sel_it = ts->get_selected();
+	int sel = sellst[0];
+	Glib::ustring selrow = m_listviewtextTracksAvailble->get_text(sel);
+	int row = m_listviewtextTracksChoosen->append(selrow);
+	for(int c = 1; c < 6; c++){
+		Glib::ustring tmp = m_listviewtextTracksAvailble->get_text(sel, c);
+		m_listviewtextTracksChoosen->set_text(row, c, tmp);
+	}
+	//erase(sel_it);
+	Glib::RefPtr<Gtk::TreeModel> reftm = m_listviewtextTracksAvailble->get_model();
+	Glib::RefPtr<Gtk::TreeStore> refStore = Glib::RefPtr<Gtk::TreeStore>::cast_dynamic(reftm);
+	if(refStore){
+		std::cout << __FILE__ << '[' << __LINE__ << "]  it's a Gtk::TreeStore" << std::endl;
+		refStore->erase(sel_it);
+		return;
+	}
+	Glib::RefPtr<Gtk::ListStore> refLStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(reftm);
+	if(refLStore){
+		std::cout << __FILE__ << '[' << __LINE__ << "]  it's a Gtk::ListStore" << std::endl;
+		refLStore->erase(sel_it);
+	}
+}
+
+void DialogNewPlaylist::on_toolbutton_RetractTrack()
+{
+	Gtk::ListViewText::SelectionList sellst = m_listviewtextTracksChoosen->get_selected();
+	if(sellst.empty()) return;
+	Glib::RefPtr<Gtk::TreeSelection> ts = m_listviewtextTracksChoosen->get_selection();
+	Gtk::TreeModel::iterator sel_it = ts->get_selected();
+	int sel = sellst[0];
+	Glib::ustring selrow = m_listviewtextTracksChoosen->get_text(sel);
+	int row = m_listviewtextTracksAvailble->append(makeAsc(selrow));
+	for(int c = 1; c < 6; c++){
+		Glib::ustring tmp = m_listviewtextTracksChoosen->get_text(sel, c);
+		m_listviewtextTracksAvailble->set_text(row, c, tmp);
+	}
+	//erase(sel_it);
+	Glib::RefPtr<Gtk::TreeModel> reftm = m_listviewtextTracksChoosen->get_model();
+	Glib::RefPtr<Gtk::TreeStore> refStore = Glib::RefPtr<Gtk::TreeStore>::cast_dynamic(reftm);
+	if(refStore){
+		std::cout << __FILE__ << '[' << __LINE__ << "]  it's a Gtk::TreeStore" << std::endl;
+		refStore->erase(sel_it);
+		return;
+	}
+	Glib::RefPtr<Gtk::ListStore> refLStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(reftm);
+	if(refLStore){
+		std::cout << __FILE__ << '[' << __LINE__ << "]  it's a Gtk::ListStore" << std::endl;
+		refLStore->erase(sel_it);
+	}
+}
+
+void DialogNewPlaylist::on_toolbutton_TrackDown()
+{
+	Gtk::ListViewText::SelectionList sellst = m_listviewtextTracksChoosen->get_selected();
+	if(sellst.empty()) return;
+	int sel = sellst[0];
+	if(sel == m_listviewtextTracksChoosen->size() - 1) return; // already at bottom //
+	Glib::RefPtr<Gtk::TreeSelection> ts = m_listviewtextTracksChoosen->get_selection();
+	Gtk::TreeModel::iterator sel_it = ts->get_selected();
+	Gtk::TreeModel::iterator new_it = sel_it;
+	++new_it;
+	Glib::RefPtr<Gtk::TreeModel> reftm = m_listviewtextTracksChoosen->get_model();
+	Glib::RefPtr<Gtk::ListStore> refLStore = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(reftm);
+	if(refLStore){
+		std::cout << __FILE__ << '[' << __LINE__ << "]  it's a Gtk::ListStore" << std::endl;
+		refLStore->iter_swap(sel_it, new_it);
+	}
+}
+
+std::vector<int> DialogNewPlaylist::get_tracks_chosen()
+{
+	guint n = m_listviewtextTracksChoosen->size();
+	std::vector<int> result;
+	for(guint i = 0; i < n; ++i){
+		char *endptr;
+		Glib::ustring tmp = m_listviewtextTracksChoosen->get_text(i);
+		std::cout << __FILE__ << '[' << __LINE__ << "]  tmp == " << tmp << std::endl;
+		int id = strtol(tmp.c_str(), &endptr, 10);
+		std::cout << __FILE__ << '[' << __LINE__ << "]  id == " << id << std::endl;
+		result.insert(result.end(), id);
+		if(endptr && *endptr){
+			std::cout << __FILE__ << '[' << __LINE__ << "]  Error: how can an id not be all number" << std::endl;
+			// TODO this is an error never should happen //
+		}
+	}
+	return result;
+}
 
 
 

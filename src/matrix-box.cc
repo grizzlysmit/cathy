@@ -112,7 +112,7 @@ guint MatrixBox::append(const std::vector<Glib::ustring>& row, int _id, int _pos
 	guint j = rows.size() + 1;
 	Row *r = new Row(num_columns); // do the rest in add //
 	for(guint i = 0; i < num_columns; ++i){
-		Gtk::Label *tmp = new Gtk::Label(row[i], Gtk::ALIGN_START);
+		Gtk::Label *tmp = new Gtk::Label(urlenties(row[i]), Gtk::ALIGN_START);
 		tmp->set_use_markup();
 		tmp->set_selectable();
 		//tmp->set_opacity(1);
@@ -203,6 +203,60 @@ MatrixBox::type_signal_clicked MatrixBox::signal_dblclicked()
 {
 	return m_signal_dblclicked;
 }
+
+Glib::ustring MatrixBox::urlenties(Glib::ustring s)
+{
+	size_t n = s.length();
+	Glib::ustring result;
+	for(int i = 0; i < n; i++){
+		switch(s[i]){
+			case('"'):
+			{
+				result += "&quot;";
+				break;
+			}
+			case('&'):
+			{
+				result += "&amp;";
+				break;
+			}
+			case('<'):
+			{
+				if((i + 2 < n) && (s[i + 1] == 'i' || s[i + 1] == 'b') && s[i + 2] == '>'){
+					result += s[i];
+					result += s[i + 1];
+					result += s[i + 2];
+					i += 2;
+				}else if((i + 3 < n) && s[i + 1] == '/' && (s[i + 2] == 'i' || s[i + 2] == 'b') && s[i + 3] == '>'){
+					result += s[i];
+					result += s[i + 1];
+					result += s[i + 2];
+					result += s[i + 3];
+					i += 3;
+				}else{
+					result += "&lt;";
+				}
+				break;
+			}
+			case('>'):
+			{
+				result += "&gt;";
+				break;
+			}
+			case(';'):
+			{
+				result += "&semi;";
+				break;
+			}
+			default:
+			{
+				result += s[i];
+			}
+		}
+	}
+	return result;
+}
+
 
 
 

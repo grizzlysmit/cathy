@@ -64,6 +64,7 @@ class MatrixBox: public Gtk::EventBox
 		type_signal_clicked m_signal_dblclicked;
 		
 		bool on_button_Pressed(GdkEventButton* event, int _id, Row* row);
+		Glib::ustring urlenties(Glib::ustring s);
 	private:
 
 };

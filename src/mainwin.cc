@@ -290,6 +290,8 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	m_builder->get_widget_derived("dialogNewPlaylist", m_dialogNewPlaylist);
 	if(m_dialogNewPlaylist){
 		m_dialogNewPlaylist->signal_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_coll_changed) );
+		m_dialogNewPlaylist->signal_namespace_changed().connect( sigc::mem_fun(*this, &Main_win::on_namespace_changed) );
+		m_dialogNewPlaylist->signal_playlist_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_playlist_coll_changed) );
 	}
 	// m_dialogNewCollection //
 	m_builder->get_widget_derived("dialogNewCollection", m_dialogNewCollection);
@@ -1759,42 +1761,105 @@ void Main_win::on_button_NewPlayList()
 	Xmms::List< std::string > lst = xmms2_client->collection.list(Xmms::Collection::COLLECTIONS);
 	std::vector<Glib::ustring> colls(lst.begin(), lst.end());
 	m_dialogNewPlaylist->set_collections(colls);
+	m_dialogNewPlaylist->namespaces_remove_all();
+	m_dialogNewPlaylist->namespaces_append(Xmms::Collection::COLLECTIONS);
+	m_dialogNewPlaylist->namespaces_append(Xmms::Collection::PLAYLISTS);
+	m_dialogNewPlaylist->namespaces_append(Xmms::Collection::ALL);
 	std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): colls.size() == " << colls.size() << std::endl;
 	int res = m_dialogNewPlaylist->run();
 	m_dialogNewPlaylist->hide();
 	if(res){
 		std::cout << "Create palylist" << std::endl;
 		std::string playlist_name = m_dialogNewPlaylist->get_playlist_name();
-		switch(m_dialogNewPlaylist->get_radio_selected()){
-			case(DialogNewPlaylist::directory):
+		switch(m_dialogNewPlaylist->get_page()){
+			case(DialogNewPlaylist::page0):
 			{
-				std::string filename = m_dialogNewPlaylist->get_filename();
-				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): filename == " << filename << std::endl;
-				if(filename[0] == '/'){
-					filename = "file://" + Urlencode(filename);
-				}
-				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): filename == " << filename << std::endl;
-				xmms2_client->playlist.create(playlist_name);
-				if(m_dialogNewPlaylist->get_addrecursive()){
-					xmms2_client->playlist.addRecursiveEncoded(filename, playlist_name);
-				}else{
-					xmms2_client->playlist.addUrlEncoded(filename, playlist_name);
+				switch(m_dialogNewPlaylist->get_radio_selected()){
+					case(DialogNewPlaylist::directory):
+					{
+						std::string filename = m_dialogNewPlaylist->get_filename();
+						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): filename == " << filename << std::endl;
+						if(filename[0] == '/'){
+							filename = "file://" + Urlencode(filename);
+						}
+						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): filename == " << filename << std::endl;
+						xmms2_client->playlist.create(playlist_name); // create the playlist //
+						if(m_dialogNewPlaylist->get_addrecursive()){
+							xmms2_client->playlist.addRecursiveEncoded(filename, playlist_name);
+						}else{
+							xmms2_client->playlist.addUrlEncoded(filename, playlist_name);
+						}
+						break;
+					}
+					case(DialogNewPlaylist::url):
+					{
+						std::string url = m_dialogNewPlaylist->get_url();
+						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): url == " << url << std::endl;
+						xmms2_client->playlist.create(playlist_name); // create the playlist //
+						if(m_dialogNewPlaylist->get_addrecursive()){
+							xmms2_client->playlist.addRecursiveEncoded(url, playlist_name);
+						}else{
+							xmms2_client->playlist.addUrlEncoded(url, playlist_name);
+						}
+						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::url):" << std::endl;
+						break;
+					}
+					case(DialogNewPlaylist::collection):
+					{
+						Glib::ustring collection_name = m_dialogNewPlaylist->get_collection_name();
+						Xmms::CollResult collresult = xmms2_client->collection.get(static_cast<std::string>(collection_name), Xmms::Collection::COLLECTIONS);
+						Xmms::CollPtr coll = static_cast<Xmms::CollPtr>(collresult);
+						std::cout << __FILE__ << '[' << __LINE__ << "] coll got: collection_name == " << collection_name << std::endl;
+						std::vector<Glib::ustring> orderby = m_dialogNewPlaylist->get_order();
+						std::list<std::string> order(orderby.begin(), orderby.end());
+						if(order.empty()){
+							order.insert(order.end(), "album");
+							order.insert(order.end(), "tracknr");
+							order.insert(order.end(), "artist");
+							//order.insert(order.end(), "title");
+							//order.insert(order.end(), "duration");
+						}
+						std::cout << __FILE__ << '[' << __LINE__ << "] getting list: collection_name == " << collection_name << std::endl;
+						//Xmms::List<int> lst = xmms2_client->collection.queryIds(*coll);
+						Xmms::List<int> lst = xmms2_client->collection.queryIds(*coll, order);
+						std::cout << __FILE__ << '[' << __LINE__ << "] got list: collection_name == " << collection_name << std::endl;
+						xmms2_client->playlist.create(playlist_name); // create the playlist //
+						int pos = 0;
+						for( Xmms::List<int>::const_iterator i(lst.begin()), i_end(lst.end()); i != i_end; ++i, ++pos){
+							std::cout << __FILE__ << '[' << __LINE__ << "] *i == " << *i << std::endl;
+							int id = *i;
+							std::cout << __FILE__ << '[' << __LINE__ << "] id == " << id << std::endl;
+							xmms2_client->playlist.insertId(pos, id, playlist_name);
+						}
+						//xmms2_client->collection.save(*coll, playlist_name, Xmms::Collection::PLAYLISTS);
+						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::collection):" << std::endl;
+						break;
+					}
+					default:
+					{
+						// TODO: handle this error cond should never get here //
+					}
 				}
 				break;
 			}
-			case(DialogNewPlaylist::url):
+			case(DialogNewPlaylist::pageSelect):
 			{
-				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::url):" << std::endl;
-				break;
-			}
-			case(DialogNewPlaylist::collection):
-			{
-				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::collection):" << std::endl;
+				std::vector<int> lst = m_dialogNewPlaylist->get_tracks_chosen();
+				// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+				xmms2_client->playlist.create(playlist_name); // create the playlist //
+				int pos = 0;
+				for(std::vector<int>::iterator i = lst.begin(), i_end = lst.end();
+				    i != i_end; ++i, ++pos){
+					std::cout << __FILE__ << '[' << __LINE__ << "] insertId: *i == " << *i << std::endl;
+					int id = *i;
+					std::cout << __FILE__ << '[' << __LINE__ << "] insertId: id == " << id << std::endl;
+					xmms2_client->playlist.insertId(pos, id, playlist_name);
+				}
 				break;
 			}
 			default:
 			{
-				// TODO: handle this error cond should never get here //
+				// TODO should never get here //
 			}
 		}
 	}else{
@@ -1809,7 +1874,18 @@ void Main_win::on_button_NewCollection()
 	// m_dialogNewCollection //
 	int res = m_dialogNewCollection->run();
 	m_dialogNewCollection->hide();
-	if(res){
+	if(res){ // ############################################################ //
+		std::string collectionname = m_dialogNewCollection->get_collectionname();
+		std::string pattern = m_dialogNewCollection->get_pattern();
+		try{
+			Xmms::CollPtr coll = xmms2_client->collection.parse(pattern);
+			xmms2_client->collection.save(*coll, collectionname, Xmms::Collection::COLLECTIONS);
+		}
+		catch(std::exception &e){
+			std::cout << __FILE__ << "[" << __LINE__ 
+				<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+				<< e.what() << std::endl;
+		}
 		std::cout << "New New Collection OK" << std::endl;
 	}else{
 		std::cout << "New New Collection Canceled" << std::endl;
@@ -1879,6 +1955,66 @@ std::string Main_win::Urlencode(std::string url)
 	result += url;
 	return result;
 }
+
+std::vector<Glib::ustring> Main_win::on_namespace_changed(Glib::ustring _namespace)
+{
+	std::cout << __FILE__ << "[" << __LINE__ 
+		      << "] Error in " << __PRETTY_FUNCTION__ << ": _namespace == " 
+			  << _namespace << std::endl;
+	try{
+		char buff[256];
+		strcpy(buff, _namespace.c_str());
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": buff == " 
+			<< buff << std::endl;
+		Xmms::List< std::string > lst = xmms2_client->collection.list(buff);
+		std::vector<Glib::ustring> result(lst.begin(), lst.end());
+		return result;
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
+	}
+	return std::vector<Glib::ustring>();
+}
+
+std::vector<Xmms::Dict> Main_win::on_playlist_coll_changed(Glib::ustring collection_name, 
+                                                           std::vector<Glib::ustring> orderby, 
+                                                           Glib::ustring _namespace)
+{
+	std::cout << __FILE__ << '[' << __LINE__ << "] on_coll_changed: collection_name == " << collection_name << std::endl;
+	if(!xmms2_client) return std::vector<Xmms::Dict>();
+	std::string std_namespace = _namespace;
+	Xmms::CollResult collresult = xmms2_client->collection.get(static_cast<std::string>(collection_name), std_namespace.c_str());
+	Xmms::CollPtr coll = static_cast<Xmms::CollPtr>(collresult);
+	std::cout << __FILE__ << '[' << __LINE__ << "] coll got: collection_name == " << collection_name << std::endl;
+	std::list<std::string> fetch;
+	fetch.insert(fetch.end(), "id");
+	fetch.insert(fetch.end(), "tracknr");
+	fetch.insert(fetch.end(), "title");
+	fetch.insert(fetch.end(), "artist");
+	fetch.insert(fetch.end(), "album");
+	fetch.insert(fetch.end(), "duration");
+	std::list<std::string> order(orderby.begin(), orderby.end());
+	if(order.empty()){
+		order.insert(order.end(), "album");
+		order.insert(order.end(), "tracknr");
+		order.insert(order.end(), "artist");
+		//order.insert(order.end(), "title");
+		//order.insert(order.end(), "duration");
+	}
+	std::cout << __FILE__ << '[' << __LINE__ << "] getting list: collection_name == " << collection_name << std::endl;
+	std::cout << __FILE__ << '[' << __LINE__ << "] list got: collection_name == " << collection_name << std::endl;
+	Xmms::List<Xmms::Dict> lst = xmms2_client->collection.queryInfos(*coll, fetch, order);
+	std::cout << __FILE__ << '[' << __LINE__ << "] list got: collection_name == " << collection_name << std::endl;
+	std::vector<Xmms::Dict> result(lst.begin(), lst.end());
+	std::cout << __FILE__ << '[' << __LINE__ << "] result made: result.size() == " << result.size() << std::endl;
+	return result;
+}
+
+
+
 
 
 

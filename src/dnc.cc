@@ -22,7 +22,14 @@
 DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Dialog(cobject), m_builder(builder), 
     m_scrolledwindowAvailbleKeys(0), m_listviewtextAvailbleKeys(0), 
-    m_scrolledwindowHelp(0), m_listviewtextHelp(0), m_big_hint(false)
+    m_scrolledwindowHelp(0), m_listviewtextHelp(0), m_entryCollectionName(0), 
+    m_entryPattern(0), m_buttonOK(0), m_dialogCollectionHelp(0), 
+    m_toolbuttonHelp(0), m_toolbuttonAddKey(0), m_toolbuttonSpace(0), 
+    m_toolbuttonBrackets(0), m_toolbuttonAND(0), m_toolbuttonOR(0), 
+    m_toolbuttonNot(0), m_toolbuttonHash(0), m_toolbuttonMinus(0), 
+    m_toolbuttonPlus(0), m_toolbuttonMatch(0), m_toolbuttonFuzzyMatch(0), 
+    m_toolbuttonLT(0), m_toolbuttonLE(0), m_toolbuttonGT(0), m_toolbuttonGE(0), 
+    m_big_hint(false)
 {
 	// dialogNewCollection-scrolledwindowAvailbleKeys //
 	m_builder->get_widget("dialogNewCollection-scrolledwindowAvailbleKeys", m_scrolledwindowAvailbleKeys);
@@ -39,19 +46,19 @@ DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
 		row = m_listviewtextAvailbleKeys->append("album");
 		m_listviewtextAvailbleKeys->set_text(row, 1, "string");
 		row = m_listviewtextAvailbleKeys->append("id");
-		m_listviewtextAvailbleKeys->set_text(row, 1, "string");
+		m_listviewtextAvailbleKeys->set_text(row, 1, "integer");
 		row = m_listviewtextAvailbleKeys->append("tracknr");
-		m_listviewtextAvailbleKeys->set_text(row, 1, "string");
+		m_listviewtextAvailbleKeys->set_text(row, 1, "integer");
 		row = m_listviewtextAvailbleKeys->append("artist");
 		m_listviewtextAvailbleKeys->set_text(row, 1, "string");
 		row = m_listviewtextAvailbleKeys->append("mime");
 		m_listviewtextAvailbleKeys->set_text(row, 1, "string");
-		row = m_listviewtextAvailbleKeys->append("AND");
+/*		row = m_listviewtextAvailbleKeys->append("AND");
 		m_listviewtextAvailbleKeys->set_text(row, 1, "Operator");
 		row = m_listviewtextAvailbleKeys->append("OR");
 		m_listviewtextAvailbleKeys->set_text(row, 1, "Operator");
 		row = m_listviewtextAvailbleKeys->append("NOT");
-		m_listviewtextAvailbleKeys->set_text(row, 1, "Operator");
+		m_listviewtextAvailbleKeys->set_text(row, 1, "Operator");*/
 		m_listviewtextAvailbleKeys->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
 		m_listviewtextAvailbleKeys->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
 	}
@@ -116,6 +123,113 @@ DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
 		//m_listviewtextHelp->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
 		//m_listviewtextHelp->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
 	}
+	// m_entryCollectionName //
+	m_builder->get_widget("dialogNewCollection-entryCollectionName", m_entryCollectionName);
+	if(m_entryCollectionName){
+		m_entryCollectionName->signal_insert_text().connect( sigc::mem_fun(*this, &DNC::on_entryCollectionName_changed) );
+		//m_entryCollectionName->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+	}
+	// m_entryPattern //
+	m_builder->get_widget("dialogNewCollection-entryPattern", m_entryPattern);
+	if(m_entryPattern){
+		//m_entryPattern->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
+		//m_entryPattern->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+	}
+	// m_buttonOK //
+	m_builder->get_widget("dialogNewCollection-buttonOK", m_buttonOK);
+	if(m_buttonOK){
+		//m_entryPattern->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
+		//m_entryPattern->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+	}
+
+	// m_dialogCollectionHelp //
+	m_builder->get_widget("dialogCollectionHelp", m_dialogCollectionHelp);
+	if(m_dialogCollectionHelp){
+		//m_dialogCollectionHelp->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
+		//m_dialogCollectionHelp->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+	}
+	// m_toolbuttonHelp //
+	m_builder->get_widget("dialogNewCollection-toolbuttonHelp", m_toolbuttonHelp);
+	if(m_toolbuttonHelp){
+		m_toolbuttonHelp->signal_clicked().connect( sigc::mem_fun(*this, &DNC::on_m_toolbuttonHelp_clicked) );
+	}
+	// m_toolbuttonAddKey //
+	m_builder->get_widget("dialogNewCollection-toolbuttonAddKey", m_toolbuttonAddKey);
+	if(m_toolbuttonAddKey){
+		m_toolbuttonAddKey->signal_clicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+	}
+	// m_toolbuttonSpace //
+	m_builder->get_widget("toolbuttonSpace", m_toolbuttonSpace);
+	if(m_toolbuttonSpace){
+		m_toolbuttonSpace->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), " ") ); // passing a space char //
+	}
+	// m_toolbuttonBrackets //
+	m_builder->get_widget("toolbuttonBrackets", m_toolbuttonBrackets);
+	if(m_toolbuttonBrackets){
+		m_toolbuttonBrackets->signal_clicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_Brackets) );
+	}
+	// m_toolbuttonAND //
+	m_builder->get_widget("toolbuttonAND", m_toolbuttonAND);
+	if(m_toolbuttonAND){
+		m_toolbuttonAND->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "AND") );
+	}
+	// m_toolbuttonOR //
+	m_builder->get_widget("toolbuttonOR", m_toolbuttonOR);
+	if(m_toolbuttonOR){
+		m_toolbuttonOR->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "OR") );
+	}
+	// m_toolbuttonNot //
+	m_builder->get_widget("toolbuttonNot", m_toolbuttonNot);
+	if(m_toolbuttonNot){
+		m_toolbuttonNot->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "NOT") );
+	}
+	// m_toolbuttonHash //
+	m_builder->get_widget("toolbuttonHash", m_toolbuttonHash);
+	if(m_toolbuttonHash){
+		m_toolbuttonHash->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "#") );
+	}
+	// m_toolbuttonMinus //
+	m_builder->get_widget("toolbuttonMinus", m_toolbuttonMinus);
+	if(m_toolbuttonMinus){
+		m_toolbuttonMinus->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "-") );
+	}
+	// m_toolbuttonPlus //
+	m_builder->get_widget("toolbuttonPlus", m_toolbuttonPlus);
+	if(m_toolbuttonPlus){
+		m_toolbuttonPlus->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "+") );
+	}
+	// m_toolbuttonMatch //
+	m_builder->get_widget("toolbuttonMatch", m_toolbuttonMatch);
+	if(m_toolbuttonMatch){
+		m_toolbuttonMatch->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), ":") );
+	}
+	// m_toolbuttonFuzzyMatch //
+	m_builder->get_widget("toolbuttonFuzzyMatch", m_toolbuttonFuzzyMatch);
+	if(m_toolbuttonFuzzyMatch){
+		m_toolbuttonFuzzyMatch->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "~") );
+	}
+	// m_toolbuttonLT //
+	m_builder->get_widget("toolbuttonLT", m_toolbuttonLT);
+	if(m_toolbuttonLT){
+		m_toolbuttonLT->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "<") );
+	}
+	// m_toolbuttonLE //
+	m_builder->get_widget("toolbuttonLE", m_toolbuttonLE);
+	if(m_toolbuttonLE){
+		m_toolbuttonLE->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), "<=") );
+	}
+	// m_toolbuttonGT //
+	m_builder->get_widget("toolbuttonGT", m_toolbuttonGT);
+	if(m_toolbuttonGT){
+		m_toolbuttonGT->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), ">") );
+	}
+	// m_toolbuttonGE //
+	m_builder->get_widget("toolbuttonGE", m_toolbuttonGE);
+	if(m_toolbuttonGE){
+		m_toolbuttonGE->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), ">=") );
+	}
+
+	set_default_size(640, 480);
 }
 
 DNC::~DNC()
@@ -128,6 +242,83 @@ void DNC::on_selection_changed_AvailableKeys()
 
 void DNC::on_toolbutton_AddKey()
 {
+	Gtk::ListViewText::SelectionList sellst = m_listviewtextAvailbleKeys->get_selected();
+	if(sellst.empty()) return;
+	//Glib::RefPtr<Gtk::TreeSelection> ts = m_listviewtextAvailbleKeys->get_selection();
+	//Gtk::TreeModel::iterator sel_it = ts->get_selected();
+	int sel = sellst[0];
+	Glib::ustring selrow = m_listviewtextAvailbleKeys->get_text(sel);
+	int start_pos, end_pos;
+	Glib::ustring text = m_entryPattern->get_text(), tmp;
+	int new_pos;
+	if(m_entryPattern->get_selection_bounds(start_pos, end_pos)){
+		tmp = text.substr(0, start_pos);
+		tmp += selrow;
+		new_pos = tmp.length();
+		tmp += text.substr(end_pos);
+		m_entryPattern->set_text(tmp);
+	}else{
+		int cursor = m_entryPattern->get_position();
+		tmp = text.substr(0, cursor);
+		tmp += selrow;
+		new_pos = tmp.length();
+		tmp += text.substr(cursor);
+		m_entryPattern->set_text(tmp);
+	}
+	if(!m_entryPattern->is_focus()){
+		m_entryPattern->grab_focus();
+	}
+	m_entryPattern->set_position(new_pos);
+}
+
+void DNC::on_toolbutton_x_clicked(Glib::ustring ins)
+{
+	int start_pos, end_pos;
+	Glib::ustring text = m_entryPattern->get_text(), tmp;
+	int new_pos;
+	if(m_entryPattern->get_selection_bounds(start_pos, end_pos)){
+		tmp = text.substr(0, start_pos);
+		tmp += ins;
+		new_pos = tmp.length();
+		tmp += text.substr(end_pos);
+		m_entryPattern->set_text(tmp);
+	}else{
+		int cursor = m_entryPattern->get_position();
+		tmp = text.substr(0, cursor);
+		tmp += ins;
+		new_pos = tmp.length();
+		tmp += text.substr(cursor);
+		m_entryPattern->set_text(tmp);
+	}
+	if(!m_entryPattern->is_focus()){
+		m_entryPattern->grab_focus();
+	}
+	m_entryPattern->set_position(new_pos);
+}
+
+void DNC::on_toolbutton_Brackets()
+{
+	int start_pos, end_pos;
+	Glib::ustring text = m_entryPattern->get_text(), tmp;
+	int new_pos;
+	if(m_entryPattern->get_selection_bounds(start_pos, end_pos)){
+		tmp = text.substr(0, start_pos);
+		tmp += "(" + text.substr(start_pos, end_pos) + ")";
+		new_pos = tmp.length();
+		tmp += text.substr(end_pos);
+		m_entryPattern->set_text(tmp);
+	}else{
+		int cursor = m_entryPattern->get_position();
+		tmp = text.substr(0, cursor);
+		tmp += "()";
+		new_pos = tmp.length();
+		tmp += text.substr(cursor);
+		m_entryPattern->set_text(tmp);
+	}
+	if(!m_entryPattern->is_focus()){
+		m_entryPattern->grab_focus();
+	}
+	m_entryPattern->set_position(new_pos);
 }
 
 void DNC::set_help_hint()
@@ -196,6 +387,43 @@ bool DNC::get_big_hint()
 {
 	return m_big_hint;
 }
+
+Glib::ustring DNC::get_collectionname()
+{
+	return m_entryCollectionName->get_text();
+}
+
+Glib::ustring DNC::get_pattern()
+{
+	return m_entryPattern->get_text();
+}
+
+void DNC::on_entryCollectionName_changed(const Glib::ustring& s,int *i)
+{
+	std::cout << __FILE__ << '[' << __LINE__ << "] " << __PRETTY_FUNCTION__ << " s == " << s << std::endl;
+	Glib::ustring text = m_entryCollectionName->get_text();
+	if(valid_collection_name(text)){
+		m_buttonOK->set_sensitive(true);
+	}else{
+		m_buttonOK->set_sensitive(false);
+	}
+}
+
+bool DNC::valid_collection_name(Glib::ustring name)
+{
+	if(name.empty()) return false;
+	Glib::ustring invalid(" \n\t\r");
+	size_t pos = name.find_first_of(invalid);
+	return (pos == Glib::ustring::npos);
+}
+
+void DNC::on_m_toolbuttonHelp_clicked()
+{
+	int res = m_dialogCollectionHelp->run();
+	m_dialogCollectionHelp->hide();
+}
+
+
 
 
 

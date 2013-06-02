@@ -15,6 +15,7 @@
 
 
  availble under GPL V3 or later</property>
+    <property name="comments" translatable="yes">Cathy is named for my teenage girlfriend who died when I was 19 due to a hole in her heart. RIP Cathy I still miss you.</property>
     <property name="website">http://www.smit.id.au/</property>
     <property name="website_label" translatable="yes">http://www.smit.id.au/</property>
     <property name="license" translatable="yes">cathy is free software: you can redistribute it and/or modify it
@@ -55,6 +56,1148 @@
       </object>
     </child>
   </object>
+  <object class="GtkDialog" id="dialogCollectionHelp">
+    <property name="width_request">626</property>
+    <property name="height_request">477</property>
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="default_width">320</property>
+    <property name="default_height">256</property>
+    <property name="type_hint">dialog</property>
+    <property name="gravity">center</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="dialog-vbox4">
+        <property name="width_request">640</property>
+        <property name="height_request">480</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area4">
+            <property name="can_focus">False</property>
+            <property name="homogeneous">True</property>
+            <property name="layout_style">center</property>
+            <child>
+              <object class="GtkButton" id="buttonCollectionHelpDone">
+                <property name="label" translatable="yes">Done</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="receives_default">True</property>
+                <property name="image">image5</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="labelCollectionHelpHeading">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">&lt;b&gt;New Collections&lt;/b&gt;
+
+New Collections can be made Via Patterns see the in Page text view for Help wpattern syntax
+
+&lt;b&gt;Using the Pattern builder tool:&lt;/b&gt;
+
+In addition to typing there is a point and click way to build your pattern using the buttons and the text view on the right the buttons are explained bellow
+</property>
+            <property name="use_markup">True</property>
+            <property name="justify">fill</property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkNotebook" id="notebookNewCollHelp">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="tab_pos">right</property>
+            <property name="scrollable">True</property>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolledwindow1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkViewport" id="viewport1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkGrid" id="grid3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="border_width">1</property>
+                        <property name="row_spacing">2</property>
+                        <property name="column_spacing">2</property>
+                        <child>
+                          <object class="GtkImage" id="image6">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="stock">gtk-help</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label11">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">start</property>
+                            <property name="valign">start</property>
+                            <property name="margin_left">6</property>
+                            <property name="label" translatable="yes">Displays this help window</property>
+                            <property name="use_markup">True</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image7">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="stock">gtk-go-back</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">3</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label12">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">7</property>
+                            <property name="xalign">0.49000000953674316</property>
+                            <property name="yalign">0.49000000953674316</property>
+                            <property name="label" translatable="yes">Insert the currently selected &lt;b&gt;key&lt;/b&gt; into the pattern, if you have text selected in your pattern, then this replaces the selection.
+Else puts the key at the cursor point.</property>
+                            <property name="use_markup">True</property>
+                            <property name="justify">fill</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">3</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label13">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">&lt;b&gt;&amp;lt;Space&amp;gt;&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">5</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label14">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">7</property>
+                            <property name="label" translatable="yes">If text is currently selected in the pattern replace it with a space, else put a space at the cursor point</property>
+                            <property name="use_markup">True</property>
+                            <property name="justify">fill</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">5</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label15">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">&lt;b&gt;( ... )&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">7</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label16">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">7</property>
+                            <property name="label" translatable="yes">If text is selected in the &lt;b&gt;pattern&lt;/b&gt; put brackets around it, otherwise put brackets at the cursor.</property>
+                            <property name="use_markup">True</property>
+                            <property name="justify">fill</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">7</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator14">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">2</property>
+                            <property name="width">3</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator15">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">4</property>
+                            <property name="width">3</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator16">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">6</property>
+                            <property name="width">3</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator17">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">8</property>
+                            <property name="width">3</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator18">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator19">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">3</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator20">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">5</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator21">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">7</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator22">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">9</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator23">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">3</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator24">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">17</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator25">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">4</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">17</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label17">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">&lt;b&gt;AND&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">9</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label18">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="ypad">1</property>
+                            <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;AND&lt;/b&gt;, else put &lt;b&gt;AND&lt;/b&gt; at the cursor point.</property>
+                            <property name="use_markup">True</property>
+                            <property name="justify">fill</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">9</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator26">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">10</property>
+                            <property name="width">4</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator27">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">11</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label19">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">&lt;b&gt;OR&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">11</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label20">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;OR&lt;/b&gt;, else put &lt;b&gt;OR&lt;/b&gt; at the cursor point.</property>
+                            <property name="use_markup">True</property>
+                            <property name="justify">fill</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">11</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label21">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">&lt;b&gt;NOT&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">13</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label22">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;NOT&lt;/b&gt;, else put &lt;b&gt;NOT&lt;/b&gt; at the cursor point.</property>
+                            <property name="use_markup">True</property>
+                            <property name="justify">fill</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">13</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator28">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">12</property>
+                            <property name="width">4</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator29">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">13</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator30">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">14</property>
+                            <property name="width">4</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label23">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">&lt;b&gt;#&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">15</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label24">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;#&lt;/b&gt;, else put &lt;b&gt;#&lt;/b&gt; at the cursor point.</property>
+                            <property name="use_markup">True</property>
+                            <property name="justify">fill</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">15</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator31">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">15</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator33">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">16</property>
+                            <property name="width">4</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="tab_expand">True</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="labelNewCollHelpPage0">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="ypad">1</property>
+                <property name="label" translatable="yes"> page 0 </property>
+                <attributes>
+                  <attribute name="weight" value="ultraheavy"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="tab_expand">True</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkGrid" id="grid6">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="border_width">1</property>
+                <property name="row_spacing">2</property>
+                <property name="column_spacing">2</property>
+                <child>
+                  <object class="GtkSeparator" id="separator60">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">1</property>
+                    <property name="height">18</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator61">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">4</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">1</property>
+                    <property name="height">18</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator66">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label53">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;-&lt;/b&gt;, else put &lt;b&gt;-&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator68">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator70">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator71">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator72">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator73">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label54">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;+&lt;/b&gt;, else put &lt;b&gt;+&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label55">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;:&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label56">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;:&lt;/b&gt;, else put &lt;b&gt;:&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="image12">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">list-remove</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="image13">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">list-add</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label57">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;~&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">7</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label58">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;~&lt;/b&gt;, else put &lt;b&gt;~&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">7</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label59">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;&amp;lt;&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">9</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label60">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;&amp;lt;&lt;/b&gt;, else put &lt;b&gt;&amp;lt;&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">9</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator74">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">6</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator75">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">8</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator76">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">7</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator77">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">9</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator78">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">10</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label61">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;&amp;lt;=&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">11</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label62">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;&amp;lt;=&lt;/b&gt;, else put &lt;b&gt;&amp;lt;=&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">11</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator79">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">12</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator80">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">11</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator81">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">13</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label63">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;&amp;gt;&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">14</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label64">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;&amp;gt;&lt;/b&gt;, else put &lt;b&gt;&amp;gt;&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">14</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label65">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;&amp;gt;=&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">16</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator82">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">17</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator83">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">15</property>
+                    <property name="width">4</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label66">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">If text is currently selected in the pattern replace it with &lt;b&gt;&amp;gt;=&lt;/b&gt;, else put &lt;b&gt;&amp;gt;=&lt;/b&gt; at the cursor point.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">fill</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">16</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator84">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">14</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparator" id="separator85">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">16</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+                <property name="tab_expand">True</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="labelNewCollHelpPage1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes"> page 1 </property>
+                <attributes>
+                  <attribute name="weight" value="ultraheavy"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="position">1</property>
+                <property name="tab_expand">True</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">buttonCollectionHelpDone</action-widget>
+    </action-widgets>
+  </object>
   <object class="GtkDialog" id="dialogNewCollection">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -67,11 +1210,11 @@
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area2">
             <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="dialogNewCollection-buttonOK">
                 <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">False</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
@@ -156,7 +1299,7 @@ see help </property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="dialogNewCollection-entryPlayListName">
+                  <object class="GtkEntry" id="dialogNewCollection-entryCollectionName">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
@@ -239,36 +1382,290 @@ see help </property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolbar" id="toolbar4">
+                  <object class="GtkBox" id="box7">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <property name="show_arrow">False</property>
                     <child>
-                      <object class="GtkToolButton" id="dialogNewCollection-toolbuttonHelp">
+                      <object class="GtkToolbar" id="toolbar4">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Get Help</property>
-                        <property name="label" translatable="yes">Help</property>
-                        <property name="use_underline">True</property>
-                        <property name="stock_id">gtk-help</property>
+                        <property name="orientation">vertical</property>
+                        <property name="show_arrow">False</property>
+                        <child>
+                          <object class="GtkToolButton" id="dialogNewCollection-toolbuttonHelp">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">Get Help</property>
+                            <property name="tooltip_text" translatable="yes">Get Help</property>
+                            <property name="label" translatable="yes">Help</property>
+                            <property name="use_underline">True</property>
+                            <property name="stock_id">gtk-help</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="dialogNewCollection-toolbuttonAddKey">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">Put the selected key into tyhe &lt;b&gt;Pattern&lt;/b&gt;</property>
+                            <property name="label" translatable="yes">Use</property>
+                            <property name="use_underline">True</property>
+                            <property name="stock_id">gtk-go-back</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonSpace">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;a Space&lt;/b&gt;, 
+else put &lt;b&gt;a Space&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">&lt;Space&gt;</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonBrackets">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is selected in the &lt;b&gt;pattern&lt;/b&gt; 
+put brackets around it, otherwise put 
+brackets at the cursor.</property>
+                            <property name="label" translatable="yes">(...)</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonAND">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;AND&lt;/b&gt;, 
+else put &lt;b&gt;AND&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">AND</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonOR">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;OR&lt;/b&gt;, 
+else put &lt;b&gt;OR&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">OR</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonNot">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;NOT&lt;/b&gt;, 
+else put &lt;b&gt;NOT&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">NOT</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonHash">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;#&lt;/b&gt;, 
+else put &lt;b&gt;#&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">#</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="homogeneous">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkToolButton" id="dialogNewCollection-toolbuttonAddKey">
+                      <object class="GtkToolbar" id="toolbar6">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Use</property>
-                        <property name="use_underline">True</property>
-                        <property name="stock_id">gtk-go-back</property>
+                        <property name="orientation">vertical</property>
+                        <property name="show_arrow">False</property>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonMinus">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;-&lt;/b&gt;, 
+else put &lt;b&gt;-&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">-</property>
+                            <property name="use_underline">True</property>
+                            <property name="icon_name">list-remove</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonPlus">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;+&lt;/b&gt;, 
+else put &lt;b&gt;+&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">+</property>
+                            <property name="use_underline">True</property>
+                            <property name="icon_name">list-add</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonMatch">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;:&lt;/b&gt;, 
+else put &lt;b&gt;:&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">:</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonFuzzyMatch">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;~&lt;/b&gt;, 
+else put &lt;b&gt;~&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">~</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonLT">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;&amp;lt;&lt;/b&gt;, 
+else put &lt;b&gt;&amp;lt;&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">&lt;</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonLE">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;&amp;lt;=&lt;/b&gt;, 
+else put &lt;b&gt;&amp;lt;=&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">&lt;=</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonGT">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;&amp;gt;&lt;/b&gt;, 
+else put &lt;b&gt;&amp;gt;&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">&gt;</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkToolButton" id="toolbuttonGE">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="has_tooltip">True</property>
+                            <property name="tooltip_markup" translatable="yes">If text is currently selected in the 
+pattern replace it with &lt;b&gt;&amp;gt;=&lt;/b&gt;, 
+else put &lt;b&gt;&amp;gt;=&lt;/b&gt; at the cursor point.</property>
+                            <property name="label" translatable="yes">&gt;=</property>
+                            <property name="use_underline">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="homogeneous">True</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="homogeneous">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -337,15 +1734,14 @@ see help </property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area1">
             <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="buttonCreate">
                 <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">False</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <property name="image_position">right</property>
                 <property name="always_show_image">True</property>
               </object>
               <packing>
@@ -379,60 +1775,19 @@ see help </property>
           </packing>
         </child>
         <child>
-          <object class="GtkGrid" id="grid4">
+          <object class="GtkBox" id="box12">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkRadioButton" id="radiobuttonDirectory">
-                <property name="label" translatable="yes">Directory</property>
+              <object class="GtkSeparator" id="separator9">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
+                <property name="orientation">vertical</property>
               </object>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">1</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="radiobuttonUrl">
-                <property name="label" translatable="yes">URL</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
-                <property name="group">radiobuttonDirectory</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">2</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="radiobuttonCollection">
-                <property name="label" translatable="yes">Collection</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
-                <property name="group">radiobuttonDirectory</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">3</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -445,26 +1800,9 @@ see help </property>
                 <property name="single_line_mode">True</property>
               </object>
               <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkFileChooserButton" id="filechooserbutton1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-                <property name="action">select-folder</property>
-                <property name="create_folders">False</property>
-                <property name="title" translatable="yes">Select a Folder</property>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">1</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -472,96 +1810,486 @@ see help </property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
+                <property name="invisible_char_set">True</property>
                 <property name="progress_fraction">0.019999999552965164</property>
                 <property name="progress_pulse_step">0.10999999940395355</property>
                 <property name="placeholder_text">&lt;name of New Playlist&gt;</property>
               </object>
               <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">0</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="entryUrl">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <property name="can_focus">False</property>
-                <property name="invisible_char">•</property>
-                <property name="width_chars">1</property>
-                <property name="shadow_type">none</property>
-                <property name="secondary_icon_stock">gtk-jump-to</property>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">2</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="checkbuttonAddRecursive">
-                <property name="label" translatable="yes">Add Recursive</property>
+              <object class="GtkSeparator" id="separator10">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="receives_default">False</property>
-                <property name="xalign">0</property>
-                <property name="active">True</property>
-                <property name="draw_indicator">True</property>
+                <property name="orientation">vertical</property>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
               </packing>
             </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkPaned" id="paned1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="position">781</property>
             <child>
-              <object class="GtkSeparator" id="separator1">
+              <object class="GtkNotebook" id="notebookMain">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tab_pos">bottom</property>
+                <child>
+                  <object class="GtkGrid" id="grid4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkRadioButton" id="radiobuttonDirectory">
+                        <property name="label" translatable="yes">Directory</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <property name="xalign">0</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="radiobuttonUrl">
+                        <property name="label" translatable="yes">URL</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <property name="xalign">0</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">radiobuttonDirectory</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">1</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="radiobuttonCollection">
+                        <property name="label" translatable="yes">Collection</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <property name="xalign">0</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">radiobuttonDirectory</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">2</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFileChooserButton" id="filechooserbutton1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <property name="action">select-folder</property>
+                        <property name="create_folders">False</property>
+                        <property name="show_hidden">True</property>
+                        <property name="title" translatable="yes">Select a Folder</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="entryUrl">
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="can_focus">False</property>
+                        <property name="invisible_char">•</property>
+                        <property name="width_chars">1</property>
+                        <property name="shadow_type">none</property>
+                        <property name="invisible_char_set">True</property>
+                        <property name="secondary_icon_stock">gtk-jump-to</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">1</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="checkbuttonAddRecursive">
+                        <property name="label" translatable="yes">Add Recursive</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="receives_default">False</property>
+                        <property name="xalign">0</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator" id="separator1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="comboboxtextCollection">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="entry_text_column">0</property>
+                        <property name="id_column">1</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">2</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolledwindowColContent">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">3</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="labelPage0">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Directory's Urls &amp;amp; Collections&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="box14">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkBox" id="box16">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel" id="labelNamespace">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Namespace: &lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBoxText" id="comboboxtextNamespace">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="entry_text_column">0</property>
+                            <property name="id_column">1</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator" id="separator13">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="labelPlaylistCollection">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">&lt;b&gt;::&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBoxText" id="comboboxtextPlayListCollection">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="entry_text_column">0</property>
+                            <property name="id_column">1</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">4</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkPaned" id="paned2">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="position">405</property>
+                        <child>
+                          <object class="GtkBox" id="box15">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkScrolledWindow" id="scrolledwindowTracksChoosen">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="shadow_type">in</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="box17">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <object class="GtkSeparator" id="separator11">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkToolbar" id="toolbar5">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="show_arrow">False</property>
+                                    <child>
+                                      <object class="GtkToolButton" id="toolbuttonTrackUP">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Up</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-go-up</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="homogeneous">True</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToolButton" id="toolbuttonChooseTrack">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Choose</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-go-back</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="homogeneous">True</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToolButton" id="toolbuttonRetractTrack">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Retract</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-go-forward</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="homogeneous">True</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToolButton" id="toolbuttonTrackDown">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Down</property>
+                                        <property name="use_underline">True</property>
+                                        <property name="stock_id">gtk-go-down</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="homogeneous">True</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSeparator" id="separator12">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="resize">False</property>
+                            <property name="shrink">True</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="scrolledwindowTracksAvailble">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="resize">True</property>
+                            <property name="shrink">True</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="labelPageSelect">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Select Individually&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
-                <property name="width">1</property>
-                <property name="height">3</property>
+                <property name="resize">False</property>
+                <property name="shrink">True</property>
               </packing>
             </child>
             <child>
-              <object class="GtkComboBoxText" id="comboboxtextOrderBy">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <property name="can_focus">False</property>
-                <property name="hexpand">True</property>
-                <property name="row_span_column">0</property>
-                <property name="active">0</property>
-                <property name="button_sensitivity">on</property>
-                <property name="entry_text_column">0</property>
-                <property name="id_column">1</property>
-                <property name="active_id">A-Z</property>
-                <items>
-                  <item translatable="yes">A-Z</item>
-                  <item translatable="yes">Z-A</item>
-                  <item translatable="yes">Edit Manually</item>
-                </items>
-              </object>
-              <packing>
-                <property name="left_attach">4</property>
-                <property name="top_attach">3</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox" id="box7">
+              <object class="GtkBox" id="box8">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkBox" id="box8">
+                  <object class="GtkBox" id="box9">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -673,7 +2401,7 @@ see help </property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="box9">
+                  <object class="GtkBox" id="box13">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -762,89 +2490,15 @@ see help </property>
                 </child>
               </object>
               <packing>
-                <property name="left_attach">5</property>
-                <property name="top_attach">3</property>
-                <property name="width">1</property>
-                <property name="height">2</property>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
               </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="comboboxtextCollection">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="hexpand">True</property>
-                <property name="entry_text_column">0</property>
-                <property name="id_column">1</property>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">3</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow" id="scrolledwindowColContent">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">4</property>
-                <property name="width">2</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
@@ -876,6 +2530,11 @@ see help </property>
     <property name="can_focus">False</property>
     <property name="yalign">0.50999999046325684</property>
     <property name="pixbuf">gtk-new.svg</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-ok</property>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="visible">True</property>

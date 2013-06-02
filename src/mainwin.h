@@ -185,6 +185,8 @@ class Main_win: public Gtk::Window
 		void on_Playlist_clicked(int id);
 		void on_Playlist_dblclicked(int id);
 		std::vector<Xmms::Dict> on_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby);
+		std::vector<Glib::ustring> on_namespace_changed(Glib::ustring _namespace);
+		std::vector<Xmms::Dict> on_playlist_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby, Glib::ustring _namespace);
 		void update_labels(const Xmms::PropDict &info);
 		void disconnect();
 		std::string Urlencode(std::string url);
