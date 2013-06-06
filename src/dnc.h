@@ -35,6 +35,9 @@
 class DNC : public Gtk::Dialog 
 {
 	public:
+		//                      return,                  collection,            orderby //
+		typedef sigc::signal<std::vector<std::pair<Glib::ustring, Glib::ustring> > > type_signal_getkeys;
+		
 		DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
 		~DNC();
 
@@ -42,6 +45,8 @@ class DNC : public Gtk::Dialog
 		bool get_big_hint();
 		Glib::ustring get_collectionname();
 		Glib::ustring get_pattern();
+
+		type_signal_getkeys signal_getkeys();
 	protected:
 		const Glib::RefPtr<Gtk::Builder>& m_builder;
 
@@ -69,13 +74,18 @@ class DNC : public Gtk::Dialog
 		Gtk::ToolButton *m_toolbuttonLE;
 		Gtk::ToolButton *m_toolbuttonGT;
 		Gtk::ToolButton *m_toolbuttonGE;
+		Gtk::ToolButton *m_toolbuttonGetKeys;
+		Gtk::ButtonBox *m_action_area;
 
 		bool m_big_hint;
+
+		type_signal_getkeys m_signal_getkeys;
 
 		// signal handlers //
 		void on_m_toolbuttonHelp_clicked();
 		void on_toolbutton_x_clicked(Glib::ustring ins);
 		void on_toolbutton_Brackets();
+		void on_toolbutton_GetKeys();
 		
 		void on_selection_changed_AvailableKeys();
 		void on_toolbutton_AddKey();

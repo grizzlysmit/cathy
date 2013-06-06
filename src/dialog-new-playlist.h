@@ -108,6 +108,7 @@ class DialogNewPlaylist : public Gtk::Dialog
 		Gtk::ToolButton *m_toolbuttonChooseTrack;
 		Gtk::ToolButton *m_toolbuttonRetractTrack;
 		Gtk::ToolButton *m_toolbuttonTrackDown;
+		Gtk::ButtonBox *m_action_area;
 
 		// other stuff //
 		bool m_addrecursive;

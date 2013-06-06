@@ -35,7 +35,7 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
     m_scrolledwindowTracksAvailble(0), m_listviewtextTracksAvailble(0), 
     m_comboboxtextNamespace(0), m_comboboxtextPlayListCollection(0), 
     m_toolbuttonTrackUP(0), m_toolbuttonChooseTrack(0), 
-    m_toolbuttonRetractTrack(0), m_toolbuttonTrackDown(0), 
+    m_toolbuttonRetractTrack(0), m_toolbuttonTrackDown(0), m_action_area(0), 
     m_addrecursive(true), m_radioselected(directory), m_orderby(atoz)
 {
 	//////////////////////////////////////////////////////////
@@ -121,6 +121,7 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
 		m_listviewtextAvailable->append("artist");
 		m_listviewtextAvailable->append("mime");
 		m_listviewtextAvailable->signal_selection_changed().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_selection_changed_Available) );
+		m_listviewtextAvailable->signal_dblclicked().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_toolbutton_MoveLeft) );
 	}
 	// m_scrolledwindowColContent //
 	m_builder->get_widget("scrolledwindowColContent", m_scrolledwindowColContent);
@@ -249,8 +250,15 @@ DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr
 	if(m_notebookMain){
 		m_notebookMain->signal_switch_page().connect( sigc::mem_fun(*this, &DialogNewPlaylist::on_notebookMain_switch_page) );
 	}
+	
+	// m_action_area //
+	m_builder->get_widget("dialognewplaylist-action_area", m_action_area);
+	if(m_action_area){
+		//m_action_area->signal_insert_text().connect( sigc::mem_fun(*this, &DR::on_entry_RenameNewName_changed) );
+		m_action_area->set_layout(Gtk::BUTTONBOX_EDGE);
+	}
 
-	set_default_size(640, 480);
+	set_default_size(800, 600);
 }
 
 DialogNewPlaylist::~DialogNewPlaylist()

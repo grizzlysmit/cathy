@@ -38,7 +38,11 @@ cathy_SOURCES = \
 	lvt.cc \
 	lvt.h \
 	dnc.cc \
-	dnc.h
+	dnc.h \
+	dd.cc \
+	dd.h \
+	dr.cc \
+	dr.h
 
 cathy_LDFLAGS = 
 

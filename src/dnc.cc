@@ -29,6 +29,7 @@ DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
     m_toolbuttonNot(0), m_toolbuttonHash(0), m_toolbuttonMinus(0), 
     m_toolbuttonPlus(0), m_toolbuttonMatch(0), m_toolbuttonFuzzyMatch(0), 
     m_toolbuttonLT(0), m_toolbuttonLE(0), m_toolbuttonGT(0), m_toolbuttonGE(0), 
+    m_toolbuttonGetKeys(0), m_action_area(0), 
     m_big_hint(false)
 {
 	// dialogNewCollection-scrolledwindowAvailbleKeys //
@@ -71,23 +72,25 @@ DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
 		//m_listviewtextHelp->set_hexpand();
 		//m_listviewtextHelp->set_vexpand();
 		m_listviewtextHelp->set_column_title(0, "Help ON Patterns");
-		m_listviewtextHelp->append("PATTERN");
-		m_listviewtextHelp->append("       Patterns are used to search for songs in the media library, some of these patterns may require escaping  (with  '\\')  depending  on  what");
-		m_listviewtextHelp->append("       shell is used. The properties can be found in the output of xmms2 info.");
+		m_listviewtextHelp->append("PATTERN SYNTAX:");
+		m_listviewtextHelp->append("       Patterns are used to search for songs in the media library, the properties ");
+		m_listviewtextHelp->append("       can be found in the output of xmms2 info, or in the list box on the right.");
 		m_listviewtextHelp->append("");
 		m_listviewtextHelp->append("       <property>:<string>");
 		m_listviewtextHelp->append("");
-		m_listviewtextHelp->append("           Match  songs  whose  property matches the string. A ? in the string indicates a single wildcard character, and a * indicates multiple");
-		m_listviewtextHelp->append("           wildcard characters.");
+		m_listviewtextHelp->append("           Match  songs  whose  property matches the string. A ? in the string indicates");
+		m_listviewtextHelp->append("           a single wildcard character, and a * indicates multiple wildcard characters.");
 		m_listviewtextHelp->append("");
 		m_listviewtextHelp->append("       <property>~<string>");
 		m_listviewtextHelp->append("");
-		m_listviewtextHelp->append("           Match songs whose property fuzzily matches the string. Equal to matching by <property>:*<string>*.");
+		m_listviewtextHelp->append("           Match songs whose property fuzzily matches the string. Equal to matching by ");
+		m_listviewtextHelp->append("           <property>:*<string>*.");
 		m_listviewtextHelp->append("");
 		m_listviewtextHelp->append("       <property><operation><number>");
 		m_listviewtextHelp->append("");
-		m_listviewtextHelp->append("           The operation can be <, <=, > or >=, the pattern will match songs whose property is a numerical value smaller, smaller or equal, big‐");
-		m_listviewtextHelp->append("           ger, bigger or equal in comparison to the number.");
+		m_listviewtextHelp->append("           The operation can be <, <=, > or >=, the pattern will match songs whose property");
+		m_listviewtextHelp->append("           is a numerical value smaller, smaller or equal, bigger, bigger or equal in ");
+		m_listviewtextHelp->append("           comparison to the number.");
 		m_listviewtextHelp->append("");
 		m_listviewtextHelp->append("       +<property>");
 		m_listviewtextHelp->append("");
@@ -228,12 +231,26 @@ DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
 	if(m_toolbuttonGE){
 		m_toolbuttonGE->signal_clicked().connect( sigc::bind<Glib::ustring>( sigc::mem_fun(*this, &DNC::on_toolbutton_x_clicked), ">=") );
 	}
+	// m_toolbuttonGetKeys //
+	m_builder->get_widget("toolbuttonGetKeys", m_toolbuttonGetKeys);
+	if(m_toolbuttonGetKeys){
+		m_toolbuttonGetKeys->signal_clicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_GetKeys) );
+	}
+	
+	// m_action_area //
+	m_builder->get_widget("dialognewcolection-action_area", m_action_area);
+	if(m_action_area){
+		//m_action_area->signal_insert_text().connect( sigc::mem_fun(*this, &DR::on_entry_RenameNewName_changed) );
+		m_action_area->set_layout(Gtk::BUTTONBOX_EDGE);
+	}
 
 	set_default_size(640, 480);
 }
 
 DNC::~DNC()
 {
+	delete m_listviewtextAvailbleKeys;
+	delete m_listviewtextHelp;
 }
 
 void DNC::on_selection_changed_AvailableKeys()
@@ -324,23 +341,23 @@ void DNC::on_toolbutton_Brackets()
 void DNC::set_help_hint()
 {
 	if(m_big_hint){
-		m_listviewtextHelp->set_tooltip_markup("<b>PATTERN</b>\n"
-		                                       "       Patterns are used to search for songs in the media library, some of these patterns may require escaping  (with  '\')  depending  on  what\n"
-		                                       "       shell is used. The properties can be found in the output of xmms2 info.\n"
-		                                       "\n"
+		m_listviewtextHelp->set_tooltip_markup("<b>PATTERN SYNTAX:</b>\n"
+		                                       "       Patterns are used to search for songs in the media library, the properties\n"
+		                                       "       can be found in the output of xmms2 info, or in the list box ooe right.\n\n"
 		                                       "       &lt;property&gt;:&lt;string&gt;\n"
 		                                       "\n"
-		                                       "           Match  songs  whose  property matches the string. A ? in the string indicates a single wildcard character, and a * indicates multiple\n"
-		                                       "           wildcard characters.\n"
-		                                       "\n"
+		                                       "           Match  songs  whose  property matches the string. A ? in the string\n"
+		                                       "           indicates a single wildcard character, and a * indicates multiple wildcard \n"
+		                                       "           characters.\n\n"
 		                                       "       &lt;property&gt;~&lt;string&gt;\n"
 		                                       "\n"
-		                                       "           Match songs whose property fuzzily matches the string. Equal to matching by &lt;property&gt;:*&lt;string&gt;*.\n"
-		                                       "\n"
+		                                       "           Match songs whose property fuzzily matches the string. Equal to matching by\n"
+		                                       "           &lt;property&gt;:*&lt;string&gt;*.\n\n"
 		                                       "       &lt;property&gt;&lt;operation&gt;&lt;number&gt;\n"
 		                                       "\n"
-		                                       "           The operation can be <b>&lt;, &lt;=, &gt;</b> or <b>&gt;=</b>, the pattern will match songs whose property is a numerical value smaller, smaller or equal, big‐\n"
-		                                       "           ger, bigger or equal in comparison to the number.\n"
+		                                       "           The operation can be <b>&lt;, &lt;=, &gt;</b> or <b>&gt;=</b>, the pattern\n"
+		                                       "           will match songs whose property is a numerical value smaller, smaller or equal,\n"
+		                                       "           bigger, bigger or equal in comparison to the number.\n"
 		                                       "\n"
 		                                       "       +&lt;property&gt;\n"
 		                                       "\n"
@@ -423,9 +440,20 @@ void DNC::on_m_toolbuttonHelp_clicked()
 	m_dialogCollectionHelp->hide();
 }
 
+void DNC::on_toolbutton_GetKeys()
+{
+	m_listviewtextAvailbleKeys->remove_all_rows();
+	std::vector<std::pair<Glib::ustring, Glib::ustring> > lst = m_signal_getkeys.emit();
+	for(std::vector<std::pair<Glib::ustring, Glib::ustring> >::iterator i = lst.begin(), i_end = lst.end(); i != i_end; ++i){
+		int row = m_listviewtextAvailbleKeys->append(i->first);
+		m_listviewtextAvailbleKeys->set_text(row, 1, i->second);
+	}
+}
 
-
-
+DNC::type_signal_getkeys DNC::signal_getkeys()
+{
+	return m_signal_getkeys;
+}
 
 
 

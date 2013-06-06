@@ -21,19 +21,44 @@ cathy is free software: you can redistribute it and/or modify it
 #include <vector>
 #include <exception>
 #include <boost/format.hpp>
+#include <map>
 
+std::map<std::string, int> keyType;
 
+static void get_keys_thunk(const std::string& key, const Xmms::Dict::Variant& v)
+{
+	if(keyType.count(key) == 0){ // it's new to us //
+		if(v.empty()){
+			keyType[key] = (1 << 3); // inserts it & record typelessness //
+		}else{
+			keyType[key] = (1 << v.which()); // inserts it //
+		}
+	}else{
+		if(v.empty()){
+			keyType[key] |= (1 << 3); // record variants typelessness //
+		}else{
+			keyType[key] |= (1 << v.which()); 
+		}
+		////////////////////////////////////////////////////////////////////
+		// record the fact that key refrences a which value of 0, 1, or 2 //
+		// as Xmms::Dict::Variant is defined as:                          //
+		// typedef boost::variant< int32_t, uint32_t, std::string >       //
+		//                                       	Xmms::Dict::Variant   //
+		////////////////////////////////////////////////////////////////////
+	}
+}
 
 
 Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Window(cobject), m_builder(builder), m_buttonConnect(0), m_buttonPrevious(0),
     m_buttonRewind(0), m_buttonStop(0), m_buttonPlayPause(0), m_buttonForward(0), 
     m_buttonNext(0), m_buttonDelete(0), m_buttonNewPlayList(0), m_buttonNewCollection(0), 
-    m_buttonExit(0), m_buttonAbout(0), 
+    m_buttonRenamePlayList(0), m_buttonExit(0), m_buttonAbout(0), 
     m_volumebuttonMaster(0), m_volumebuttonLeft(0), m_volumebuttonRight(0), m_progressbar1(0), 
     m_labelPlayed(0), m_labelLeft(0), m_labelTitle(0), m_labelArtist(0), m_labelAlbum(0), 
     m_labelDuration(0), 
     m_aboutdialog1(0), m_dialogNewPlaylist(0), m_dialogNewCollection(0), 
+    m_dialogDelete(0), m_dialogrename(0), 
     m_listviewformatTextPlaylists(0), m_MatrixBoxCurrentPlaylist(0), m_imagemenuitemQuit(0), 
     m_imagemenuitemConnect(0), m_imagemenuitemNewPlayList(0), m_imagemenuitemNewCollection(0), 
     m_imagemenuitemPlayPause(0), m_imagemenuitemPrevious(0), m_imagemenuitemRewind(0), 
@@ -44,7 +69,8 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
     //m_eventboxPlaylists(0), m_eventboxCurrentPlaylist(0), 
     xmms2_client(0), xmms2_sync_client(0), connect_cout(0), 
     m_connect_retrys(2), m_setting_volume_left(false), m_setting_volume_right(false), 
-    m_setting_volume_master(false), m_duration(0), m_auto_connect(true)
+    m_setting_volume_master(false), m_duration(0), m_auto_connect(true), 
+    m_adding_palylist(false)
 {
 	m_status = Xmms::Playback::STOPPED;
 
@@ -91,10 +117,17 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	if(m_buttonNewCollection){
 		m_buttonNewCollection->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_NewCollection) );
 	}
+	// m_buttonRenamePlayList //
+	m_builder->get_widget("buttonRenamePlayList", m_buttonRenamePlayList);
+	if(m_buttonRenamePlayList){
+		m_buttonRenamePlayList->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_Rename) );
+	}
+	// m_buttonExit //
 	m_builder->get_widget("buttonExit", m_buttonExit);
 	if(m_buttonExit){
 		m_buttonExit->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_Exit) );
 	}
+	// m_buttonAbout //
 	m_builder->get_widget("buttonAbout", m_buttonAbout);
 	if(m_buttonAbout){
 		m_buttonAbout->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_About) );
@@ -296,7 +329,19 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	// m_dialogNewCollection //
 	m_builder->get_widget_derived("dialogNewCollection", m_dialogNewCollection);
 	if(m_dialogNewCollection){
-		//m_dialogNewCollection->signal_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_coll_changed) );
+		m_dialogNewCollection->signal_getkeys().connect( sigc::mem_fun(*this, &Main_win::on_newcol_getkeys) );
+	}
+	// m_dialogDelete //
+	m_builder->get_widget_derived("dialogDelete", m_dialogDelete);
+	if(m_dialogDelete){
+		m_dialogDelete->signal_namespace_changed().connect( sigc::mem_fun(*this, &Main_win::on_namespace_delete_changed) );
+		m_dialogDelete->signal_playlist_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_playlist_coll_delete_changed) );
+	}
+	// m_dialogrename //
+	m_builder->get_widget_derived("dialogrename", m_dialogrename);
+	if(m_dialogrename){
+		m_dialogrename->signal_namespace_changed().connect( sigc::mem_fun(*this, &Main_win::on_namespace_rename_changed) );
+		m_dialogrename->signal_playlist_coll_changed().connect( sigc::mem_fun(*this, &Main_win::on_playlist_coll_rename_changed) );
 	}
 
 	// set buttons to non-interactive state at sart //
@@ -433,7 +478,7 @@ void Main_win::on_button_Connect()
 		}
 		catch(std::exception &e){
 			std::cout << e.what() << std::endl;
-			system("/usr/bin/xmms2-launcher"); // force xmms2d to start //
+			int res = system("/usr/bin/xmms2-launcher"); // force xmms2d to start //
 		}
 	}
 }
@@ -660,11 +705,11 @@ bool Main_win::on_timeout()
 						pos = chg.get<int32_t>("position");
 					}
 
-					if(chg.contains("id")){
+					if(!m_adding_palylist && chg.contains("id")){
 						id = chg.get<int32_t>("id");
 						//int id = xmms2_client->playback.currentID();
 						Xmms::PropDict info = xmms2_client->medialib.getInfo( id );
-						update_labels(info);
+						update_labels(info); // ************************************** //
 					}
 					std::cout << __FILE__ << '[' << __LINE__ << "] id == " << id << std::endl;
 
@@ -923,7 +968,7 @@ bool Main_win::on_timeout()
 					try{
 						the_mesage = dynamic_cast<mesage<Xmms::PropDict>*>(msg);
 						Xmms::PropDict  info = the_mesage->get_arg();
-						update_labels(info);
+						if(!m_adding_palylist) update_labels(info);
 					}
 					catch(std::exception &e){
 						std::cout << __FILE__ << "[" << __LINE__ 
@@ -1153,31 +1198,55 @@ void Main_win::on_button_Next()
 void Main_win::on_button_Delete()
 {
 	if(!xmms2_client) return;
-	Gtk::MessageDialog dialog(*this, "Delete PlayList <b>" + m_currentPlaylistName 
-	                                              + "?</b>\nThis cannot be undone!",
-	                          true /* use_markup */, Gtk::MESSAGE_QUESTION,
-	                          Gtk::BUTTONS_OK_CANCEL);
-	dialog.set_secondary_text("you are about to delete a play "
-	                          "list from xmms2's database!!");
 
-	int result = dialog.run();
+	m_dialogDelete->set_namespace(DD::rb_playlist);
+	m_dialogDelete->set_coll(m_currentPlaylistName);
+	int res = m_dialogDelete->run();
+	m_dialogDelete->hide();
+	std::cout << __FILE__ << "[" << __LINE__ 
+			  << "] in " << __PRETTY_FUNCTION__ << ": res == " 
+			  << res << std::endl;
 
-	//Handle the response:
-	switch(result)
-	{
-		case(Gtk::RESPONSE_OK):
-		{
+	if(res){
+		DD::NameSpace e_ns = m_dialogDelete->get_namespace();
+		Xmms::Collection::Namespace ns;
+		switch(e_ns){
+			case(DD::rb_coll):
+			{
+				ns = Xmms::Collection::COLLECTIONS;
+				break;
+			}
+			case(DD::rb_playlist):
+			{
+				ns = Xmms::Collection::PLAYLISTS;
+				break;
+			}
+			default:
+			{
+				// TODO: error message  //
+				return; // nothing to do //
+			}
+		}
+		std::string coll_playlst = m_dialogDelete->get_coll();
+	    std::cout << __FILE__ << "[" << __LINE__ 
+			      << "] in " << __PRETTY_FUNCTION__ << ": coll_playlst == " 
+			      << coll_playlst << std::endl;
+		if(!coll_playlst.empty()){
 			try{
-				xmms2_client->playlist.remove(m_currentPlaylistName);
+				xmms2_client->collection.remove(coll_playlst, ns);
+				std::cout << __FILE__ << "[" << __LINE__ 
+					      << "] in " << __PRETTY_FUNCTION__ << ": coll_playlst == " 
+				          << coll_playlst << std::endl;
 				refresh_playlists(); // taken care of in callbacks from xmms2_sync_client // not so taken care of //
 			}
 			catch(std::exception &e){
-				Gtk::MessageDialog dialog(*this, "Failed to delete PlayList <b>" + m_currentPlaylistName 
+				Gtk::MessageDialog dialog(*this, "Failed to delete <b>" + Glib::ustring(ns) + "::" + coll_playlst 
 				                          + "?</b>\nyour error message was <b><i>" + e.what() + "!</i></b>",
-				                          true /* use_markup */, Gtk::MESSAGE_ERROR,
+				                          true // use_markup //
+										  , Gtk::MESSAGE_ERROR,
 				                          Gtk::BUTTONS_OK);
 				std::string currentplst = xmms2_client->playlist.currentActive();
-				if(currentplst == m_currentPlaylistName){
+				if(e_ns == DD::rb_playlist && currentplst == coll_playlst){
 					dialog.set_secondary_text("you cannot delete the currently "
 					                          "active playlist!!");
 				}else{
@@ -1187,19 +1256,10 @@ void Main_win::on_button_Delete()
 				int result = dialog.run();
 				std::cout << e.what() << std::endl;
 			}
-			std::cout << "OK clicked." << std::endl;
-			break;
 		}
-		case(Gtk::RESPONSE_CANCEL):
-		{
-			std::cout << "Cancel clicked." << std::endl;
-			break;
-		}
-		default:
-		{
-			std::cout << "Unexpected button clicked." << std::endl;
-			break;
-		}
+		std::cout << "Delete clicked." << std::endl;
+	}else{
+		std::cout << "Cancel clicked." << std::endl;
 	}
 }
 
@@ -1578,6 +1638,7 @@ bool Main_win::handle_change(const Xmms::Dict &chg)
 {
     std::cout << __FILE__ << "[" << __LINE__ << "] got here handle_change: " << std::endl;
 	Glib::Threads::Mutex::Lock lock(m_mutex);
+	if(m_adding_palylist) return m_dont_disconect; // don't do it we're adding a palylist //
 	try{
 		basemesage *msg = new mesage<Xmms::Dict>(basemesage::plchange, chg);
 		m_queue.push(msg);
@@ -1614,6 +1675,7 @@ bool Main_win::handle_pls_loaded(const std::string &name)
 	std::cout << __FILE__ << '[' << __LINE__ 
 	          << "] handle_pls_loaded name == " << name << std::endl;
 	Glib::Threads::Mutex::Lock lock(m_mutex);
+	if(m_adding_palylist) return m_dont_disconect; // we're adding a palylist so don't //
 	try{
 		basemesage *msg = new mesage<std::string>(basemesage::pls_loaded, name);
 		m_queue.push(msg);
@@ -1696,6 +1758,7 @@ bool Main_win::handle_playtime(const unsigned int &tme)
 	//std::cout << __FILE__ << '[' << __LINE__ << "] handle_playtime: tme " << tme << std::endl;
 
 	Glib::Threads::Mutex::Lock lock (m_mutex);
+	if(m_adding_palylist) return m_dont_disconect; // dont do it we're adding a palylist //
 	try{
 		basemesage *msg = new mesage<unsigned>(basemesage::handle_playtime, tme);
 		m_queue.push(msg);
@@ -1716,6 +1779,7 @@ bool Main_win::handle_mlib_entry_changed(const uint32_t &id)
 	if(!xmms2_sync_client) return m_dont_disconect;
 	if(!xmms2_client) return m_dont_disconect;
 	Glib::Threads::Mutex::Lock lock(m_mutex);
+	if(m_adding_palylist) return m_dont_disconect; // dont do it we're adding a palylist //
 	try{
 		if(xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
 			xmms2_sync_client->medialib.getInfo(id)(Xmms::bind(&Main_win::handle_medialib_info, this));
@@ -1774,6 +1838,7 @@ void Main_win::on_button_NewPlayList()
 		switch(m_dialogNewPlaylist->get_page()){
 			case(DialogNewPlaylist::page0):
 			{
+				std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::page0): " << std::endl;
 				switch(m_dialogNewPlaylist->get_radio_selected()){
 					case(DialogNewPlaylist::directory):
 					{
@@ -1784,10 +1849,18 @@ void Main_win::on_button_NewPlayList()
 						}
 						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): filename == " << filename << std::endl;
 						xmms2_client->playlist.create(playlist_name); // create the playlist //
+						{
+							Glib::Threads::Mutex::Lock lock (m_mutex);
+							m_adding_palylist = true;
+						}
 						if(m_dialogNewPlaylist->get_addrecursive()){
 							xmms2_client->playlist.addRecursiveEncoded(filename, playlist_name);
 						}else{
 							xmms2_client->playlist.addUrlEncoded(filename, playlist_name);
+						}
+						{
+							Glib::Threads::Mutex::Lock lock (m_mutex);
+							m_adding_palylist = false;
 						}
 						break;
 					}
@@ -1796,10 +1869,18 @@ void Main_win::on_button_NewPlayList()
 						std::string url = m_dialogNewPlaylist->get_url();
 						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::directory): url == " << url << std::endl;
 						xmms2_client->playlist.create(playlist_name); // create the playlist //
+						{
+							Glib::Threads::Mutex::Lock lock (m_mutex);
+							m_adding_palylist = true;
+						}
 						if(m_dialogNewPlaylist->get_addrecursive()){
 							xmms2_client->playlist.addRecursiveEncoded(url, playlist_name);
 						}else{
 							xmms2_client->playlist.addUrlEncoded(url, playlist_name);
+						}
+						{
+							Glib::Threads::Mutex::Lock lock (m_mutex);
+							m_adding_palylist = false;
 						}
 						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::url):" << std::endl;
 						break;
@@ -1807,6 +1888,7 @@ void Main_win::on_button_NewPlayList()
 					case(DialogNewPlaylist::collection):
 					{
 						Glib::ustring collection_name = m_dialogNewPlaylist->get_collection_name();
+						std::cout << __FILE__ << '[' << __LINE__ << "] coll got: collection_name == " << collection_name << std::endl;
 						Xmms::CollResult collresult = xmms2_client->collection.get(static_cast<std::string>(collection_name), Xmms::Collection::COLLECTIONS);
 						Xmms::CollPtr coll = static_cast<Xmms::CollPtr>(collresult);
 						std::cout << __FILE__ << '[' << __LINE__ << "] coll got: collection_name == " << collection_name << std::endl;
@@ -1825,11 +1907,19 @@ void Main_win::on_button_NewPlayList()
 						std::cout << __FILE__ << '[' << __LINE__ << "] got list: collection_name == " << collection_name << std::endl;
 						xmms2_client->playlist.create(playlist_name); // create the playlist //
 						int pos = 0;
+						{
+							Glib::Threads::Mutex::Lock lock (m_mutex);
+							m_adding_palylist = true;
+						}
 						for( Xmms::List<int>::const_iterator i(lst.begin()), i_end(lst.end()); i != i_end; ++i, ++pos){
 							std::cout << __FILE__ << '[' << __LINE__ << "] *i == " << *i << std::endl;
 							int id = *i;
 							std::cout << __FILE__ << '[' << __LINE__ << "] id == " << id << std::endl;
 							xmms2_client->playlist.insertId(pos, id, playlist_name);
+						}
+						{
+							Glib::Threads::Mutex::Lock lock (m_mutex);
+							m_adding_palylist = false;
 						}
 						//xmms2_client->collection.save(*coll, playlist_name, Xmms::Collection::PLAYLISTS);
 						std::cout << __FILE__ << '[' << __LINE__ << "] case(DialogNewPlaylist::collection):" << std::endl;
@@ -1848,12 +1938,20 @@ void Main_win::on_button_NewPlayList()
 				// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 				xmms2_client->playlist.create(playlist_name); // create the playlist //
 				int pos = 0;
+				{
+					Glib::Threads::Mutex::Lock lock (m_mutex);
+					m_adding_palylist = true;
+				}
 				for(std::vector<int>::iterator i = lst.begin(), i_end = lst.end();
 				    i != i_end; ++i, ++pos){
 					std::cout << __FILE__ << '[' << __LINE__ << "] insertId: *i == " << *i << std::endl;
 					int id = *i;
 					std::cout << __FILE__ << '[' << __LINE__ << "] insertId: id == " << id << std::endl;
 					xmms2_client->playlist.insertId(pos, id, playlist_name);
+				}
+				{
+					Glib::Threads::Mutex::Lock lock (m_mutex);
+					m_adding_palylist = false;
 				}
 				break;
 			}
@@ -1889,6 +1987,78 @@ void Main_win::on_button_NewCollection()
 		std::cout << "New New Collection OK" << std::endl;
 	}else{
 		std::cout << "New New Collection Canceled" << std::endl;
+	}
+}
+
+void Main_win::on_button_Rename()
+{
+	if(!xmms2_client) return;
+
+	m_dialogrename->set_namespace(DR::rb_playlist);
+	m_dialogrename->set_coll(m_currentPlaylistName);
+	int res = m_dialogrename->run();
+	m_dialogrename->hide();
+	std::cout << __FILE__ << "[" << __LINE__ 
+			  << "] in " << __PRETTY_FUNCTION__ << ": res == " 
+			  << res << std::endl;
+
+	if(res){
+		DR::NameSpace e_ns = m_dialogrename->get_namespace();
+		Xmms::Collection::Namespace ns;
+		switch(e_ns){
+			case(DD::rb_coll):
+			{
+				ns = Xmms::Collection::COLLECTIONS;
+				break;
+			}
+			case(DD::rb_playlist):
+			{
+				ns = Xmms::Collection::PLAYLISTS;
+				break;
+			}
+			default:
+			{
+				// TODO: error message  //
+				return; // nothing to do //
+			}
+		}
+		std::string coll_playlst = m_dialogrename->get_coll();
+	    std::cout << __FILE__ << "[" << __LINE__ 
+			      << "] in " << __PRETTY_FUNCTION__ << ": coll_playlst == " 
+			      << coll_playlst << std::endl;
+		std::string newname = m_dialogrename->get_newname();
+	    std::cout << __FILE__ << "[" << __LINE__ 
+			      << "] in " << __PRETTY_FUNCTION__ << ": newname == " 
+			      << newname << std::endl;
+		if(!coll_playlst.empty() && !newname.empty()){
+			try{
+				xmms2_client->collection.rename(coll_playlst, newname, ns);
+				std::cout << __FILE__ << "[" << __LINE__ 
+					      << "] in " << __PRETTY_FUNCTION__ << ": coll_playlst == " 
+				          << coll_playlst << std::endl;
+				refresh_playlists(); // taken care of in callbacks from xmms2_sync_client // not so taken care of //
+			}
+			catch(std::exception &e){
+				Gtk::MessageDialog dialog(*this, "Failed to rename <b>" + Glib::ustring(ns) + "::" + coll_playlst 
+				                          + "to " + newname + "?</b>\nyour error message was <b><i>" + e.what() + "!</i></b>",
+				                          true // use_markup //
+										  , Gtk::MESSAGE_ERROR,
+				                          Gtk::BUTTONS_OK);
+				std::string currentplst = xmms2_client->playlist.currentActive();
+				if(e_ns == DR::rb_playlist && currentplst == coll_playlst){
+					dialog.set_secondary_text("you cannot delete the currently "
+					                          "active playlist!!");
+				}else{
+					dialog.set_secondary_text("I don't know what happend!!");
+				}
+
+				int result = dialog.run();
+				std::cout << e.what() << std::endl;
+			}
+		}
+		std::cout << "Delete clicked." << std::endl;
+	}else{
+		std::cout << "Cancel clicked." << std::endl;
 	}
 }
 
@@ -2013,7 +2183,221 @@ std::vector<Xmms::Dict> Main_win::on_playlist_coll_changed(Glib::ustring collect
 	return result;
 }
 
+std::vector<std::pair<Glib::ustring, Glib::ustring> > Main_win::on_newcol_getkeys()
+{
+	std::vector<std::pair<Glib::ustring, Glib::ustring> > result;
+	if(!xmms2_client) return result;
+	keyType.clear();
+	try{
+		Xmms::CollPtr coll = xmms2_client->collection.parse("album:*");
+		Xmms::List<int> lst = xmms2_client->collection.queryIds(*coll);
+		std::cout << __FILE__ << '[' << __LINE__ << "] got list: " << __PRETTY_FUNCTION__ << std::endl;
+		for( Xmms::List<int>::const_iterator i(lst.begin()), i_end(lst.end()); i != i_end; ++i){
+			std::cout << __FILE__ << '[' << __LINE__ << "] *i == " << *i << std::endl;
+			Xmms::Dict info = xmms2_client->medialib.getInfo(*i);
+			info.each(get_keys_thunk);
+			std::cout << __FILE__ << '[' << __LINE__ << "] keyType.size() == " << keyType.size() << std::endl;
+		}
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
+		return result;
+	}
+	for(std::map<std::string, int>::iterator i = keyType.begin(), i_end = keyType.end(); i != i_end; ++i){
+		std::pair<Glib::ustring, Glib::ustring> p(i->first, mapinttostr(i->second));
+		result.insert(result.end(), p);
+	}
+	std::cout << __FILE__ << '[' << __LINE__ << "] result.size() == " << result.size() << std::endl;
+	return result;
+}
 
+Glib::ustring Main_win::mapinttostr(int encoded)
+{
+	Glib::ustring result;
+	////////////////////////////////////////////////////////////////////
+	// Xmms::Dict::Variant is defined as:                             //
+	// typedef boost::variant< int32_t, uint32_t, std::string >       //
+	//                                       	Xmms::Dict::Variant   //
+	////////////////////////////////////////////////////////////////////
+	Glib::ustring comma;
+	if(encoded & 0X01){
+		result += comma + "integer";
+		comma = ", ";
+	}
+	if(encoded & 0X02){
+		result += comma + "unsigned integer";
+		comma = ", ";
+	}
+	if(encoded & 0X04){
+		result += comma + "string";
+		comma = ", ";
+	}
+	if(encoded & 0X08){
+		result += comma + "typeless ???";
+		comma = ", ";
+	}
+
+	return result;
+}
+
+std::vector<Glib::ustring> Main_win::on_namespace_delete_changed(DD::NameSpace _ns)
+{
+	Xmms::Collection::Namespace ns;
+	switch(_ns){
+		case(DD::rb_coll):
+		{
+			ns = Xmms::Collection::COLLECTIONS;
+			break;
+		}
+		case(DD::rb_playlist):
+		{
+			ns = Xmms::Collection::PLAYLISTS;
+			break;
+		}
+	}
+	std::cout << __FILE__ << "[" << __LINE__ 
+		      << "] in " << __PRETTY_FUNCTION__ << ": ns == " 
+			  << ns << std::endl;
+	try{
+		std::cout << __FILE__ << "[" << __LINE__ 
+			      << "] in " << __PRETTY_FUNCTION__ << ": ns == " 
+			      << ns << std::endl;
+		Xmms::List< std::string > lst = xmms2_client->collection.list(ns);
+		std::vector<Glib::ustring> result(lst.begin(), lst.end());
+		return result;
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
+	}
+	return std::vector<Glib::ustring>();
+}
+
+
+std::vector<Glib::ustring> Main_win::on_namespace_rename_changed(DR::NameSpace _ns)
+{
+	Xmms::Collection::Namespace ns;
+	switch(_ns){
+		case(DR::rb_coll):
+		{
+			ns = Xmms::Collection::COLLECTIONS;
+			break;
+		}
+		case(DR::rb_playlist):
+		{
+			ns = Xmms::Collection::PLAYLISTS;
+			break;
+		}
+	}
+	std::cout << __FILE__ << "[" << __LINE__ 
+		      << "] in " << __PRETTY_FUNCTION__ << ": ns == " 
+			  << ns << std::endl;
+	try{
+		std::cout << __FILE__ << "[" << __LINE__ 
+			      << "] in " << __PRETTY_FUNCTION__ << ": ns == " 
+			      << ns << std::endl;
+		Xmms::List< std::string > lst = xmms2_client->collection.list(ns);
+		std::vector<Glib::ustring> result(lst.begin(), lst.end());
+		return result;
+	}
+	catch(std::exception &e){
+		std::cout << __FILE__ << "[" << __LINE__ 
+			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
+			<< e.what() << std::endl;
+	}
+	return std::vector<Glib::ustring>();
+}
+
+std::vector<Xmms::Dict> Main_win::on_playlist_coll_delete_changed(Glib::ustring col_playlst, std::vector<Glib::ustring> orderby, DD::NameSpace _ns)
+{
+	std::cout << __FILE__ << '[' << __LINE__ << "] on_coll_changed: col_playlst == " << col_playlst << std::endl;
+	if(!xmms2_client) return std::vector<Xmms::Dict>();
+	Xmms::Collection::Namespace ns;
+	switch(_ns){
+		case(DD::rb_coll):
+		{
+			ns = Xmms::Collection::COLLECTIONS;
+			break;
+		}
+		case(DD::rb_playlist):
+		{
+			ns = Xmms::Collection::PLAYLISTS;
+			break;
+		}
+	}
+	Xmms::CollResult collresult = xmms2_client->collection.get(static_cast<std::string>(col_playlst), ns);
+	Xmms::CollPtr coll = static_cast<Xmms::CollPtr>(collresult);
+	std::cout << __FILE__ << '[' << __LINE__ << "] coll got: col_playlst == " << col_playlst << std::endl;
+	std::list<std::string> fetch;
+	fetch.insert(fetch.end(), "id");
+	fetch.insert(fetch.end(), "tracknr");
+	fetch.insert(fetch.end(), "title");
+	fetch.insert(fetch.end(), "artist");
+	fetch.insert(fetch.end(), "album");
+	fetch.insert(fetch.end(), "duration");
+	std::list<std::string> order(orderby.begin(), orderby.end());
+	if(order.empty()){
+		order.insert(order.end(), "album");
+		order.insert(order.end(), "tracknr");
+		order.insert(order.end(), "artist");
+		//order.insert(order.end(), "title");
+		//order.insert(order.end(), "duration");
+	}
+	std::cout << __FILE__ << '[' << __LINE__ << "] getting list: col_playlst == " << col_playlst << std::endl;
+	std::cout << __FILE__ << '[' << __LINE__ << "] list got: col_playlst == " << col_playlst << std::endl;
+	Xmms::List<Xmms::Dict> lst = xmms2_client->collection.queryInfos(*coll, fetch, order);
+	std::cout << __FILE__ << '[' << __LINE__ << "] list got: col_playlst == " << col_playlst << std::endl;
+	std::vector<Xmms::Dict> result(lst.begin(), lst.end());
+	std::cout << __FILE__ << '[' << __LINE__ << "] result made: result.size() == " << result.size() << std::endl;
+	return result;
+}
+
+std::vector<Xmms::Dict> Main_win::on_playlist_coll_rename_changed(Glib::ustring col_playlst, std::vector<Glib::ustring> orderby, DR::NameSpace _ns)
+{
+	std::cout << __FILE__ << '[' << __LINE__ << "] on_coll_changed: col_playlst == " << col_playlst << std::endl;
+	if(!xmms2_client) return std::vector<Xmms::Dict>();
+	Xmms::Collection::Namespace ns;
+	switch(_ns){
+		case(DR::rb_coll):
+		{
+			ns = Xmms::Collection::COLLECTIONS;
+			break;
+		}
+		case(DR::rb_playlist):
+		{
+			ns = Xmms::Collection::PLAYLISTS;
+			break;
+		}
+	}
+	Xmms::CollResult collresult = xmms2_client->collection.get(static_cast<std::string>(col_playlst), ns);
+	Xmms::CollPtr coll = static_cast<Xmms::CollPtr>(collresult);
+	std::cout << __FILE__ << '[' << __LINE__ << "] coll got: col_playlst == " << col_playlst << std::endl;
+	std::list<std::string> fetch;
+	fetch.insert(fetch.end(), "id");
+	fetch.insert(fetch.end(), "tracknr");
+	fetch.insert(fetch.end(), "title");
+	fetch.insert(fetch.end(), "artist");
+	fetch.insert(fetch.end(), "album");
+	fetch.insert(fetch.end(), "duration");
+	std::list<std::string> order(orderby.begin(), orderby.end());
+	if(order.empty()){
+		order.insert(order.end(), "album");
+		order.insert(order.end(), "tracknr");
+		order.insert(order.end(), "artist");
+		//order.insert(order.end(), "title");
+		//order.insert(order.end(), "duration");
+	}
+	std::cout << __FILE__ << '[' << __LINE__ << "] getting list: col_playlst == " << col_playlst << std::endl;
+	std::cout << __FILE__ << '[' << __LINE__ << "] list got: col_playlst == " << col_playlst << std::endl;
+	Xmms::List<Xmms::Dict> lst = xmms2_client->collection.queryInfos(*coll, fetch, order);
+	std::cout << __FILE__ << '[' << __LINE__ << "] list got: col_playlst == " << col_playlst << std::endl;
+	std::vector<Xmms::Dict> result(lst.begin(), lst.end());
+	std::cout << __FILE__ << '[' << __LINE__ << "] result made: result.size() == " << result.size() << std::endl;
+	return result;
+}
 
 
 

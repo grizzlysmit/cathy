@@ -31,6 +31,8 @@ cathy is free software: you can redistribute it and/or modify it
 #include <queue>
 #include "dialog-new-playlist.h"
 #include "dnc.h" // dialogNewCollection //
+#include "dd.h"  // dialogDelete  //
+#include "dr.h"  // dialogrename //
 
 
 
@@ -66,6 +68,7 @@ class Main_win: public Gtk::Window
 		Gtk::Button *m_buttonDelete;
 		Gtk::Button *m_buttonNewPlayList;
 		Gtk::Button *m_buttonNewCollection;
+		Gtk::Button *m_buttonRenamePlayList;
 		Gtk::Button *m_buttonExit;
 		Gtk::Button *m_buttonAbout;
 		Gtk::VolumeButton *m_volumebuttonMaster;
@@ -81,9 +84,12 @@ class Main_win: public Gtk::Window
 		Gtk::Label *m_labelAlbum;
 		Gtk::Label *m_labelDuration;
 
+		// Dialogs //
 		Gtk::AboutDialog *m_aboutdialog1;
 		DialogNewPlaylist *m_dialogNewPlaylist;
 		DNC *m_dialogNewCollection;
+		DD *m_dialogDelete;
+		DR *m_dialogrename;
 
 		//custom components I wrote //
 		ListViewFormatText *m_listviewformatTextPlaylists;
@@ -126,6 +132,7 @@ class Main_win: public Gtk::Window
 		double m_duration;
 		bool m_dont_disconect;
 		bool m_auto_connect;
+		bool m_adding_palylist;
 
 		// thread stuff //
 		Glib::Threads::Mutex m_mutex;
@@ -152,6 +159,7 @@ class Main_win: public Gtk::Window
 		void on_button_Delete();
 		void on_button_Exit();
 		void on_button_NewPlayList();
+		void on_button_Rename();
 		void on_button_NewCollection();
 		void on_imagemenuitem_Refresh();
 		void on_button_About();
@@ -177,9 +185,6 @@ class Main_win: public Gtk::Window
 		// a time out handler  //
 		bool on_timeout();
 		
-		void refresh_playlists();
-		std::vector<Glib::ustring> get_mediainfo(int id, int highlight = 0);
-		void refresh_playlist();
 		void on_Playlists_clicked(Glib::ustring cp);
 		void on_Playlists_dblclicked(Glib::ustring cp);
 		void on_Playlist_clicked(int id);
@@ -187,9 +192,20 @@ class Main_win: public Gtk::Window
 		std::vector<Xmms::Dict> on_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby);
 		std::vector<Glib::ustring> on_namespace_changed(Glib::ustring _namespace);
 		std::vector<Xmms::Dict> on_playlist_coll_changed(Glib::ustring collection_name, std::vector<Glib::ustring> orderby, Glib::ustring _namespace);
+		std::vector<std::pair<Glib::ustring, Glib::ustring> > on_newcol_getkeys();
+		std::vector<Glib::ustring> on_namespace_delete_changed(DD::NameSpace _ns);
+		std::vector<Xmms::Dict> on_playlist_coll_delete_changed(Glib::ustring col_playlst, std::vector<Glib::ustring> orderby, DD::NameSpace _ns);
+		std::vector<Glib::ustring> on_namespace_rename_changed(DR::NameSpace _ns);
+		std::vector<Xmms::Dict> on_playlist_coll_rename_changed(Glib::ustring col_playlst, std::vector<Glib::ustring> orderby, DR::NameSpace _ns);
+
+		
+		void refresh_playlists();
+		std::vector<Glib::ustring> get_mediainfo(int id, int highlight = 0);
+		void refresh_playlist();
 		void update_labels(const Xmms::PropDict &info);
 		void disconnect();
 		std::string Urlencode(std::string url);
+		Glib::ustring mapinttostr(int encoded);
 };
 
 #endif // _MAINWIN_H_
