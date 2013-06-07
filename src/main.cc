@@ -31,8 +31,8 @@
 
 
 /* For testing propose use the local (not installed) ui file */
-/* #define UI_FILE PACKAGE_DATA_DIR"/ui/cathy.ui" */
-#define UI_FILE "src/cathy.ui"
+#define UI_FILE PACKAGE_DATA_DIR"/ui/cathy.ui"
+/*#define UI_FILE "src/cathy.ui"*/
 
    
 int

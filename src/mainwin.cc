@@ -367,6 +367,10 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	m_imagemenuitemNext->set_sensitive(false);
 	m_imagemenuitemRefresh->set_sensitive(false);
 	if(m_auto_connect) on_button_Connect();
+	char buff[11] = "0123456789";
+	for(auto e: buff){
+		std::cout << e << std::endl;
+	}
 }
 
 Main_win::~Main_win(){
@@ -2131,6 +2135,7 @@ std::vector<Glib::ustring> Main_win::on_namespace_changed(Glib::ustring _namespa
 	std::cout << __FILE__ << "[" << __LINE__ 
 		      << "] Error in " << __PRETTY_FUNCTION__ << ": _namespace == " 
 			  << _namespace << std::endl;
+	if(_namespace.empty()) return std::vector<Glib::ustring>();
 	try{
 		char buff[256];
 		strcpy(buff, _namespace.c_str());
