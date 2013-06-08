@@ -18,14 +18,17 @@ cathy is free software: you can redistribute it and/or modify it
  */
 
 #include "mainwin.h"
+#include <xmmsclient/xmmsclient++/mainloop.h>
+//#include <xmmsclient/xmmsclient++/listener.h>
+//#include <xmmsclient/xmmsclient.h>
 #include <vector>
 #include <exception>
 #include <boost/format.hpp>
 #include <map>
+#include <algorithm>
 
-std::map<std::string, int> keyType;
 
-static void get_keys_thunk(const std::string& key, const Xmms::Dict::Variant& v)
+void Main_win::get_keys_thunk(std::ostream& stream, const std::string& key, const Xmms::Dict::Variant& v, const std::string& source)
 {
 	if(keyType.count(key) == 0){ // it's new to us //
 		if(v.empty()){
@@ -50,24 +53,24 @@ static void get_keys_thunk(const std::string& key, const Xmms::Dict::Variant& v)
 
 
 Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
-  : Gtk::Window(cobject), m_builder(builder), m_buttonConnect(0), m_buttonPrevious(0),
-    m_buttonRewind(0), m_buttonStop(0), m_buttonPlayPause(0), m_buttonForward(0), 
-    m_buttonNext(0), m_buttonDelete(0), m_buttonNewPlayList(0), m_buttonNewCollection(0), 
-    m_buttonRenamePlayList(0), m_buttonExit(0), m_buttonAbout(0), 
-    m_volumebuttonMaster(0), m_volumebuttonLeft(0), m_volumebuttonRight(0), m_progressbar1(0), 
-    m_labelPlayed(0), m_labelLeft(0), m_labelTitle(0), m_labelArtist(0), m_labelAlbum(0), 
-    m_labelDuration(0), 
-    m_aboutdialog1(0), m_dialogNewPlaylist(0), m_dialogNewCollection(0), 
-    m_dialogDelete(0), m_dialogrename(0), 
-    m_listviewformatTextPlaylists(0), m_MatrixBoxCurrentPlaylist(0), m_imagemenuitemQuit(0), 
-    m_imagemenuitemConnect(0), m_imagemenuitemNewPlayList(0), m_imagemenuitemNewCollection(0), 
-    m_imagemenuitemPlayPause(0), m_imagemenuitemPrevious(0), m_imagemenuitemRewind(0), 
-    m_imagemenuitemStop(0), m_imagemenuitemForward(0), m_imagemenuitemNext(0), 
-    m_imagemenuitemRefresh(0), m_imagemenuitemAbout(0), 
-    m_scrolledwindowPlaylists(0), m_scrolledwindowCurrentPlaylist(0), m_panedBody(0), 
-    m_statusbar1(0), 
-    //m_eventboxPlaylists(0), m_eventboxCurrentPlaylist(0), 
-    xmms2_client(0), xmms2_sync_client(0), connect_cout(0), 
+   : Gtk::Window(cobject), m_builder(builder), m_buttonConnect(nullptr), m_buttonPrevious(nullptr),
+    m_buttonRewind(nullptr), m_buttonStop(nullptr), m_buttonPlayPause(nullptr), m_buttonForward(nullptr), 
+    m_buttonNext(nullptr), m_buttonDelete(nullptr), m_buttonNewPlayList(nullptr), m_buttonNewCollection(nullptr), 
+    m_buttonRenamePlayList(nullptr), m_buttonExit(nullptr), m_buttonAbout(nullptr), 
+    m_volumebuttonMaster(nullptr), m_volumebuttonLeft(nullptr), m_volumebuttonRight(nullptr), m_progressbar1(nullptr), 
+    m_labelPlayed(nullptr), m_labelLeft(nullptr), m_labelTitle(nullptr), m_labelArtist(nullptr), m_labelAlbum(nullptr), 
+    m_labelDuration(nullptr), 
+    m_aboutdialog1(nullptr), m_dialogNewPlaylist(nullptr), m_dialogNewCollection(nullptr), 
+    m_dialogDelete(nullptr), m_dialogrename(nullptr), 
+    m_listviewformatTextPlaylists(nullptr), m_MatrixBoxCurrentPlaylist(nullptr), m_imagemenuitemQuit(nullptr), 
+    m_imagemenuitemConnect(nullptr), m_imagemenuitemNewPlayList(nullptr), m_imagemenuitemNewCollection(nullptr), 
+    m_imagemenuitemPlayPause(nullptr), m_imagemenuitemPrevious(nullptr), m_imagemenuitemRewind(nullptr), 
+    m_imagemenuitemStop(nullptr), m_imagemenuitemForward(nullptr), m_imagemenuitemNext(nullptr), 
+    m_imagemenuitemRefresh(nullptr), m_imagemenuitemAbout(nullptr), 
+    m_scrolledwindowPlaylists(nullptr), m_scrolledwindowCurrentPlaylist(nullptr), m_panedBody(nullptr), 
+    m_statusbar1(nullptr), 
+    //m_eventboxPlaylists(nullptr), m_eventboxCurrentPlaylist(nullptr), 
+    xmms2_client(nullptr), xmms2_sync_client(nullptr), connect_cout(0), 
     m_connect_retrys(2), m_setting_volume_left(false), m_setting_volume_right(false), 
     m_setting_volume_master(false), m_duration(0), m_auto_connect(true), 
     m_adding_palylist(false)
@@ -390,7 +393,7 @@ void Main_win::on_button_Connect()
 {
 	std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
 	if(xmms2_client && xmms2_client->isConnected()){
-		disconnect();
+		//disconnect();
 		return;
 	}
 	m_dont_disconect = true;
@@ -442,10 +445,10 @@ void Main_win::on_button_Connect()
 			// thread stuff //
 			m_sync_thread = Glib::Threads::Thread::create(sigc::mem_fun(this, &Main_win::run_sync));
 
-			m_buttonConnect->set_label("gtk-disconnect");
-			m_buttonConnect->set_tooltip_markup("<i><b>Disconnect</b> from <b>xmms2d</b></i>");
-			m_action_Connection->set_stock_id(Gtk::Stock::DISCONNECT);
-			m_action_Connection->set_label("Disconnect");
+			m_buttonConnect->set_label("connected");
+			m_buttonConnect->set_tooltip_markup("<i><b>Connected</b> to <b>xmms2d</b></i>");
+			//m_action_Connection->set_stock_id(Gtk::Stock::DISCONNECT);
+			m_action_Connection->set_label("Connected");
 			std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
 			refresh_playlists();
 			std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
@@ -489,34 +492,58 @@ void Main_win::on_button_Connect()
 
 void Main_win::disconnect()
 {
-	std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
-	Glib::Threads::Mutex::Lock lock (m_mutex);
-	m_dont_disconect = false;
-	xmms2_sync_client->getMainLoop().~MainloopInterface();
-	//delete m_sync_thread;
-	//std::cout << __FILE__ << '[' << __LINE__ << "] delete m_sync_thread" << std::endl;
-/*	while(xmms2_sync_client->isConnected()){
-		m_cond_disconnect.wait(m_mutex);
-	}*/
-	std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
-	m_sync_thread->join();
-	std::cout << __FILE__ << '[' << __LINE__ << "] m_sync_thread->join()" << std::endl;
-	delete xmms2_client;
-	std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_client" << std::endl;
-	delete xmms2_sync_client;
-	std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_sync_client" << std::endl;
-	xmms2_client = 0;
-	xmms2_sync_client = 0;
-	try{
-		basemesage *msg = new mesage<int>(basemesage::disconnect, 0);
-		m_queue.push(msg);
-	}
+    try{
+	    std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
+	    Glib::Threads::Mutex::Lock lock(m_mutex);
+	    m_dont_disconect = false;
+	    /*
+	    using namespace Xmms;
+	    xmms2_sync_client->getMainLoop().~MainloopInterface();
+	    xmms2_sync_client->quit();
+	    //*/
+	    //dynamic_cast<MainLoop*>(&xmms2_sync_client->getMainLoop())->~Mainloop();
+	    //delete m_sync_thread;
+	    //std::cout << __FILE__ << '[' << __LINE__ << "] delete m_sync_thread" << std::endl;
+	    /*	while(xmms2_sync_client->isConnected()){
+		    m_cond_disconnect.wait(m_mutex);
+        }*/
+	    /*
+	    std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
+	    m_sync_thread->join();
+	    std::cout << __FILE__ << '[' << __LINE__ << "] m_sync_thread->join()" << std::endl;
+	    delete xmms2_client;
+	    std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_client" << std::endl;
+	    delete xmms2_sync_client;
+	    std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_sync_client" << std::endl;
+	    xmms2_client = 0;
+	    xmms2_sync_client = 0;
+	    // */
+	    try{
+		    basemesage *msg = new mesage<int>(basemesage::disconnect, 0);
+		    m_queue.push(msg);
+	    }
+	    catch(std::exception &e){
+		    std::cout << __FILE__ << "[" << __LINE__ 
+			    << "] Error in handle_disconnect: " 
+		    	<< e.what() << " sending disconnect message: " << std::endl;
+	    }
+	    //*
+	    std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
+	    //m_sync_thread->join();
+	    //std::cout << __FILE__ << '[' << __LINE__ << "] m_sync_thread->join()" << std::endl;
+	    delete xmms2_client;
+	    std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_client" << std::endl;
+	    delete xmms2_sync_client;
+	    std::cout << __FILE__ << '[' << __LINE__ << "] delete xmms2_sync_client" << std::endl;
+	    xmms2_client = 0;
+	    xmms2_sync_client = 0;
+	    // */
+    }
 	catch(std::exception &e){
 		std::cout << __FILE__ << "[" << __LINE__ 
 			<< "] Error in handle_disconnect: " 
 			<< e.what() << std::endl;
 	}
-	std::cout << __FILE__ << '[' << __LINE__ << "] disconnect()" << std::endl;
 }
 
 void Main_win::run_sync()
@@ -570,6 +597,9 @@ bool Main_win::on_timeout()
 			basemesage *msg = m_queue.front();
 			switch(msg->get_message_type()){
 				case(basemesage::disconnect):
+	                //using namespace Xmms;
+	                //xmms2_sync_client->getMainLoop().~MainloopInterface();
+	                //xmms2_sync_client->quit();
 					m_statusbar1->push("Cathy is disconnected from xmms2d", m_ContextId);
 					m_buttonConnect->set_label("gtk-connect");
 					m_buttonConnect->set_tooltip_markup("<i><b>Connect</b> to <b>xmms2d</b></i>");
@@ -1293,6 +1323,13 @@ void Main_win::refresh_playlists(){
 		std::string currentplst = xmms2_client->playlist.currentActive();
 		//Xmms::List< std::string > lst = xmms2_client->collection.list("Playlists");
 		Xmms::List< std::string > lst = xmms2_client->collection.list(Xmms::Collection::PLAYLISTS);
+		std::vector<std::string> ls(lst.begin(), lst.end());
+		//std::sort(ls.begin(), ls.end());
+		sort(ls.begin(), ls.end(), [](const auto& lhs, const auto& rhs){
+                   const auto result = mismatch(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend(), [](const auto& lhs, const auto& rhs){return tolower(lhs) == tolower(rhs);});
+
+                     return result.second != rhs.cend() && (result.first == lhs.cend() || tolower(*result.first) < tolower(*result.second));
+                            });
 
 
 		//Glib::RefPtr<Gtk::TextBuffer> buffer = m_listviewformatTextPlaylists->get_buffer();
@@ -1302,7 +1339,7 @@ void Main_win::refresh_playlists(){
 		m_listviewformatTextPlaylists->clear_items();
 		//std::cout << "got here[" << __LINE__ << ']' << std::endl;
 
-		for( Xmms::List< std::string  >::const_iterator i(lst.begin()), i_end(lst.end()); i != i_end; ++i ){
+		for( std::vector< std::string  >::const_iterator i(ls.begin()), i_end(ls.end()); i != i_end; ++i ){
 			//for(auto playlst: lst)
 			if(*i == currentplst){
 				//Gtk::TextBuffer::Tag tag = Pango::Weight::Bold;
@@ -1497,6 +1534,8 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 		std::cout << __FILE__ << "[" << __LINE__ 
 			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
 			<< e.what() << std::endl;
+		std::vector<Glib::ustring> result;
+		return result;
 	}
 }
 
@@ -1507,6 +1546,7 @@ void Main_win::refresh_playlist()
 		std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 		Xmms::List<int> list = xmms2_client->playlist.listEntries(m_currentPlaylistName);
 		std::cout << __FILE__ << '[' << __LINE__ << "] m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
+		//std::sort(list.begin (), list.end());
 
 		m_MatrixBoxCurrentPlaylist->clear_items();
 
@@ -2199,8 +2239,15 @@ std::vector<std::pair<Glib::ustring, Glib::ustring> > Main_win::on_newcol_getkey
 		std::cout << __FILE__ << '[' << __LINE__ << "] got list: " << __PRETTY_FUNCTION__ << std::endl;
 		for( Xmms::List<int>::const_iterator i(lst.begin()), i_end(lst.end()); i != i_end; ++i){
 			std::cout << __FILE__ << '[' << __LINE__ << "] *i == " << *i << std::endl;
-			Xmms::Dict info = xmms2_client->medialib.getInfo(*i);
-			info.each(get_keys_thunk);
+			Xmms::PropDictResult res = xmms2_client->medialib.getInfo(*i);
+	        // connect callbacks
+	        res.connect( Xmms::bind( &Main_win::my_get_info, this ) );
+	        res.connectError( boost::bind( &Main_win::error_handler, this,
+	                               "xmms2_client.medialib.getInfo()", _1 ) );
+	        // finish the call
+	        res();			
+			//std::for_each(info.cbegin(), info.cend(), get_keys_thunk)
+			//info.each(boost::bind( &Main_win::get_keys_thunk, this, boost::ref(std::cout), _1, _2, _3));
 			std::cout << __FILE__ << '[' << __LINE__ << "] keyType.size() == " << keyType.size() << std::endl;
 		}
 	}
@@ -2216,6 +2263,41 @@ std::vector<std::pair<Glib::ustring, Glib::ustring> > Main_win::on_newcol_getkey
 	}
 	std::cout << __FILE__ << '[' << __LINE__ << "] result.size() == " << result.size() << std::endl;
 	return result;
+}
+
+bool Main_win::my_get_info( const Xmms::PropDict& propdict )
+{
+	/*
+	 * Here's two more special cases that are good to know.
+	 * boost::bind stores a copy of any parameters you give to it so
+	 * if you have a variable which has a private copy-constructor,
+	 * for example std::cout like here, you must use boost::ref or boost::cref
+	 * (http://www.boost.org/libs/bind/ref.html) to store a reference instead.
+	 * (This should be taken into consideration when passing large objects too)
+	 *
+	 * Another thing to notice here is the _2 and _3, which work exactly
+	 * like the _1 but are placeholders for the second and third parameters.
+	 * propdict foreaching is the only place where these are needed -
+	 * dict foreaching needs _1 and _2.
+	 * Note that the _1, _2 and _3 are only needed when you're passing
+	 * extra data to the functions, in normal cases you should use
+	 * Xmms::bind functions which are provided for your convenience.
+	 */
+	propdict.each( boost::bind( &Main_win::get_keys_thunk, this,
+	                            boost::ref(std::cout), _1, _2, _3 ) );
+	return false;
+}
+
+bool Main_win::error_handler(const std::string& function, const std::string& error )
+{
+	// print function name and error message...
+	std::cout << "Error in function: " << function
+	          << " - " << error << std::endl;
+	Gtk::MessageDialog dialog(*this, "<b>Error in function: " + function + " - " + error + "</b>",
+				                          true // use_markup //
+										  , Gtk::MESSAGE_ERROR,
+				                          Gtk::BUTTONS_OK);
+	return false;
 }
 
 Glib::ustring Main_win::mapinttostr(int encoded)

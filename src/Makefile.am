@@ -6,7 +6,8 @@
 uidir = $(pkgdatadir)/ui
 ui_DATA = cathy.ui \
 	grizzlybear.0.png \
-	gtk-new.svg
+	gtk-new.svg \
+	cathy.png
 
 
 AM_CPPFLAGS = \

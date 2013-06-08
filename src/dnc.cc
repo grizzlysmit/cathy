@@ -21,15 +21,16 @@
 
 DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Dialog(cobject), m_builder(builder), 
-    m_scrolledwindowAvailbleKeys(0), m_listviewtextAvailbleKeys(0), 
-    m_scrolledwindowHelp(0), m_listviewtextHelp(0), m_entryCollectionName(0), 
-    m_entryPattern(0), m_buttonOK(0), m_dialogCollectionHelp(0), 
-    m_toolbuttonHelp(0), m_toolbuttonAddKey(0), m_toolbuttonSpace(0), 
-    m_toolbuttonBrackets(0), m_toolbuttonAND(0), m_toolbuttonOR(0), 
-    m_toolbuttonNot(0), m_toolbuttonHash(0), m_toolbuttonMinus(0), 
-    m_toolbuttonPlus(0), m_toolbuttonMatch(0), m_toolbuttonFuzzyMatch(0), 
-    m_toolbuttonLT(0), m_toolbuttonLE(0), m_toolbuttonGT(0), m_toolbuttonGE(0), 
-    m_toolbuttonGetKeys(0), m_action_area(0), 
+    m_scrolledwindowAvailbleKeys(nullptr), m_listviewtextAvailbleKeys(nullptr), 
+    m_scrolledwindowHelp(nullptr), m_listviewtextHelp(nullptr), m_entryCollectionName(nullptr), 
+    m_entryPattern(nullptr), m_buttonOK(nullptr), m_dialogCollectionHelp(nullptr), 
+    m_labelNewCollHelpPage0(nullptr), m_labelNewCollHelpPage1(nullptr), 
+    m_toolbuttonHelp(nullptr), m_toolbuttonAddKey(nullptr), m_toolbuttonSpace(nullptr), 
+    m_toolbuttonBrackets(nullptr), m_toolbuttonAND(nullptr), m_toolbuttonOR(nullptr), 
+    m_toolbuttonNot(nullptr), m_toolbuttonHash(nullptr), m_toolbuttonMinus(nullptr), 
+    m_toolbuttonPlus(nullptr), m_toolbuttonMatch(nullptr), m_toolbuttonFuzzyMatch(nullptr), 
+    m_toolbuttonLT(nullptr), m_toolbuttonLE(nullptr), m_toolbuttonGT(nullptr), m_toolbuttonGE(nullptr), 
+    m_toolbuttonGetKeys(nullptr), m_action_area(nullptr), 
     m_big_hint(false)
 {
 	// dialogNewCollection-scrolledwindowAvailbleKeys //
@@ -150,6 +151,20 @@ DNC::DNC(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
 	if(m_dialogCollectionHelp){
 		//m_dialogCollectionHelp->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
 		//m_dialogCollectionHelp->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+	}
+	// m_labelNewCollHelpPage0 //
+	m_builder->get_widget("labelNewCollHelpPage0", m_labelNewCollHelpPage0);
+	if(m_labelNewCollHelpPage0){
+		//m_labelNewCollHelpPage0->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
+		//m_labelNewCollHelpPage0->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+		m_labelNewCollHelpPage0->set_angle(90);
+	}
+	// m_labelNewCollHelpPage1 //
+	m_builder->get_widget("labelNewCollHelpPage1", m_labelNewCollHelpPage1);
+	if(m_labelNewCollHelpPage1){
+		//m_labelNewCollHelpPage1->signal_selection_changed().connect( sigc::mem_fun(*this, &DNC::on_selection_changed_AvailableKeys) );
+		//m_labelNewCollHelpPage1->signal_dblclicked().connect( sigc::mem_fun(*this, &DNC::on_toolbutton_AddKey) );
+		m_labelNewCollHelpPage1->set_angle(90);
 	}
 	// m_toolbuttonHelp //
 	m_builder->get_widget("dialogNewCollection-toolbuttonHelp", m_toolbuttonHelp);

@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Cathy
+GenericName=Music Player
+Comment=Play Music
+Comment[en_CA]=Play Music
+Comment[en_GB]=Edit text files
+Comment[en_AU]=Edit text files
+TryExec=cathy
+Exec=cathy 
+Terminal=false
+Type=Application
+Keywords=music;player;
+Icon=cathy
+Categories=Utility;musicplayer;

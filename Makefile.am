@@ -18,9 +18,21 @@ INTLTOOL_FILES = intltool-extract.in \
 	intltool-update.in
 
 EXTRA_DIST = $(cathydoc_DATA) \
+			 cathy.desktop \
+			 cathy.png \
 	$(INTLTOOL_FILES)
 
-AM_CXXFLAGS = -std=c++11 
+pixmapdir = $(datadir)/pixmaps
+
+pixmap_DATA = cathy.png
+
+
+Applicationsdir = $(datadir)/applications
+Applications_DATA = cathy.desktop
+
+
+
+AM_CXXFLAGS = -std=c++17 
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \

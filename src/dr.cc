@@ -22,10 +22,10 @@
 
 DR::DR(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Dialog(cobject), m_builder(builder), 
-    m_scrolledwindowRenameContents(0), m_listviewtextRenameContents(0), 
-    m_radiobuttonRenameNSCollection(0), m_radiobuttonRenameNSPlaqylist(0), 
-    m_comboboxtextRenameCollection(0), m_buttonRenameOK(0), m_entryRenameNewName(0), 
-    m_action_area(0), 
+    m_scrolledwindowRenameContents(nullptr), m_listviewtextRenameContents(nullptr), 
+    m_radiobuttonRenameNSCollection(nullptr), m_radiobuttonRenameNSPlaqylist(nullptr), 
+    m_comboboxtextRenameCollection(nullptr), m_buttonRenameOK(nullptr), m_entryRenameNewName(nullptr), 
+    m_action_area(nullptr), 
     m_NameSpace(rb_playlist)
 {
 	// m_scrolledwindowRenameContents //

@@ -22,9 +22,9 @@
 
 DD::DD(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Dialog(cobject), m_builder(builder), 
-    m_scrolledwindowDeleteContents(0), m_listviewtextDeleteContents(0), 
-    m_radiobuttonDeleteNSCollection(0), m_radiobuttonDeleteNSPlaqylist(0), 
-    m_comboboxtextDeleteCollection(0), m_buttonDeleteIt(0), m_action_area(0), 
+    m_scrolledwindowDeleteContents(nullptr), m_listviewtextDeleteContents(nullptr), 
+    m_radiobuttonDeleteNSCollection(nullptr), m_radiobuttonDeleteNSPlaqylist(nullptr), 
+    m_comboboxtextDeleteCollection(nullptr), m_buttonDeleteIt(nullptr), m_action_area(nullptr), 
     m_NameSpace(rb_playlist)
 {
 	// m_scrolledwindowDeleteContents //

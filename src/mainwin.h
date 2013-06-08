@@ -147,6 +147,7 @@ class Main_win: public Gtk::Window
 		sigc::connection m_conn;
 
 		Xmms::Playback::Status m_status;
+		std::map<std::string, int> keyType;
 
 		// button signal handlers //
 		void on_button_Connect();
@@ -181,6 +182,9 @@ class Main_win: public Gtk::Window
 		bool handle_playtime(const unsigned int &tme);
 		bool handle_mlib_entry_changed(const uint32_t &id);
 		bool handle_medialib_info(const Xmms::PropDict &info);
+		void get_keys_thunk(std::ostream& stream, const std::string& key, const Xmms::Dict::Variant& v, const std::string& source);
+		bool my_get_info( const Xmms::PropDict& propdict );
+		bool error_handler(const std::string& function, const std::string& error);
 
 		// a time out handler  //
 		bool on_timeout();

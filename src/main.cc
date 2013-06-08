@@ -53,7 +53,7 @@ main (int argc, char *argv[])
 		return 1;
 	}
 	//Gtk::Window* main_win = 0;
-	Main_win* main_win = 0;
+	Main_win* main_win = nullptr;
 	//builder->get_widget("main_window", main_win);
 	builder->get_widget_derived("main_window", main_win);
 

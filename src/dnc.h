@@ -58,6 +58,8 @@ class DNC : public Gtk::Dialog
 		Gtk::Entry *m_entryPattern;
 		Gtk::Button *m_buttonOK;
 		Gtk::Dialog *m_dialogCollectionHelp;
+		Gtk::Label *m_labelNewCollHelpPage0;
+		Gtk::Label *m_labelNewCollHelpPage1;
 		Gtk::ToolButton *m_toolbuttonHelp;
 		Gtk::ToolButton *m_toolbuttonAddKey;
 		Gtk::ToolButton *m_toolbuttonSpace;
