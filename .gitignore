@@ -1,2 +1,3 @@
 *.o
-
+.*.swp
+backup-*-pre-cathy.tgz
