@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
+<!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAboutDialog" id="aboutdialog1">
@@ -8,7 +8,7 @@
     <property name="title" translatable="yes">About Cathy</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
-    <property name="icon">grizzlybear.0.png</property>
+    <property name="icon">cathy.png</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">Cathy</property>
     <property name="version">0.1.0</property>
@@ -32,9 +32,9 @@
   You should have received a copy of the GNU General Public License along
   with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
     <property name="authors">Francis Grizzly Smit</property>
-    <property name="logo">grizzlybear.0.png</property>
+    <property name="logo">cathy.png</property>
     <property name="license_type">gpl-3-0</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -65,7 +65,7 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Delete Collection or Playlist -- Cathy</property>
     <property name="type_hint">dialog</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -200,7 +200,7 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">New Collection -- Cathy</property>
     <property name="type_hint">dialog</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -743,7 +743,7 @@ else put &lt;b&gt;&amp;gt;=&lt;/b&gt; at the cursor point.</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">New Playlist -- Cathy</property>
     <property name="type_hint">dialog</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -1580,7 +1580,7 @@ of &lt;b&gt;&lt;i&gt;availble&lt;/i&gt;&lt;/b&gt; &lt;b&gt;keys&lt;/b&gt; to the
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Rename Collection or Playlist -- Cathy</property>
     <property name="type_hint">dialog</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -1779,7 +1779,7 @@ of &lt;b&gt;&lt;i&gt;availble&lt;/i&gt;&lt;/b&gt; &lt;b&gt;keys&lt;/b&gt; to the
     <property name="default_height">256</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child internal-child="vbox">
@@ -2856,8 +2856,8 @@ Else puts the key at the cursor point.</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">622</property>
     <property name="default_height">400</property>
-    <property name="icon">grizzlybear.0.png</property>
-    <child>
+    <property name="icon">cathy.png</property>
+    <child type="titlebar">
       <placeholder/>
     </child>
     <child>
@@ -3270,7 +3270,17 @@ all the details</property>
               <placeholder/>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="buttonENV">
+                <property name="label" translatable="yes">ENV</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">13</property>
+              </packing>
             </child>
           </object>
           <packing>

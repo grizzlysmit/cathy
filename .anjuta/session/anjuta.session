@@ -1,15 +1,14 @@
 [Anjuta]
 Maximized=1
-Geometry=2525x1349+35+27
+Geometry=3800x2080+40+41
 
 [File Loader]
-Files=../../src/main.cc#34%%%../../src/mainwin.h#28%%%../../src/mainwin.cc#448%%%../../src/matrix-box.h#1%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#15%%%../../src/basemesage.cc#1%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#57%%%../../src/dd.cc#62%%%../../Makefile.am#1
+Files=../../src/main.cc#34%%%../../src/mainwin.h#164%%%../../src/mainwin.cc#131%%%../../src/matrix-box.h#1%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#15%%%../../src/basemesage.cc#1%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#57%%%../../src/dd.cc#62
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks><bookmark title="on_radiobutton:91" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="91"/><bookmark title="DR:65" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="65"/></bookmarks>\n
 
 [Search Box]
-Case Sensitive=1
 Highlight Match=1
 
 [Execution]
@@ -18,7 +17,12 @@ Run in terminal=2
 Working directories=../../.
 
 [Project Manager]
-Shortcut=cathy//src//cathy
+Shortcut=cathy
+Expand=cathy%%%cathy//src%%%cathy//src//ui
+
+[Debugger]
+Source directories=file:///home/grizzlysmit/Projects/xmms2/cathy/src
+Stop at beginning=2
 
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
@@ -27,7 +31,3 @@ BuildArgs/Default=--enable-maintainer-mode 'CXXFLAGS=-std=c++11'
 BuildArgs/Debug='CFLAGS=-g -O0' 'CXXFLAGS=-g -O0' 'JFLAGS=-g -O0' 'FFLAGS=-g -O0'
 BuildArgs/Profiling=--enable-maintainer-mode 'CFLAGS=-g -pg' 'CXXFLAGS=-g -pg' 'JFLAGS=-g -pg' 'FFLAGS=-g -pg'
 BuildArgs/Optimized=--enable-maintainer-mode 'CFLAGS=-O2' 'CXXFLAGS=-O2' 'JFLAGS=-O2' 'FFLAGS=-O2'
-
-[Debugger]
-Source directories=file:///home/grizzlysmit/Projects/xmms2/cathy/src
-Stop at beginning=2

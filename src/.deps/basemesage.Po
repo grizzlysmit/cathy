@@ -1,5 +1,3 @@
 basemesage.o: basemesage.cc /usr/include/stdc-predef.h basemesage.h
-
 /usr/include/stdc-predef.h:
-
 basemesage.h:

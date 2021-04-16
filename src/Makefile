@@ -393,7 +393,6 @@ top_builddir = ..
 top_srcdir = ..
 uidir = $(pkgdatadir)/ui
 ui_DATA = cathy.ui \
-	grizzlybear.0.png \
 	gtk-new.svg \
 	cathy.png
 

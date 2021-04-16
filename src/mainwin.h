@@ -69,6 +69,7 @@ class Main_win: public Gtk::Window
 		Gtk::Button *m_buttonNewPlayList;
 		Gtk::Button *m_buttonNewCollection;
 		Gtk::Button *m_buttonRenamePlayList;
+		Gtk::Button *m_buttonENV;
 		Gtk::Button *m_buttonExit;
 		Gtk::Button *m_buttonAbout;
 		Gtk::VolumeButton *m_volumebuttonMaster;
@@ -113,7 +114,8 @@ class Main_win: public Gtk::Window
 		Gtk::ScrolledWindow *m_scrolledwindowCurrentPlaylist;
 		Gtk::Paned *m_panedBody;
 		Gtk::Statusbar *m_statusbar1;
-		
+
+		// other stuff //
 		Xmms::Client *xmms2_client;
 		Xmms::Client *xmms2_sync_client;
 		Glib::RefPtr<Gtk::TextTag> m_ref_bold_tag;
@@ -133,6 +135,7 @@ class Main_win: public Gtk::Window
 		bool m_dont_disconect;
 		bool m_auto_connect;
 		bool m_adding_palylist;
+		const Glib::ustring xmms_path = std::getenv("XMMS_PATH");
 
 		// thread stuff //
 		Glib::Threads::Mutex m_mutex;
@@ -158,6 +161,7 @@ class Main_win: public Gtk::Window
 		void on_button_Forward();
 		void on_button_Next();
 		void on_button_Delete();
+		void on_button_ENV();
 		void on_button_Exit();
 		void on_button_NewPlayList();
 		void on_button_Rename();

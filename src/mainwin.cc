@@ -26,6 +26,7 @@ cathy is free software: you can redistribute it and/or modify it
 #include <boost/format.hpp>
 #include <map>
 #include <algorithm>
+#include <gtkmm/messagedialog.h>
 
 
 void Main_win::get_keys_thunk(std::ostream& stream, const std::string& key, const Xmms::Dict::Variant& v, const std::string& source)
@@ -56,7 +57,7 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
    : Gtk::Window(cobject), m_builder(builder), m_buttonConnect(nullptr), m_buttonPrevious(nullptr),
     m_buttonRewind(nullptr), m_buttonStop(nullptr), m_buttonPlayPause(nullptr), m_buttonForward(nullptr), 
     m_buttonNext(nullptr), m_buttonDelete(nullptr), m_buttonNewPlayList(nullptr), m_buttonNewCollection(nullptr), 
-    m_buttonRenamePlayList(nullptr), m_buttonExit(nullptr), m_buttonAbout(nullptr), 
+    m_buttonRenamePlayList(nullptr), m_buttonENV(nullptr), m_buttonExit(nullptr), m_buttonAbout(nullptr), 
     m_volumebuttonMaster(nullptr), m_volumebuttonLeft(nullptr), m_volumebuttonRight(nullptr), m_progressbar1(nullptr), 
     m_labelPlayed(nullptr), m_labelLeft(nullptr), m_labelTitle(nullptr), m_labelArtist(nullptr), m_labelAlbum(nullptr), 
     m_labelDuration(nullptr), 
@@ -124,6 +125,11 @@ Main_win::Main_win(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& bu
 	m_builder->get_widget("buttonRenamePlayList", m_buttonRenamePlayList);
 	if(m_buttonRenamePlayList){
 		m_buttonRenamePlayList->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_Rename) );
+	}
+	// m_buttonENV  //
+	m_builder->get_widget("buttonENV", m_buttonENV);
+	if(m_buttonENV){
+		m_buttonENV->signal_clicked().connect( sigc::mem_fun(*this, &Main_win::on_button_ENV) );
 	}
 	// m_buttonExit //
 	m_builder->get_widget("buttonExit", m_buttonExit);
@@ -401,7 +407,8 @@ void Main_win::on_button_Connect()
 		std::cout << __FILE__ << " got here[" << __LINE__ << ']' << std::endl;
 		try{
 			xmms2_client = new Xmms::Client("cathy");
-			xmms2_client->connect( std::getenv("XMMS_PATH") );
+		    //Glib::ustring xmms_path = std::getenv("XMMS_PATH");
+		    xmms2_client->connect( xmms_path.c_str() );
 			m_conn = Glib::signal_timeout().connect(sigc::mem_fun(*this, &Main_win::on_timeout), 100);
 			if(xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING){
 				Xmms::Dict d = xmms2_client->playback.volumeGet();
@@ -1377,6 +1384,16 @@ void Main_win::refresh_playlists(){
 			<< "] Error in " << __PRETTY_FUNCTION__ << ": " 
 			<< e.what() << std::endl;
 	}
+}
+
+void Main_win::on_button_ENV(){
+	Glib::ustring msg = "XMMS_PATH == `" + xmms_path + "'";
+	std::cout << msg << std::endl;
+	Gtk::MessageDialog messageBox(*this, msg, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+	messageBox.set_title("Message");
+	messageBox.set_modal();
+	messageBox.set_position(Gtk::WindowPosition::WIN_POS_CENTER);
+	int result = messageBox.run();
 }
 
 void Main_win::on_button_Exit(){
