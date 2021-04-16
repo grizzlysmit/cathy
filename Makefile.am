@@ -32,7 +32,7 @@ Applications_DATA = cathy.desktop
 
 
 
-AM_CXXFLAGS = -std=c++17 
+AM_CXXFLAGS = -std=c++20 
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \
