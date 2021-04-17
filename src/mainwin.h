@@ -41,6 +41,8 @@ cathy is free software: you can redistribute it and/or modify it
 #include <string>
 #include <cstdlib>
 
+using std::literals::string_literals::operator""s;
+
 
 class Main_win: public Gtk::Window 
 {

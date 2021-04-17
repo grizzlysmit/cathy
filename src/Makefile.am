@@ -50,7 +50,8 @@ cathy_LDFLAGS =
 
 cathy_LDADD = $(CATHY_LIBS) \
 	$(gtkmm-3.0_LIBS) \
-	$(XMMS2_CLIENT_CPP_LIBS)
+	$(XMMS2_CLIENT_CPP_LIBS)\
+	$(FMT_LIBS)
 
 
 EXTRA_DIST = $(ui_DATA)

@@ -23,7 +23,10 @@ cathy is free software: you can redistribute it and/or modify it
 //#include <xmmsclient/xmmsclient.h>
 #include <vector>
 #include <exception>
-#include <boost/format.hpp>
+//#include <boost/format.hpp>
+#include <fmt/core.h>
+#include <fmt/format.h>
+//#include <fmt/format-inl.h>
 #include <map>
 #include <algorithm>
 #include <gtkmm/messagedialog.h>
@@ -980,10 +983,12 @@ bool Main_win::on_timeout()
 							int mins = pt % 60;
 							pt /= 60;
 							int hours = pt;
-							boost::format bf("%02d:%02d:%06.3f");
-							bf % hours % mins % secs;
+							//boost::format bf("%02d:%02d:%06.3f");
+							//bf % hours % mins % secs;
 							//std::cout << bf << ')' << std::endl;
-							std::string s = bf.str();
+							//std::string s = bf.str();
+							//std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
+							std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
 							m_labelPlayed->set_text(s);
 						}
 						{
@@ -992,10 +997,12 @@ bool Main_win::on_timeout()
 							int mins = tleft % 60;
 							tleft /= 60;
 							int hours = tleft;
-							boost::format bf("-%02d:%02d:%06.3f");
-							bf % hours % mins % secs;
+							//boost::format bf("-%02d:%02d:%06.3f");
+							//bf % hours % mins % secs;
 							//std::cout << bf << ')' << std::endl;
-							std::string s = bf.str();
+							//std::string s = bf.str();
+							//std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
+							std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3}"s, hours, mins, secs);
 							m_labelLeft->set_text(s);
 						}
 					}else{
@@ -1080,10 +1087,12 @@ void Main_win::update_labels(const Xmms::PropDict &info)
 			int mins = duration % 60;
 			duration /= 60;
 			int hours = duration;
-			boost::format bf("%02d:%02d:%06.3f");
-			bf % hours % mins % secs;
+			//boost::format bf("%02d:%02d:%06.3f");
+			//bf % hours % mins % secs;
 			//std::cout << bf << ')' << std::endl;
-			std::string s = bf.str();
+			//std::string s = bf.str();
+			//std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
+			std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
 			m_labelDuration->set_text(s);
 		}
 	}
@@ -1527,10 +1536,11 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 			int mins = duration % 60;
 			duration /= 60;
 			int hours = duration;
-			boost::format bf("%02d:%02d:%06.3f");
-			bf % hours % mins % secs;
+			//boost::format bf("%02d:%02d:%06.3f");
+			//bf % hours % mins % secs;
 			//std::cout << bf << ')' << std::endl;
-			std::string s = bf.str();
+			//std::string s = bf.str();
+			std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
 			result.insert(result.end(), pre + s + post);
 		}
 		catch( Xmms::no_such_key_error& err ) {
@@ -2178,9 +2188,10 @@ std::string Main_win::Urlencode(std::string url)
 		if(pos) result += url.substr(0, pos);
 		int ch = url[pos];
 		url = url.substr(pos + 1);
-		boost::format bf("%%%02X");
-		bf % ch;
-		result += bf.str();
+		//boost::format bf("%%%02X");
+		//bf % ch;
+		//result += bf.str();
+		result += fmt::format("%{:02X}"s, ch);
 		pos = url.find_first_of(invalid);
 	}
 	result += url;

@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = cathy
 PACKAGE = cathy
-VERSION = 0.1.0
+VERSION = 4.6.4
 
 SHELL = /bin/bash
 

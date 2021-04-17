@@ -32,6 +32,7 @@
 #include <vector>
 #include "lvt.h"
 
+using std::literals::string_literals::operator""s;
 
 class DialogNewPlaylist : public Gtk::Dialog 
 {

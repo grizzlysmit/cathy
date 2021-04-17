@@ -18,7 +18,9 @@
  */
 
 #include "dialog-new-playlist.h"
-#include <boost/format.hpp>
+#include <fmt/core.h>
+#include <fmt/format.h>
+//#include <fmt/format-inl.h>
 
 DialogNewPlaylist::DialogNewPlaylist(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder)
   : Gtk::Dialog(cobject), m_builder(builder), 
@@ -367,9 +369,10 @@ void DialogNewPlaylist::on_combo_Coll_changed()
 			std::string tracknr_str;
 			try{
 				tracknr = boost::get<int>(info["tracknr"]);
-				boost::format bf("%02d");
-				bf % tracknr;
-				tracknr_str = bf.str();
+				//boost::format bf("%02d");
+				//bf % tracknr;
+				//tracknr_str = bf.str();
+			    tracknr_str = fmt::format("{:02d}"s, tracknr);
 			}
 			catch( Xmms::no_such_key_error& err ) {
 				tracknr_str = "tracknr unknown";
@@ -412,10 +415,11 @@ void DialogNewPlaylist::on_combo_Coll_changed()
 				int mins = duration % 60;
 				duration /= 60;
 				int hours = duration;
-				boost::format bf("%02d:%02d:%06.3f");
-				bf % hours % mins % secs;
+				//boost::format bf("%02d:%02d:%06.3f");
+				//bf % hours % mins % secs;
 				//std::cout << bf << ')' << std::endl;
-				std::string s = bf.str();
+				//std::string s = bf.str();
+				std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3}"s, hours, mins, secs);
 				m_listviewtextColContent->set_text(row, 4, s);
 			}
 			catch( Xmms::no_such_key_error& err ) {
@@ -714,9 +718,10 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 			try{
 				id = boost::get<int>(info["id"]);
 				//boost::format bf("%010d");
-				boost::format bf("%d");
-				bf % id;
-				id_str = bf.str();
+				//boost::format bf("%d");
+				//bf % id;
+				//id_str = bf.str();
+			    id_str = fmt::format("{:d}"s, id);
 			}
 			catch( Xmms::no_such_key_error& err ) {
 				id_str = "tracknr unknown";
@@ -725,9 +730,10 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 			int row = m_listviewtextTracksAvailble->append(id_str);
 			try{
 				tracknr = boost::get<int>(info["tracknr"]);
-				boost::format bf("%02d");
-				bf % tracknr;
-				tracknr_str = bf.str();
+				//boost::format bf("%02d");
+				//bf % tracknr;
+				//tracknr_str = bf.str();
+				tracknr_str = fmt::format("{:02d}"s, tracknr);
 			}
 			catch( Xmms::no_such_key_error& err ) {
 				tracknr_str = "tracknr unknown";
@@ -770,10 +776,11 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 				int mins = duration % 60;
 				duration /= 60;
 				int hours = duration;
-				boost::format bf("%02d:%02d:%06.3f");
-				bf % hours % mins % secs;
+				//boost::format bf("%02d:%02d:%06.3f");
+				//bf % hours % mins % secs;
 				//std::cout << bf << ')' << std::endl;
-				std::string s = bf.str();
+				//std::string s = bf.str();
+				std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
 				m_listviewtextTracksAvailble->set_text(row, 5, s);
 			}
 			catch( Xmms::no_such_key_error& err ) {

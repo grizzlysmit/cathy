@@ -6,6 +6,7 @@ SUBDIRS = src po
 cathydocdir = ${prefix}/doc/cathy
 cathydoc_DATA = \
 	README\
+	README.md\
 	COPYING\
 	AUTHORS\
 	ChangeLog\

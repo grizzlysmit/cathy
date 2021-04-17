@@ -109,7 +109,8 @@ am_cathy_OBJECTS = main.$(OBJEXT) mainwin.$(OBJEXT) \
 	dd.$(OBJEXT) dr.$(OBJEXT)
 cathy_OBJECTS = $(am_cathy_OBJECTS)
 am__DEPENDENCIES_1 =
-cathy_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+cathy_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
@@ -266,6 +267,8 @@ ECHO_T =
 EGREP = /usr/bin/grep -E
 EXEEXT = 
 FGREP = /usr/bin/grep -F
+FMT_CFLAGS = 
+FMT_LIBS = -lfmt
 GETTEXT_PACKAGE = cathy
 GLIB_CFLAGS = -I/usr/include/xmms2 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
 GLIB_LIBS = -lxmmsclient-glib -lxmmsclient++-glib -lxmmsclient -lxmmsclient++ -lglib-2.0
@@ -313,10 +316,10 @@ OTOOL64 =
 PACKAGE = cathy
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = cathy
-PACKAGE_STRING = cathy 0.1.0
+PACKAGE_STRING = cathy 4.6.4
 PACKAGE_TARNAME = cathy
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.1.0
+PACKAGE_VERSION = 4.6.4
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
@@ -331,7 +334,7 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 USE_NLS = yes
-VERSION = 0.1.0
+VERSION = 4.6.4
 XGETTEXT = /usr/bin/xgettext
 XMMS2_CLIENT_CPP_CFLAGS = -I/usr/include/xmms2
 XMMS2_CLIENT_CPP_LIBS = -lxmmsclient-glib -lxmmsclient++-glib -lxmmsclient -lxmmsclient++
@@ -434,7 +437,8 @@ cathy_SOURCES = \
 cathy_LDFLAGS = 
 cathy_LDADD = $(CATHY_LIBS) \
 	$(gtkmm-3.0_LIBS) \
-	$(XMMS2_CLIENT_CPP_LIBS)
+	$(XMMS2_CLIENT_CPP_LIBS)\
+	$(FMT_LIBS)
 
 EXTRA_DIST = $(ui_DATA)
 all: all-am

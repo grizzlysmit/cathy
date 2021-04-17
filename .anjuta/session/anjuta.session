@@ -3,12 +3,13 @@ Maximized=1
 Geometry=3800x2080+40+41
 
 [File Loader]
-Files=../../src/main.cc#34%%%../../src/mainwin.h#164%%%../../src/mainwin.cc#131%%%../../src/matrix-box.h#1%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#15%%%../../src/basemesage.cc#1%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#57%%%../../src/dd.cc#62
+Files=../../src/main.cc#34%%%../../src/mainwin.h#44%%%../../src/mainwin.cc#1543%%%../../src/matrix-box.h#1%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#15%%%../../src/basemesage.cc#20%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#34%%%../../src/dd.cc#130%%%../../src/dialog-new-playlist.cc#375%%%../../src/dr.cc#131%%%../../src/dialog-new-playlist.h#36%%%../../src/dr.h#24
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks><bookmark title="on_radiobutton:91" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="91"/><bookmark title="DR:65" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="65"/></bookmarks>\n
 
 [Search Box]
+Case Sensitive=1
 Highlight Match=1
 
 [Execution]
@@ -17,7 +18,8 @@ Run in terminal=2
 Working directories=../../.
 
 [Project Manager]
-Shortcut=cathy
+Shortcut=cathy//src//cathy
+Expand=cathy%%%cathy%%%cathy//src%%%cathy//src//ui%%%cathy//cathydoc%%%cathy//CATHY%%%cathy//FMT%%%cathy//GLIB%%%cathy//XMMS2_CLIENT_CPP
 
 [Debugger]
 Source directories=file:///home/grizzlysmit/Projects/xmms2/cathy/src

@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl Created by Anjuta application wizard.
 
-AC_INIT(cathy, 0.1.0)
+AC_INIT(cathy, 4.6.4)
 
 AC_CONFIG_HEADERS([config.h])
 
@@ -29,6 +29,8 @@ AM_GLIB_GNU_GETTEXT
 LT_INIT
 
 
+
+PKG_CHECK_MODULES(FMT,fmt)
 
 PKG_CHECK_MODULES(XMMS2_CLIENT_CPP,xmms2-client-cpp-glib
 xmms2-client-cpp)

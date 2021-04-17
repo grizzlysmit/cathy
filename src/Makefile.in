@@ -109,7 +109,8 @@ am_cathy_OBJECTS = main.$(OBJEXT) mainwin.$(OBJEXT) \
 	dd.$(OBJEXT) dr.$(OBJEXT)
 cathy_OBJECTS = $(am_cathy_OBJECTS)
 am__DEPENDENCIES_1 =
-cathy_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+cathy_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -266,6 +267,8 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+FMT_CFLAGS = @FMT_CFLAGS@
+FMT_LIBS = @FMT_LIBS@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
@@ -434,7 +437,8 @@ cathy_SOURCES = \
 cathy_LDFLAGS = 
 cathy_LDADD = $(CATHY_LIBS) \
 	$(gtkmm-3.0_LIBS) \
-	$(XMMS2_CLIENT_CPP_LIBS)
+	$(XMMS2_CLIENT_CPP_LIBS)\
+	$(FMT_LIBS)
 
 EXTRA_DIST = $(ui_DATA)
 all: all-am
