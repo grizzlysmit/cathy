@@ -30,6 +30,12 @@ cathy is free software: you can redistribute it and/or modify it
 #include <map>
 #include <algorithm>
 #include <gtkmm/messagedialog.h>
+#include <regex>
+#include <cstdio>
+#include <string>
+#include <boost/bind.hpp>
+
+
 
 
 void Main_win::get_keys_thunk(std::ostream& stream, const std::string& key, const Xmms::Dict::Variant& v, const std::string& source)
@@ -397,6 +403,12 @@ Main_win::~Main_win(){
 	}
 }
 
+bool compare_to_array(const std::string& val, const std::vector<std::string>& array){
+	for(auto elt : array){
+		if(elt == val) return true;
+	}
+	return false;
+}
 
 void Main_win::on_button_Connect()
 {
@@ -495,8 +507,64 @@ void Main_win::on_button_Connect()
 		}
 		catch(std::exception &e){
 			std::cout << e.what() << std::endl;
-			int res = system("/usr/bin/xmms2-launcher"); // force xmms2d to start //
-		}
+			int res;
+			if(xmms_path != ""){
+				std::string ip;
+				std::regex pattern(R"delim(^tcp://(\d{1,3}(?:\.\d{1,3}){3})(?::\d+)*$)delim");
+				std::smatch m;
+				std::string s = xmms_path;
+				if(std::regex_match(s.cbegin(), s.cend(), m, pattern)){
+					if(m.size() == 2){
+						ip = m[1].str();
+					}
+				}
+				std::cerr << "ip == " << ip << std::endl;				                           
+				std::vector<std::string> hostips;
+				std::string cmd = R"command(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')command";
+				FILE* pipe = popen(cmd.c_str(), "r");
+				if(pipe){
+					char buffer[256];
+					std::string raw;
+					while(fgets(buffer, 256, pipe) != NULL){
+						raw += buffer;
+					}
+					auto returnCode = pclose(pipe);
+					std::cerr << "raw == " << raw << std::endl;
+					auto start = raw.find_first_not_of("\n\r\t\v");
+					auto end   = raw.find_first_not_of("0123456789.", start);
+					//if(start ==  std::string::npos) start = 0;
+					while(end != (raw.cend() - raw.cbegin()) && end != std::string::npos){
+						if(start !=  std::string::npos && end !=  std::string::npos){
+							hostips.push_back(raw.substr(start, end - start));
+						}else if(start !=  std::string::npos){
+							hostips.push_back(raw.substr(start, end));
+						}
+					    start = raw.find_first_not_of("\n\r\t\v", end);
+					    end   = raw.find_first_not_of("0123456789.", start);
+					}
+					if(start != std::string::npos && end != std::string::npos){
+						hostips.push_back(raw.substr(start, end - start));
+					}else if(start != std::string::npos){
+						hostips.push_back(raw.substr(start, end));
+					}
+				}
+				std::cerr << "hostips == [\n";
+				for(auto hostip : hostips){
+				    std::cerr << hostip << ", " << std::endl;				                           
+				}
+				std::cerr << "]" << std::endl;
+				if(ip == ""){
+					res = system("xmms2-launcher"); // force xmms2d to start //
+				}else if(compare_to_array(ip, hostips)){
+					res = system("xmms2-launcher"); // force xmms2d to start we are on the host //
+				}else{ // host is another machine //
+					std::string username = std::getenv("USER");
+					res = system(fmt::format("ssh {0}@{1} xmms2-launcher", username, ip).c_str()); // force xmms2d to start //
+				}
+			}else{
+				res = system("xmms2-launcher"); // force xmms2d to start //
+			}
+		}// catch(std::exception &e)  //  
 	}
 }
 
@@ -1579,7 +1647,7 @@ void Main_win::refresh_playlist()
 
 		//if(list.size() == 0) return;
 		if(list.begin() == list.end()) return;
-		std::cout << __FILE__ << '[' << __LINE__ << "] should not get here on enpty list: m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
+		std::cout << __FILE__ << '[' << __LINE__ << "] should not get here on empty list: m_currentPlaylistName == " << m_currentPlaylistName << std::endl;
 
 		std::string name;
 		int position = 0;
@@ -2258,6 +2326,7 @@ std::vector<Xmms::Dict> Main_win::on_playlist_coll_changed(Glib::ustring collect
 
 std::vector<std::pair<Glib::ustring, Glib::ustring> > Main_win::on_newcol_getkeys()
 {
+	using namespace boost::placeholders;
 	std::vector<std::pair<Glib::ustring, Glib::ustring> > result;
 	if(!xmms2_client) return result;
 	keyType.clear();
@@ -2311,6 +2380,7 @@ bool Main_win::my_get_info( const Xmms::PropDict& propdict )
 	 * extra data to the functions, in normal cases you should use
 	 * Xmms::bind functions which are provided for your convenience.
 	 */
+	using namespace boost::placeholders;
 	propdict.each( boost::bind( &Main_win::get_keys_thunk, this,
 	                            boost::ref(std::cout), _1, _2, _3 ) );
 	return false;

@@ -1,6 +1,6 @@
 [Anjuta]
 Maximized=1
-Geometry=3800x2080+40+41
+Geometry=3800x2080+0+0
 
 [File Loader]
 Files=../../src/main.cc#34%%%../../src/mainwin.h#44%%%../../src/mainwin.cc#1543%%%../../src/matrix-box.h#1%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#15%%%../../src/basemesage.cc#20%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#34%%%../../src/dd.cc#130%%%../../src/dialog-new-playlist.cc#375%%%../../src/dr.cc#131%%%../../src/dialog-new-playlist.h#36%%%../../src/dr.h#24
@@ -21,6 +21,10 @@ Working directories=../../.
 Shortcut=cathy//src//cathy
 Expand=cathy%%%cathy//src%%%cathy//src//ui%%%cathy//cathydoc%%%cathy//CATHY%%%cathy//FMT%%%cathy//GLIB%%%cathy//XMMS2_CLIENT_CPP
 
+[Debugger]
+Source directories=file:///home/grizzlysmit/Projects/xmms2/cathy/src
+Stop at beginning=2
+
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
 Selected Configuration=Default
@@ -28,7 +32,3 @@ BuildArgs/Default=--enable-maintainer-mode 'CXXFLAGS=-std=c++20'
 BuildArgs/Debug='CFLAGS=-g -O0' 'CXXFLAGS=-g -O0' 'JFLAGS=-g -O0' 'FFLAGS=-g -O0'
 BuildArgs/Profiling=--enable-maintainer-mode 'CFLAGS=-g -pg' 'CXXFLAGS=-g -pg' 'JFLAGS=-g -pg' 'FFLAGS=-g -pg'
 BuildArgs/Optimized=--enable-maintainer-mode 'CFLAGS=-O2' 'CXXFLAGS=-O2' 'JFLAGS=-O2' 'FFLAGS=-O2'
-
-[Debugger]
-Source directories=file:///home/grizzlysmit/Projects/xmms2/cathy/src
-Stop at beginning=2

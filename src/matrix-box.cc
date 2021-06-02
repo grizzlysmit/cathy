@@ -137,7 +137,7 @@ bool MatrixBox::on_button_Pressed(GdkEventButton* event, int _id, Row* row){
     for(std::vector<Gtk::Label*>::iterator label(row->begin()), label_end(row->end()); label != label_end; ++label){
 		(*label)->select_region(0);
 	}
-	if(event->type == GDK_2BUTTON_PRESS){ //double click //
+	if(event->type == GDK_BUTTON_PRESS){ //double click //
 		currentid = _id;
 		m_signal_dblclicked.emit(row->get_pos());
 		//std::cout << "double click: " << currentid << std::endl;

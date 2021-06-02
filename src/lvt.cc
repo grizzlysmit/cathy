@@ -58,7 +58,7 @@ bool LVT::on_button_press_event(GdkEventButton *event)
 		m_signal_selection_changed.emit();
 	}
 	m_selected = lst;
-	if(event->type == GDK_2BUTTON_PRESS){ //double click //
+	if(event->type == GDK_BUTTON_PRESS){ //double click //
 		m_signal_dblclicked.emit();
 		std::cout << "double click: " << std::endl;
 		return result;

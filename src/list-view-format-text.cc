@@ -152,7 +152,7 @@ bool ListViewFormatText::on_button_Pressed(GdkEventButton* event, Gtk::Label *la
 	try{
 		//std::cout << "entering on_button_Pressed" << std::endl;
 		label->select_region(0);
-		if(event->type == GDK_2BUTTON_PRESS){ //double click //
+		if(event->type == GDK_BUTTON_PRESS){ //double click //
 			SelectionString = label->get_text();
 			m_signal_dblclicked.emit(SelectionString);
 			//std::cout << "double click: " << SelectionString << std::endl;

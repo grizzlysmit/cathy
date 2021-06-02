@@ -11,7 +11,7 @@
     <property name="icon">cathy.png</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">Cathy</property>
-    <property name="version">4.6.4</property>
+    <property name="version">4.6.6</property>
     <property name="copyright" translatable="yes">© Francis Grizzly Smit
 
 
