@@ -33,7 +33,7 @@ cathy is free software: you can redistribute it and/or modify it
 #include <regex>
 #include <cstdio>
 #include <string>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 
 

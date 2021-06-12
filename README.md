@@ -7,3 +7,7 @@ The Cathy client is a reasonably complete client. It can add and delete playlist
 
 
 I have built deb files for it using checkinstall but one day I might do a proper one.
+
+Cathy is built in 
+[![C++](https://img.shields.io/badge/C++-blue?style=green)](https://isocpp.org/)
+[![Xmms2](https://img.shields.io/badge/xmms2client++-blue?style=green)](https://github.com/xmms2/xmms2-tutorial)
