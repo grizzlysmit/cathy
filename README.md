@@ -10,4 +10,4 @@ I have built deb files for it using checkinstall but one day I might do a proper
 
 Cathy is built in 
 [![C++](https://img.shields.io/badge/C++-blue?style=green)](https://isocpp.org/)
-[![Xmms2](https://img.shields.io/badge/xmms2client++-green?style=green)](https://github.com/xmms2/xmms2)
+[![Xmms2](https://img.shields.io/badge/xmms2client++-darkblue?style=green)](https://github.com/xmms2)
