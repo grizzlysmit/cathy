@@ -134,6 +134,9 @@ void DR::on_comboboxtextRenameCollection_changed()
 				id_str = "tracknr unknown";
 				//std::cout << "tracknr unknown" << std::endl;
 			}
+			catch(...){
+				id_str = "tracknr unknown";
+			}
 			int row = m_listviewtextRenameContents->append(id_str);
 			try{
 				tracknr = boost::get<int>(info["tracknr"]);
@@ -145,6 +148,9 @@ void DR::on_comboboxtextRenameCollection_changed()
 			catch( Xmms::no_such_key_error& err ) {
 				tracknr_str = "tracknr unknown";
 				//std::cout << "tracknr unknown" << std::endl;
+			}
+			catch(...){
+				tracknr_str = "tracknr unknown";
 			}
 			m_listviewtextRenameContents->set_text(row, 1, tracknr_str);
 			std::string title, artist, album;
@@ -163,7 +169,10 @@ void DR::on_comboboxtextRenameCollection_changed()
 			catch( Xmms::no_such_key_error& err ) {
 				artist = "Artist unknown";
 				//std::cout << "Artist unknown" << std::endl;
-			}			
+			}
+			catch(...){
+				artist = "Artist unknown";
+			}
 			m_listviewtextRenameContents->set_text(row, 3, artist);
 			
 			try{
@@ -172,7 +181,10 @@ void DR::on_comboboxtextRenameCollection_changed()
 			catch( Xmms::no_such_key_error& err ) {
 				album = "No Album";
 				//std::cout << "No Album" << std::endl;
-			}			
+			}
+			catch(...){
+				album = "No Album";
+			}
 			m_listviewtextRenameContents->set_text(row, 4, album);
 
 			try{
@@ -193,7 +205,10 @@ void DR::on_comboboxtextRenameCollection_changed()
 			catch( Xmms::no_such_key_error& err ) {
 				m_listviewtextRenameContents->set_text(row, 5, "00:00:00");
 				//std::cout << "00:00:00" << std::endl;
-			}			
+			}
+			catch(...){
+				m_listviewtextRenameContents->set_text(row, 5, "00:00:00");
+			}
 		}
 	}
 }

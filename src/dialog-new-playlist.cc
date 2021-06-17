@@ -381,6 +381,9 @@ void DialogNewPlaylist::on_combo_Coll_changed()
 			catch(std::exception& err){
 				tracknr_str = "tracknr unknown";
 			}
+			catch(...){
+				tracknr_str = "tracknr unknown";
+			}
 			int row = m_listviewtextColContent->append(tracknr_str);
 			std::string title, artist, album;
 			try{
@@ -391,6 +394,9 @@ void DialogNewPlaylist::on_combo_Coll_changed()
 				//std::cout << "Title unknown" << std::endl;
 			}
 			catch(std::exception& err){
+				title = "Title unkown";
+			}
+			catch(...){
 				title = "Title unkown";
 			}
 			m_listviewtextColContent->set_text(row, 1, title);
@@ -405,6 +411,9 @@ void DialogNewPlaylist::on_combo_Coll_changed()
 			catch(std::exception& err){
 				artist = "Artist unkown";
 			}
+			catch(...){
+				artist = "Artist unkown";
+			}
 			m_listviewtextColContent->set_text(row, 2, artist);
 			
 			try{
@@ -415,6 +424,9 @@ void DialogNewPlaylist::on_combo_Coll_changed()
 				//std::cout << "No Album" << std::endl;
 			}			
 			catch(std::exception& err){
+				album = "No Album";
+			}			
+			catch(...){
 				album = "No Album";
 			}
             m_listviewtextColContent->set_text(row, 3, album);
@@ -439,6 +451,9 @@ void DialogNewPlaylist::on_combo_Coll_changed()
 				//std::cout << "00:00:00" << std::endl;
 			}
 			catch(std::exception& err){
+				m_listviewtextColContent->set_text(row, 4, "00:00:00");
+			}
+			catch(...){
 				m_listviewtextColContent->set_text(row, 4, "00:00:00");
 			}
 		}
@@ -745,6 +760,9 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 			catch(std::exception& err){
 				id_str = "tracknr unknown";
 			}
+			catch(...){
+				id_str = "tracknr unknown";
+			}
 			int row = m_listviewtextTracksAvailble->append(id_str);
 			try{
 				tracknr = boost::get<int>(info["tracknr"]);
@@ -760,6 +778,9 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 			catch(std::exception& err){
 				tracknr_str = "tracknr unknown";
 			}
+			catch(...){
+				tracknr_str = "tracknr unknown";
+			}
 			m_listviewtextTracksAvailble->set_text(row, 1, tracknr_str);
 			std::string title, artist, album;
 			try{
@@ -770,6 +791,9 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 				//std::cout << "Title unknown" << std::endl;
 			}
 			catch(std::exception& err){
+				title = "Title unknown";
+			}
+			catch(...){
 				title = "Title unknown";
 			}
 			m_listviewtextTracksAvailble->set_text(row, 2, title);
@@ -783,6 +807,9 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 			}
 			catch(std::exception& err){
 				artist = "Artist unknown";
+			}
+			catch(...){
+				artist = "Artist unknown";
 			}			
 			m_listviewtextTracksAvailble->set_text(row, 3, artist);
 			
@@ -794,6 +821,9 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 				//std::cout << "No Album" << std::endl;
 			}
 			catch(std::exception& err){
+				album = "No Album";
+			}
+			catch(...){
 				album = "No Album";
 			}			
 			m_listviewtextTracksAvailble->set_text(row, 4, album);
@@ -818,6 +848,9 @@ void DialogNewPlaylist::on_comboboxtextPlayListCollection_changed()
 				//std::cout << "00:00:00" << std::endl;
 			}
 			catch(std::exception& err){
+				m_listviewtextTracksAvailble->set_text(row, 5, "00:00:00");
+			}
+			catch(...){
 				m_listviewtextTracksAvailble->set_text(row, 5, "00:00:00");
 			}			
 		}

@@ -1564,6 +1564,9 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 			result.insert(result.end(), pre + "Title unknown" + post);
 			//std::cout << "Title unknown" << std::endl;
 		}
+		catch(...){
+			result.insert(result.end(), pre + "Title unknown" + post);
+		}
 
 		//std::cout << "artist = ";
 		try {
@@ -1574,6 +1577,9 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 			result.insert(result.end(), pre + "No artist" + post);
 			//std::cout << "No artist" << std::endl;
 		}
+		catch(...){
+			result.insert(result.end(), pre + "No artist" + post);
+		}
 
 		//std::cout << "album = ";
 		try {
@@ -1583,6 +1589,9 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 		catch( Xmms::no_such_key_error& err ) {
 			result.insert(result.end(), pre + "No album" + post);
 			//std::cout << "No album" << std::endl;
+		}
+		catch(...){
+			result.insert(result.end(), pre + boost::get<std::string>(info["album"]) + post);
 		}
 
 		//std::cout << "bitrate = ";
@@ -1614,6 +1623,9 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 		catch( Xmms::no_such_key_error& err ) {
 			result.insert(result.end(), pre + "unknown duration" + post);
 			//std::cout << "unknown duration" << std::endl;
+		}
+		catch(...){
+			result.insert(result.end(), pre + "unknown duration" + post);
 		}
 
 		if(highlight){
@@ -1662,6 +1674,11 @@ void Main_win::refresh_playlist()
 			std::cout << __FILE__ << "[" << __LINE__ 
 				      << "] Error in " << __PRETTY_FUNCTION__ << ": " 
 				      << e.what() << std::endl;
+		}
+		catch(...){
+			std::cout << __FILE__ << "[" << __LINE__ 
+				      << "] Error in " << __PRETTY_FUNCTION__ << ": " 
+				      << "unkown exception thrown" << std::endl;
 		}
 		//std::cout << __FILE__ << '[' << __LINE__ << "] position == " << position << std::endl;
 		std::string currentplst = xmms2_client->playlist.currentActive();
