@@ -4,3 +4,4 @@ backup-*-pre-cathy.tgz
 compile
 Makefile
 *.deb
+*~
