@@ -3,7 +3,7 @@ Maximized=1
 Geometry=3800x2080+0+0
 
 [File Loader]
-Files=../../src/main.cc#34%%%../../src/mainwin.h#44%%%../../src/mainwin.cc#1669%%%../../src/matrix-box.h#1%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#15%%%../../src/basemesage.cc#20%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#34%%%../../src/dd.cc#119%%%../../src/dialog-new-playlist.cc#371%%%../../src/dr.cc#126%%%../../src/dialog-new-playlist.h#36%%%../../src/dr.h#81
+Files=../../src/main.cc#34%%%../../src/mainwin.h#103%%%../../src/mainwin.cc#1562%%%../../src/matrix-box.h#58%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#15%%%../../src/basemesage.cc#20%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#34%%%../../src/dd.cc#26%%%../../src/dialog-new-playlist.cc#390%%%../../src/dr.cc#142%%%../../src/dialog-new-playlist.h#36%%%../../src/dr.h#81
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks><bookmark title="on_radiobutton:91" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="91"/><bookmark title="DR:65" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="65"/></bookmarks>\n

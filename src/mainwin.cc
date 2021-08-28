@@ -1544,6 +1544,22 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 		std::vector<Glib::ustring> result;
 
 		Xmms::Dict info = xmms2_client->medialib.getInfo( id );
+		std::cout << "keys == [ ";
+		for(auto key : info){
+			std::cout << key.first << ", ";
+		}
+		std::cout << "]" << std::endl;
+
+		std::string id;
+		if(info.contains("id")){
+			try {
+			    id = info.get<std::string>("id");
+		    }
+			catch(...){
+				std::cout << "id not a std::string" << std::endl;
+			}
+			std::cout << "id == " << id << std::endl;
+		}
 
 		std::string pre, post;
 		if(highlight == 1){ // bold //
@@ -1667,7 +1683,7 @@ void Main_win::refresh_playlist()
 			Xmms::DictResult currentPos = xmms2_client->playlist.currentPos(m_currentPlaylistName);
 			Xmms::Dict d = currentPos;
 			name = boost::get<std::string>(d["name"]);
-			//std::cout << __FILE__ << '[' << __LINE__ << "] name == " << name << std::endl;
+			std::cout << __FILE__ << '[' << __LINE__ << "] name == " << name << std::endl;
 			position = boost::get<int>(d["position"]);
 		}
 		catch(std::exception &e){
