@@ -128,7 +128,7 @@ void DR::on_comboboxtextRenameCollection_changed()
 				//boost::format bf("%d");
 				//bf % id;
 				//id_str = bf.str();
-			    id_str = fmt::format("{:d}"s, id);
+			    id_str = fmt::format("{:d}", id);
 			}
 			catch( Xmms::no_such_key_error& err ) {
 				id_str = "tracknr unknown";
@@ -143,7 +143,7 @@ void DR::on_comboboxtextRenameCollection_changed()
 				//boost::format bf("%02d");
 				//bf % tracknr;
 				//tracknr_str = bf.str();
-				tracknr_str = fmt::format("{:02d}"s, tracknr);
+				tracknr_str = fmt::format("{:02d}", tracknr);
 			}
 			catch( Xmms::no_such_key_error& err ) {
 				tracknr_str = "tracknr unknown";
@@ -199,7 +199,7 @@ void DR::on_comboboxtextRenameCollection_changed()
 				//bf % hours % mins % secs;
 				//std::cout << bf << ')' << std::endl;
 				//std::string s = bf.str();
-				std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
+				std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
 				m_listviewtextRenameContents->set_text(row, 5, s);
 			}
 			catch( Xmms::no_such_key_error& err ) {

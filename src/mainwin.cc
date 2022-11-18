@@ -462,7 +462,7 @@ void Main_win::on_button_Connect()
 					m_progressbar1->pulse();
 				}
 				update_labels(info);
-			}
+			} // if(xmms2_client->playback.getStatus() == Xmms::Playback::PLAYING) //
 			
 			// thread stuff //
 			m_sync_thread = Glib::Threads::Thread::create(sigc::mem_fun(this, &Main_win::run_sync));
@@ -504,7 +504,7 @@ void Main_win::on_button_Connect()
 			
 			std::cout << "connect count == " << ++connect_cout << std::endl;
 			break;
-		}
+		} // try //
 		catch(std::exception &e){
 			std::cout << e.what() << std::endl;
 			int res;
@@ -559,7 +559,9 @@ void Main_win::on_button_Connect()
 					res = system("xmms2-launcher"); // force xmms2d to start we are on the host //
 				}else{ // host is another machine //
 					std::string username = std::getenv("USER");
-					res = system(fmt::format("ssh {0}@{1} xmms2-launcher", username, ip).c_str()); // force xmms2d to start //
+					std::string cmd = fmt::format("ssh {0}@{1} xmms2-launcher", username, ip);
+					std::cerr << "cmd == " <<  cmd << std::endl;
+					res = system(cmd.c_str()); // force xmms2d to start //
 				}
 			}else{
 				res = system("xmms2-launcher"); // force xmms2d to start //
@@ -871,7 +873,7 @@ bool Main_win::on_timeout()
 								xmms2_sync_client->playlist.listEntries(m_currentPlaylistName)(Xmms::bind(&Main_win::handle_list, this));
 							}
 							break;
-					}
+					} // switch(change) //
 					break;
 				}
 				case(basemesage::update_pos):
@@ -1056,7 +1058,7 @@ bool Main_win::on_timeout()
 							//std::cout << bf << ')' << std::endl;
 							//std::string s = bf.str();
 							//std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
-							std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
+							std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
 							m_labelPlayed->set_text(s);
 						}
 						{
@@ -1070,7 +1072,7 @@ bool Main_win::on_timeout()
 							//std::cout << bf << ')' << std::endl;
 							//std::string s = bf.str();
 							//std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
-							std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3}"s, hours, mins, secs);
+							auto s = fmt::format("{0:02d}:{1:02d}:{2:06.3}", hours, mins, secs);
 							m_labelLeft->set_text(s);
 						}
 					}else{
@@ -1121,10 +1123,10 @@ bool Main_win::on_timeout()
 					refresh_playlist();
 					break;
 				}
-			}
+			} // switch(msg->get_message_type()) //
 			m_queue.pop();
 			delete msg;
-		}
+		} // while(!m_queue.empty()) //
 	}
 	catch(std::exception &e){
 		std::cout << __FILE__ << "[" << __LINE__ 
@@ -1160,7 +1162,7 @@ void Main_win::update_labels(const Xmms::PropDict &info)
 			//std::cout << bf << ')' << std::endl;
 			//std::string s = bf.str();
 			//std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
-			std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
+			std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
 			m_labelDuration->set_text(s);
 		}
 	}
@@ -1633,7 +1635,7 @@ std::vector<Glib::ustring> Main_win::get_mediainfo(int id, int highlight)
 			//bf % hours % mins % secs;
 			//std::cout << bf << ')' << std::endl;
 			//std::string s = bf.str();
-			std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}"s, hours, mins, secs);
+			std::string s = fmt::format("{0:02d}:{1:02d}:{2:06.3f}", hours, mins, secs);
 			result.insert(result.end(), pre + s + post);
 		}
 		catch( Xmms::no_such_key_error& err ) {
@@ -2292,7 +2294,7 @@ std::string Main_win::Urlencode(std::string url)
 		//boost::format bf("%%%02X");
 		//bf % ch;
 		//result += bf.str();
-		result += fmt::format("%{:02X}"s, ch);
+		result += fmt::format("%{:02X}", ch);
 		pos = url.find_first_of(invalid);
 	}
 	result += url;
