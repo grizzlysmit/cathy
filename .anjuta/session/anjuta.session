@@ -3,7 +3,7 @@ Maximized=1
 Geometry=3802x2036+0+0
 
 [File Loader]
-Files=../../src/main.cc#31%%%../../src/mainwin.h#11%%%../../src/mainwin.cc#563%%%../../src/matrix-box.h#58%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#19%%%../../src/basemesage.cc#20%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#34%%%../../src/dd.cc#198%%%../../src/dialog-new-playlist.cc#843%%%../../src/dr.cc#202%%%../../src/dr.h#27%%%../../src/mesage.h#25
+Files=../../src/main.cc#31%%%../../src/mainwin.h#104%%%../../src/mainwin.cc#37%%%../../src/matrix-box.h#58%%%../../src/matrix-box.cc#121%%%../../src/basemesage.h#19%%%../../src/basemesage.cc#20%%%../../src/lvt.h#47%%%../../src/lvt.cc#36%%%../../src/dnc.h#60%%%../../src/dnc.cc#22%%%../../src/dd.h#34%%%../../src/dd.cc#198%%%../../src/dialog-new-playlist.cc#843%%%../../src/dr.cc#202%%%../../src/dr.h#27%%%../../src/mesage.h#25
 
 [Document Manager]
 bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks><bookmark title="on_radiobutton:91" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="91"/><bookmark title="DR:65" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/dr.cc" line="65"/><bookmark title="m_cond_disconnect:144" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/mainwin.h" line="144"/><bookmark title="_MAINWIN_H_:26" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/mainwin.h" line="26"/><bookmark title="run_sync:642" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/mainwin.cc" line="642"/><bookmark title="on_timeout:1124" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/mainwin.cc" line="1124"/><bookmark title="on_timeout:676" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/mainwin.cc" line="676"/><bookmark title="xmms_path" uri="file:///home/grizzlysmit/Projects/xmms2/cathy/src/mainwin.cc" line="425"/></bookmarks>\n
@@ -21,6 +21,10 @@ Working directories=../../.
 Shortcut=cathy//src//cathy
 Expand=cathy%%%cathy//src%%%cathy//src//cathy%%%cathy//src//ui%%%cathy//cathydoc%%%cathy//CATHY%%%cathy//FMT%%%cathy//GLIB%%%cathy//XMMS2_CLIENT_CPP
 
+[Debugger]
+Source directories=file:///home/grizzlysmit/Projects/xmms2/cathy/src
+Stop at beginning=2
+
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
 Selected Configuration=Default
@@ -28,7 +32,3 @@ BuildArgs/Default=--enable-maintainer-mode 'CXXFLAGS=-std=c++20'
 BuildArgs/Debug='CFLAGS=-g -O0' 'CXXFLAGS=-g -O0' 'JFLAGS=-g -O0' 'FFLAGS=-g -O0'
 BuildArgs/Profiling=--enable-maintainer-mode 'CFLAGS=-g -pg' 'CXXFLAGS=-g -pg' 'JFLAGS=-g -pg' 'FFLAGS=-g -pg'
 BuildArgs/Optimized=--enable-maintainer-mode 'CFLAGS=-O2' 'CXXFLAGS=-O2' 'JFLAGS=-O2' 'FFLAGS=-O2'
-
-[Debugger]
-Source directories=file:///home/grizzlysmit/Projects/xmms2/cathy/src
-Stop at beginning=2

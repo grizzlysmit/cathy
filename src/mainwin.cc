@@ -33,8 +33,8 @@ cathy is free software: you can redistribute it and/or modify it
 #include <regex>
 #include <cstdio>
 #include <string>
+#define BOOST_BIND_NO_PLACEHOLDERS
 #include <boost/bind/bind.hpp>
-
 
 
 
@@ -561,7 +561,7 @@ void Main_win::on_button_Connect()
 					std::string username = std::getenv("USER");
 					std::string cmd = fmt::format("ssh {0}@{1} xmms2-launcher", username, ip);
 					std::cerr << "cmd == " <<  cmd << std::endl;
-					res = system(cmd.c_str()); // force xmms2d to start //
+					res = system(cmd.c_str()); // force xmms2d to start on remote system //
 				}
 			}else{
 				res = system("xmms2-launcher"); // force xmms2d to start //

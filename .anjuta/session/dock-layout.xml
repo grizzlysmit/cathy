@@ -50,8 +50,8 @@
   <layout name="__default__">
     <dock name="__dock_1" floating="no" width="-1" height="-1" floatx="0" floaty="0" skip-taskbar="yes">
       <paned orientation="vertical" resize="yes" locked="no" iconified="no" closed="no" position="985">
-        <paned orientation="horizontal" resize="yes" locked="no" iconified="no" closed="no" position="331">
-          <notebook orientation="vertical" resize="yes" locked="no" iconified="no" closed="no" page="1">
+        <paned orientation="horizontal" resize="yes" locked="no" iconified="no" closed="no" position="311">
+          <notebook orientation="vertical" resize="yes" locked="no" iconified="no" closed="no" page="0">
             <item name="AnjutaFileManager" orientation="vertical" resize="yes" locked="yes" iconified="no" closed="no"/>
             <item name="AnjutaProjectManager" orientation="vertical" resize="yes" locked="yes" iconified="no" closed="no"/>
             <item name="AnjutaSymbolBrowser" orientation="horizontal" resize="yes" locked="no" iconified="no" closed="yes"/>
@@ -64,7 +64,7 @@
           <paned orientation="horizontal" resize="yes" locked="no" iconified="no" closed="no" position="500">
             <paned orientation="vertical" resize="yes" locked="no" iconified="no" closed="no" position="200">
               <notebook orientation="vertical" resize="yes" locked="no" iconified="no" closed="yes" page="-1"/>
-              <notebook orientation="vertical" resize="yes" locked="no" iconified="no" closed="no" page="9">
+              <notebook orientation="vertical" resize="yes" locked="no" iconified="no" closed="no" page="1">
                 <item name="AnjutaStarter" orientation="horizontal" resize="yes" locked="no" iconified="no" closed="yes"/>
                 <item name="AnjutaDocumentManager" orientation="vertical" resize="yes" locked="no" iconified="no" closed="no"/>
                 <item name="AnjutaDevhelpDisplay" orientation="vertical" resize="yes" locked="no" iconified="no" closed="yes"/>
@@ -95,7 +95,7 @@
         </paned>
       </paned>
     </dock>
-    <dock floating="yes" width="535" height="1842" floatx="0" floaty="0" skip-taskbar="yes">
+    <dock floating="yes" width="795" height="2171" floatx="0" floaty="0" skip-taskbar="yes">
       <item name="bookmarks" orientation="vertical" resize="yes" locked="yes" iconified="no" closed="no"/>
     </dock>
   </layout>
